@@ -6,6 +6,12 @@ Parent static host for Romanian civic browser demos under:
 https://digital.cristian-nichifor.com/
 ```
 
+Temporary Pages URL:
+
+```txt
+https://digital-public-administration-lab.pages.dev/
+```
+
 ## Routes
 
 - `/` - lab index and module overview
@@ -54,6 +60,13 @@ CLOUDFLARE_ACCOUNT_ID=432316a05c0d6000c6e196fe32e47dd7
 Only this parent project should attach `digital.cristian-nichifor.com`.
 Do not attach that hostname to `bureaucracy-as-code`; that repo remains the
 standalone module source and keeps `https://bureaucracy-as-code.pages.dev/`.
+
+Current state:
+
+- Pages project created
+- production deploy works at `https://digital-public-administration-lab.pages.dev/`
+- `digital.cristian-nichifor.com` is attached to this Pages project
+- DNS still needs an explicit CNAME approval before the custom hostname resolves
 
 ## Release Source
 
