@@ -133,7 +133,8 @@ h2 {
   overflow-wrap: anywhere;
 }
 
-.moduleSection {
+.moduleSection,
+.flowSection {
   display: grid;
   gap: 14px;
   margin-top: 28px;
@@ -183,6 +184,63 @@ h2 {
   font-weight: 900;
 }
 
+.flowSection {
+  margin-top: 20px;
+}
+
+.flowRail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.flowCard {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  align-content: start;
+  gap: 10px;
+  border: 1px solid #d9e0ec;
+  border-radius: 8px;
+  padding: 16px;
+  background: #ffffff;
+}
+
+.flowCard::after {
+  position: absolute;
+  top: 28px;
+  right: -13px;
+  width: 13px;
+  height: 1px;
+  background: #a9b7ce;
+  content: "";
+}
+
+.flowCard:last-child::after {
+  display: none;
+}
+
+.flowCard svg {
+  color: #2756d8;
+}
+
+.flowIndex {
+  color: #66758f;
+  font-size: 0.74rem;
+  font-weight: 900;
+}
+
+.flowCard strong,
+.flowCard p {
+  overflow-wrap: anywhere;
+}
+
+.flowCard p {
+  margin-bottom: 0;
+  color: #58677f;
+  line-height: 1.45;
+}
+
 .notes {
   display: grid;
   grid-template-columns: minmax(0, 0.36fr) minmax(0, 0.64fr);
@@ -208,8 +266,13 @@ code {
   .hero,
   .statusBand,
   .moduleGrid,
+  .flowRail,
   .notes {
     grid-template-columns: 1fr;
+  }
+
+  .flowCard::after {
+    display: none;
   }
 
   .hero {

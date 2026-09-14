@@ -1,4 +1,14 @@
-import { ArrowRight, BadgeCheck, Boxes, ExternalLink, ShieldCheck } from "lucide-react";
+import {
+  ArrowRight,
+  BadgeCheck,
+  Boxes,
+  Database,
+  ExternalLink,
+  FileCheck2,
+  GitBranch,
+  ShieldCheck,
+  UserRoundCheck,
+} from "lucide-react";
 
 const modules = [
   {
@@ -28,6 +38,29 @@ const modules = [
     href: "#planned-modules",
     description:
       "A generic signed event-chain viewer extracted from the bureaucracy demo after the parent host is live.",
+  },
+];
+
+const flow = [
+  {
+    title: "Citizen action",
+    copy: "The mounted demo starts with a local identity, credential, signed request payload, and no personal data on the public trail.",
+    icon: UserRoundCheck,
+  },
+  {
+    title: "State transition",
+    copy: "Each Law 544 step moves through deterministic rules: registry, routing, processing, evidence, response, or exception.",
+    icon: GitBranch,
+  },
+  {
+    title: "Public ledger proof",
+    copy: "The browser records action type, hashes, signer role, timestamp, and chain links so the audit history stays inspectable.",
+    icon: Database,
+  },
+  {
+    title: "Verification surface",
+    copy: "Citizens can open the mounted app, inspect the trail, export receipts, and compare received documents with recorded hashes.",
+    icon: FileCheck2,
   },
 ];
 
@@ -84,6 +117,27 @@ export function App() {
               </small>
             </a>
           ))}
+        </div>
+      </section>
+
+      <section className="flowSection" aria-labelledby="flow-title">
+        <div className="sectionHeader">
+          <p className="eyebrow">Data flow</p>
+          <h2 id="flow-title">What happens under digital</h2>
+        </div>
+        <div className="flowRail" aria-label="Bureaucracy as Code data flow">
+          {flow.map((step, index) => {
+            const Icon = step.icon;
+
+            return (
+              <article className="flowCard" key={step.title}>
+                <span className="flowIndex">{String(index + 1).padStart(2, "0")}</span>
+                <Icon aria-hidden="true" size={20} />
+                <strong>{step.title}</strong>
+                <p>{step.copy}</p>
+              </article>
+            );
+          })}
         </div>
       </section>
 

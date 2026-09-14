@@ -7,6 +7,9 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const sourceDir = resolve(process.env.BAC_SOURCE_DIR ?? "../bureaucracy-as-code");
 const sourceDist = resolve(sourceDir, "dist");
 const targetDir = resolve(root, "dist/bureaucracy-as-code");
+const packageManager = process.env.npm_execpath
+  ? { command: process.execPath, argsPrefix: [process.env.npm_execpath] }
+  : { command: "pnpm", argsPrefix: [] };
 
 function run(command, args, cwd) {
   execFileSync(command, args, { cwd, stdio: "inherit" });
@@ -14,8 +17,8 @@ function run(command, args, cwd) {
 
 await mkdir(resolve(root, "dist"), { recursive: true });
 
-run("pnpm", ["install", "--frozen-lockfile"], sourceDir);
-run("pnpm", ["build"], sourceDir);
+run(packageManager.command, [...packageManager.argsPrefix, "install", "--frozen-lockfile"], sourceDir);
+run(packageManager.command, [...packageManager.argsPrefix, "build"], sourceDir);
 
 await rm(targetDir, { force: true, recursive: true });
 await mkdir(targetDir, { recursive: true });
