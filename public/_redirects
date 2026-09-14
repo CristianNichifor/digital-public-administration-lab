@@ -2,5 +2,3 @@
 /salarizare /romania-reforms/salarizare/ 301
 /administrativ/* /romania-reforms/administrativ/:splat 301
 /administrativ /romania-reforms/administrativ/ 301
-/bureaucracy-as-code/* /bureaucracy-as-code/index.html 200
-/* /index.html 200
