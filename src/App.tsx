@@ -9,37 +9,17 @@ import {
   ShieldCheck,
   UserRoundCheck,
 } from "lucide-react";
+import { categories, projects, type Project } from "./projects";
 
-const modules = [
-  {
-    title: "Bureaucracy as Code",
-    status: "Released v0.1.0",
-    href: "/bureaucracy-as-code/",
-    description:
-      "Law 544/2001 requests as signed, trackable, tamper-evident browser state transitions.",
-  },
-  {
-    title: "Digital Romania Atlas",
-    status: "Next intake",
-    href: "https://github.com/CristianNichifor/digital-romania-atlas",
-    description:
-      "The existing atlas work remains a sibling module in the lab instead of absorbing unrelated demos.",
-  },
-  {
-    title: "Identity Playground",
-    status: "Planned",
-    href: "#planned-modules",
-    description:
-      "DID-like identities, verifiable credential presentation, and local privacy-preserving role proofs.",
-  },
-  {
-    title: "Audit Log Explorer",
-    status: "Planned",
-    href: "#planned-modules",
-    description:
-      "A generic signed event-chain viewer extracted from the bureaucracy demo after the parent host is live.",
-  },
-];
+const STATUS_LABEL: Record<Project["kind"], string> = {
+  proxied: "Live",
+  mounted: "Live",
+  external: "Source only",
+};
+
+function hrefFor(project: Project): string {
+  return project.kind === "external" ? (project.href ?? "#") : `/${project.slug}/`;
+}
 
 const flow = [
   {
@@ -69,11 +49,12 @@ export function App() {
     <main className="appShell">
       <header className="hero">
         <div>
-          <p className="eyebrow">digital.cristian-nichifor.com</p>
-          <h1>Digital Public Administration Lab</h1>
+          <p className="eyebrow">Civic projects</p>
+          <h1>Romanian civic tech, in one place</h1>
           <p>
-            Browser-first Romanian civic demos for identity, signed administrative workflows,
-            transparent audit trails, and public-service state machines.
+            Deterministic, explainable, browser-first instruments for public debate: reform
+            simulators, open procurement and budget data, draft-legislation linting, and digital
+            public administration demos.
           </p>
         </div>
         <a className="primaryLink" href="/bureaucracy-as-code/">
@@ -82,11 +63,11 @@ export function App() {
         </a>
       </header>
 
-      <section className="statusBand" aria-label="Release status">
+      <section className="statusBand" aria-label="How this host works">
         <article>
           <BadgeCheck aria-hidden="true" />
-          <span>Current release</span>
-          <strong>bureaucracy-as-code v0.1.0</strong>
+          <span>One host</span>
+          <strong>Every project is a path, not a subdomain</strong>
         </article>
         <article>
           <ShieldCheck aria-hidden="true" />
@@ -95,35 +76,45 @@ export function App() {
         </article>
         <article>
           <Boxes aria-hidden="true" />
-          <span>Mount strategy</span>
-          <strong>Sibling modules under one digital host</strong>
+          <span>Independence</span>
+          <strong>Each project builds and deploys from its own repo</strong>
         </article>
       </section>
 
-      <section className="moduleSection" aria-labelledby="modules-title">
-        <div className="sectionHeader">
-          <p className="eyebrow">Modules</p>
-          <h2 id="modules-title">Lab index</h2>
-        </div>
-        <div className="moduleGrid">
-          {modules.map((module) => (
-            <a className="moduleCard" href={module.href} key={module.title}>
-              <span>{module.status}</span>
-              <strong>{module.title}</strong>
-              <p>{module.description}</p>
-              <small>
-                Open
-                <ExternalLink aria-hidden="true" size={14} />
-              </small>
-            </a>
-          ))}
-        </div>
-      </section>
+      {categories.map((category) => {
+        const inCategory = projects.filter((project) => project.category === category);
+
+        if (inCategory.length === 0) {
+          return null;
+        }
+
+        return (
+          <section className="moduleSection" aria-labelledby={`category-${category}`} key={category}>
+            <div className="sectionHeader">
+              <p className="eyebrow">Projects</p>
+              <h2 id={`category-${category}`}>{category}</h2>
+            </div>
+            <div className="moduleGrid">
+              {inCategory.map((project) => (
+                <a className="moduleCard" href={hrefFor(project)} key={project.slug}>
+                  <span>{STATUS_LABEL[project.kind]}</span>
+                  <strong>{project.title}</strong>
+                  <p>{project.description}</p>
+                  <small>
+                    {project.kind === "external" ? "View source" : `/${project.slug}`}
+                    <ExternalLink aria-hidden="true" size={14} />
+                  </small>
+                </a>
+              ))}
+            </div>
+          </section>
+        );
+      })}
 
       <section className="flowSection" aria-labelledby="flow-title">
         <div className="sectionHeader">
           <p className="eyebrow">Data flow</p>
-          <h2 id="flow-title">What happens under digital</h2>
+          <h2 id="flow-title">What happens in Bureaucracy as Code</h2>
         </div>
         <div className="flowRail" aria-label="Bureaucracy as Code data flow">
           {flow.map((step, index) => {
@@ -141,16 +132,22 @@ export function App() {
         </div>
       </section>
 
-      <section className="notes" id="planned-modules" aria-labelledby="planned-title">
+      <section className="notes" id="host-model" aria-labelledby="host-model-title">
         <div>
           <p className="eyebrow">Scope</p>
-          <h2 id="planned-title">Mount, do not rebuild</h2>
+          <h2 id="host-model-title">Route, do not rebuild</h2>
         </div>
         <p>
-          The Bureaucracy as Code app remains authoritative in its standalone repository. This host
-          builds that repo and mounts its static output at <code>/bureaucracy-as-code/</code>.
-          Future identity and audit-log modules should be extracted as sibling routes, not copied
-          into the Law 544 workflow internals.
+          Each project stays authoritative in its own repository and deploys on its own cadence.
+          This host owns the public URL and nothing else: <code>/bureaucracy-as-code/</code> is
+          built into it, and every other path is proxied to the origin that already serves that
+          project. Moving a project to a different origin therefore changes one line in{" "}
+          <code>src/projects.ts</code> and no public URL.
+        </p>
+        <p>
+          One consequence worth naming: everything served here shares a single browser origin, so
+          the storage isolation that separate subdomains gave the signed-identity demo no longer
+          applies. Treat the demo keys in <code>/bureaucracy-as-code/</code> as demo keys.
         </p>
       </section>
     </main>
