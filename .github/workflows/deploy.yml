@@ -1,0 +1,53 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout digital host
+        uses: actions/checkout@v4
+        with:
+          path: digital-public-administration-lab
+
+      - name: Checkout bureaucracy-as-code
+        uses: actions/checkout@v4
+        with:
+          repository: CristianNichifor/bureaucracy-as-code
+          path: bureaucracy-as-code
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: |
+            digital-public-administration-lab/pnpm-lock.yaml
+            bureaucracy-as-code/pnpm-lock.yaml
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+        working-directory: digital-public-administration-lab
+
+      - name: Build
+        run: BAC_SOURCE_DIR=../bureaucracy-as-code pnpm build && pnpm smoke
+        working-directory: digital-public-administration-lab
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=digital-public-administration-lab
+          workingDirectory: digital-public-administration-lab

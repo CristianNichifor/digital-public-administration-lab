@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout digital host
+        uses: actions/checkout@v4
+        with:
+          path: digital-public-administration-lab
+
+      - name: Checkout bureaucracy-as-code
+        uses: actions/checkout@v4
+        with:
+          repository: CristianNichifor/bureaucracy-as-code
+          path: bureaucracy-as-code
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: |
+            digital-public-administration-lab/pnpm-lock.yaml
+            bureaucracy-as-code/pnpm-lock.yaml
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+        working-directory: digital-public-administration-lab
+
+      - name: Verify
+        run: BAC_SOURCE_DIR=../bureaucracy-as-code pnpm verify && pnpm smoke
+        working-directory: digital-public-administration-lab
