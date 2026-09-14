@@ -1,6 +1,7 @@
 name: Deploy
 
 on:
+  pull_request:
   push:
     branches: [main]
 
@@ -45,6 +46,7 @@ jobs:
         working-directory: digital-public-administration-lab
 
       - name: Deploy to Cloudflare Pages
+        if: github.event_name == 'push'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
