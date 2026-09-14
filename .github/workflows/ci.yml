@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout digital host
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: digital-public-administration-lab
 
       - name: Checkout bureaucracy-as-code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: CristianNichifor/bureaucracy-as-code
           path: bureaucracy-as-code
