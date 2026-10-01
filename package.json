@@ -44,5 +44,10 @@
     "type": "git",
     "url": "https://github.com/CristianNichifor/digital-public-administration-lab.git"
   },
-  "homepage": "https://digital.cristian-nichifor.com"
+  "homepage": "https://digital.cristian-nichifor.com",
+  "pnpm": {
+    "overrides": {
+      "undici@7.29.0": "7.29.1"
+    }
+  }
 }
