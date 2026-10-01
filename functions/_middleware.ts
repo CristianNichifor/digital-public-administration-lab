@@ -1,3 +1,4 @@
+import { compatibilityRedirect } from "../src/compatibility";
 import { matchProxyRoute, rewriteLocation } from "../src/projects";
 
 /**
@@ -6,6 +7,7 @@ import { matchProxyRoute, rewriteLocation } from "../src/projects";
  * file; `next()` hands the request back to static asset serving.
  */
 interface PagesContext {
+  env?: { CANONICAL_REDIRECTS_ENABLED?: string };
   request: Request;
   next: () => Promise<Response>;
 }
@@ -36,6 +38,15 @@ const SECURITY_HEADERS: Record<string, string> = {
 
 export async function onRequest(context: PagesContext): Promise<Response> {
   const url = new URL(context.request.url);
+  const redirect = compatibilityRedirect(
+    url,
+    context.env?.CANONICAL_REDIRECTS_ENABLED === "true",
+  );
+  if (redirect)
+    return new Response(null, {
+      status: 301,
+      headers: { Location: redirect, ...SECURITY_HEADERS },
+    });
   const match = matchProxyRoute(url.pathname);
 
   if (!match) {
@@ -71,6 +82,8 @@ export async function onRequest(context: PagesContext): Promise<Response> {
   const responseHeaders = new Headers(upstreamResponse.headers);
 
   responseHeaders.delete("set-cookie");
+  if (url.hostname.endsWith(".pages.dev"))
+    responseHeaders.set("X-Robots-Tag", "noindex, nofollow");
 
   for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
     responseHeaders.set(name, value);
@@ -94,4 +107,3 @@ export async function onRequest(context: PagesContext): Promise<Response> {
     headers: responseHeaders,
   });
 }
-
