@@ -69,8 +69,9 @@ Two consequences worth stating plainly:
 ## Build model
 
 ```bash
-pnpm install
-BAC_SOURCE_DIR=../bureaucracy-as-code pnpm verify   # lint, typecheck, test, build, functions build
+pnpm install --frozen-lockfile
+pnpm setup:sibling
+pnpm verify   # lint, typecheck, test, build, functions build
 pnpm smoke
 pnpm dev
 ```
