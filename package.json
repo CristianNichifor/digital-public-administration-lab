@@ -16,7 +16,8 @@
     "lint": "eslint . --max-warnings=0",
     "test": "vitest run",
     "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm build:functions",
-    "smoke": "node scripts/smoke-dist.mjs"
+    "smoke": "node scripts/smoke-dist.mjs",
+    "setup:sibling": "node scripts/setup-bureaucracy-as-code.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.2.0",

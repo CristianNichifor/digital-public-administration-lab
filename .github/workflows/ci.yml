@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, dev]
 
 permissions:
   contents: read
@@ -17,12 +17,6 @@ jobs:
         with:
           path: digital-public-administration-lab
 
-      - name: Checkout bureaucracy-as-code
-        uses: actions/checkout@v4
-        with:
-          repository: CristianNichifor/bureaucracy-as-code
-          path: bureaucracy-as-code
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -35,12 +29,25 @@ jobs:
           cache: pnpm
           cache-dependency-path: |
             digital-public-administration-lab/pnpm-lock.yaml
-            bureaucracy-as-code/pnpm-lock.yaml
+
+      - name: Prepare pinned sibling
+        run: pnpm setup:sibling
+        working-directory: digital-public-administration-lab
 
       - name: Install
         run: pnpm install --frozen-lockfile
         working-directory: digital-public-administration-lab
 
       - name: Verify
-        run: BAC_SOURCE_DIR=../bureaucracy-as-code pnpm verify && pnpm smoke
+        run: pnpm verify && pnpm smoke
         working-directory: digital-public-administration-lab
+
+  verify:
+    name: verify
+    if: ${{ always() }}
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: echo "$RESULTS" | jq -e 'all(.[]; .result == "success")'

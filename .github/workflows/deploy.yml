@@ -1,7 +1,6 @@
 name: Deploy
 
 on:
-  pull_request:
   push:
     branches: [main]
 
@@ -17,12 +16,6 @@ jobs:
         with:
           path: digital-public-administration-lab
 
-      - name: Checkout bureaucracy-as-code
-        uses: actions/checkout@v4
-        with:
-          repository: CristianNichifor/bureaucracy-as-code
-          path: bureaucracy-as-code
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -35,14 +28,17 @@ jobs:
           cache: pnpm
           cache-dependency-path: |
             digital-public-administration-lab/pnpm-lock.yaml
-            bureaucracy-as-code/pnpm-lock.yaml
+
+      - name: Prepare pinned sibling
+        run: pnpm setup:sibling
+        working-directory: digital-public-administration-lab
 
       - name: Install
         run: pnpm install --frozen-lockfile
         working-directory: digital-public-administration-lab
 
       - name: Build
-        run: BAC_SOURCE_DIR=../bureaucracy-as-code pnpm build && pnpm smoke
+        run: pnpm build && pnpm smoke
         working-directory: digital-public-administration-lab
 
       - name: Deploy to Cloudflare Pages
