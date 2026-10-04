@@ -1,12 +1,11 @@
-# Civic projects host
+# Cristian Nichifor — project catalogue
 
-Single public host for the Romanian civic fleet. Every project is a path on one
-origin rather than a subdomain of its own.
+Bilingual project catalogue with Coda Packs, tools, civic projects and experiments. Existing civic application paths remain stable.
 
 Target hostname:
 
 ```txt
-https://proiecte.cristian-nichifor.com/
+https://projects.cristian-nichifor.com/
 ```
 
 Currently serving at:
@@ -29,10 +28,7 @@ https://digital-public-administration-lab.pages.dev/
 | `/ro-intel-reform-dataflows/` | proxied |
 | `/salarizare`, `/administrativ` | 301 into `/romania-reforms/` |
 
-The path segment is always the GitHub repository name. That is load-bearing:
-each project already builds with a `/<repo>/` base because it is served as a
-GitHub Pages project site, so a 1:1 proxy resolves its assets with no rebuild in
-any of those repos.
+Runtime path segments retain their existing values independently of repository names. They currently match the upstream build bases; a rename must explicitly preserve or migrate those asset paths.
 
 `public-pay-simulator` and `administrative-reform-simulator` are not proxied.
 Both repos now serve a meta-refresh stub into `romania-reforms`, so proxying
@@ -110,3 +106,18 @@ The hostname cutover is deliberately left as an operator step:
 `date.cristian-nichifor.com` stays a subdomain. It is an R2 custom domain
 serving dataset readers, not a browser app, and does not belong behind this
 proxy.
+
+## Bilingual presentation pages
+
+`src/catalogue-content.json` supplies editorial content keyed by the routing registry’s stable IDs. `src/catalogue.ts` resolves explicit English and Romanian paths and reciprocal language links. `src/prerender.tsx` renders 30 complete HTML pages plus canonical/alternate metadata and sitemap; browsing and contact links work without JavaScript.
+
+| Collection | English | Romanian |
+| --- | --- | --- |
+| Coda Packs | `/coda-packs/` | `/ro/pachete-coda/` |
+| Tools | `/tools/` | `/ro/instrumente/` |
+| Civic projects | `/civic/` | `/ro/proiecte-civice/` |
+| Experiments | `/experiments/` | `/ro/experimente/` |
+
+Presentation routes do not translate application paths. Google Contacts is labelled beta and links to source until a public installation is verified. USR is explicitly unofficial and synthetic. Lifecycle labels do not certify production readiness.
+
+See [domain rollout](docs/domain-rollout.md) for release order, repository naming, compatibility gates and rollback. The full personal website links to selected examples; this catalogue owns project setup and status.

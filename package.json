@@ -8,15 +8,15 @@
   "packageManager": "pnpm@10.15.1",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && node scripts/mount-bureaucracy-as-code.mjs",
-    "build:shell": "tsc -b && vite build",
+    "build": "pnpm build:shell && node scripts/mount-bureaucracy-as-code.mjs",
+    "build:shell": "tsc -b && vite build && vite build --ssr src/prerender.tsx --outDir .prerender && node .prerender/prerender.js",
     "build:functions": "wrangler pages functions build --outdir=.wrangler/functions-build",
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "lint": "eslint . --max-warnings=0",
     "test": "vitest run",
     "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm build:functions",
-    "smoke": "node scripts/smoke-dist.mjs",
+    "smoke": "node scripts/smoke-dist.mjs && node scripts/verify-catalogue.mjs",
     "setup:sibling": "node scripts/setup-bureaucracy-as-code.mjs"
   },
   "dependencies": {

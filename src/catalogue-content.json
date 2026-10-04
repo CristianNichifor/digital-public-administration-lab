@@ -1,0 +1,202 @@
+{
+  "romania-reforms": {
+    "repository": "romania-reforms",
+    "collection": "civic",
+    "lifecycle": "prototype",
+    "languages": [
+      "ro"
+    ],
+    "en": {
+      "slug": "romania-reforms",
+      "title": "Romania Reforms",
+      "summary": "Compare the assumptions behind public-policy choices.",
+      "body": "Seven browser-based reform simulators make proposed trade-offs inspectable. Use them to explore scenarios, not to calculate legal entitlements."
+    },
+    "ro": {
+      "slug": "reforme-romania",
+      "title": "Reforme pentru România",
+      "summary": "Compară ipotezele din spatele opțiunilor de politică publică.",
+      "body": "Șapte simulatoare fac vizibile compromisurile propunerilor de reformă. Explorează scenarii; rezultatele nu stabilesc drepturi legale."
+    }
+  },
+  "achizitii-deschise": {
+    "repository": "achizitii-deschise",
+    "collection": "civic",
+    "lifecycle": "prototype",
+    "languages": [
+      "ro"
+    ],
+    "en": {
+      "slug": "open-procurement",
+      "title": "Open Procurement",
+      "summary": "Ask better questions about public purchasing.",
+      "body": "Explore published procurement snapshots and comparable prices. Check coverage, dates and source provenance before drawing conclusions."
+    },
+    "ro": {
+      "slug": "achizitii-deschise",
+      "title": "Achiziții Deschise",
+      "summary": "Pune întrebări mai bune despre achizițiile publice.",
+      "body": "Explorează seturi de date despre achiziții și prețuri comparabile. Verifică acoperirea, perioada și proveniența datelor înainte de a trage concluzii."
+    }
+  },
+  "legislativ": {
+    "repository": "legislativ",
+    "collection": "civic",
+    "lifecycle": "prototype",
+    "languages": [
+      "ro"
+    ],
+    "en": {
+      "slug": "legislative-linter",
+      "title": "Legislative Linter",
+      "summary": "Make draft legislation easier to examine.",
+      "body": "Inspect candidate inconsistencies with references back to the underlying articles. Findings support human review; they are not legal advice."
+    },
+    "ro": {
+      "slug": "analizor-legislativ",
+      "title": "Analizor legislativ",
+      "summary": "Analizează mai ușor proiectele legislative.",
+      "body": "Examinează posibile neconcordanțe cu trimiteri la articolele relevante. Rezultatele sprijină analiza umană și nu reprezintă consultanță juridică."
+    }
+  },
+  "bureaucracy-as-code": {
+    "repository": "bureaucracy-as-code",
+    "collection": "civic",
+    "lifecycle": "prototype",
+    "languages": [
+      "ro"
+    ],
+    "en": {
+      "slug": "bureaucracy-as-code",
+      "title": "Bureaucracy as Code",
+      "summary": "Follow a public-information request from start to finish.",
+      "body": "A browser-only demonstration of a Law 544 workflow, with inspectable steps and receipts. Use sample identities and data; this is not a government service."
+    },
+    "ro": {
+      "slug": "birocratie-ca-program",
+      "title": "Birocrație ca program",
+      "summary": "Urmărește o cerere de informații publice de la început la final.",
+      "body": "O demonstrație în browser a unui flux bazat pe Legea 544, cu pași și dovezi inspectabile. Folosește identități și date fictive; nu este un serviciu guvernamental."
+    }
+  },
+  "digital-romania-atlas": {
+    "repository": "digital-romania-atlas",
+    "collection": "civic",
+    "lifecycle": "prototype",
+    "languages": [
+      "ro"
+    ],
+    "en": {
+      "slug": "digital-romania-atlas",
+      "title": "Digital Romania Atlas",
+      "summary": "See how public digital systems could connect.",
+      "body": "Explore digital identity and proposed public-service architecture. Separate observed systems from proposals using the explanations and sources in the tool."
+    },
+    "ro": {
+      "slug": "atlas-romania-digitala",
+      "title": "Atlasul României digitale",
+      "summary": "Descoperă cum s-ar putea conecta sistemele publice digitale.",
+      "body": "Explorează identitatea digitală și arhitectura propusă pentru serviciile publice. Distinge sistemele existente de propuneri folosind explicațiile și sursele instrumentului."
+    }
+  },
+  "ro-intel-reform-dataflows": {
+    "repository": "ro-intel-reform-dataflows",
+    "collection": "civic",
+    "lifecycle": "prototype",
+    "languages": [
+      "ro"
+    ],
+    "en": {
+      "slug": "intelligence-reform",
+      "title": "Intelligence Reform Data Flows",
+      "summary": "Make oversight and information flows understandable.",
+      "body": "An explainer comparing current and proposed institutional flows. Scenarios are illustrative; this does not expose operational intelligence data."
+    },
+    "ro": {
+      "slug": "reforma-serviciilor-informatii",
+      "title": "Fluxuri de date pentru reforma serviciilor de informații",
+      "summary": "Înțelege fluxurile de informații și mecanismele de control.",
+      "body": "Un material explicativ care compară fluxuri instituționale actuale și propuse. Scenariile sunt ilustrative și nu conțin date operative."
+    }
+  },
+  "ro-budget-dashboard": {
+    "repository": "ro-budget-dashboard",
+    "collection": "civic",
+    "lifecycle": "prototype",
+    "languages": [
+      "ro"
+    ],
+    "en": {
+      "slug": "budget-dashboard",
+      "title": "Citizen Budget Dashboard",
+      "summary": "Understand where public money goes.",
+      "body": "Explore budget information with year and source context. Check the application’s source and fallback indicators when interpreting a chart."
+    },
+    "ro": {
+      "slug": "buget-public",
+      "title": "Bugetul public pe înțelesul tuturor",
+      "summary": "Înțelege unde merg banii publici.",
+      "body": "Explorează informațiile bugetare în contextul anului și al sursei. Verifică indicatorii privind sursa și datele demonstrative atunci când interpretezi un grafic."
+    }
+  },
+  "civic-ui": {
+    "repository": "civic-ui",
+    "collection": "tools",
+    "lifecycle": "maintained",
+    "languages": [
+      "en"
+    ],
+    "en": {
+      "slug": "civic-ui",
+      "title": "Civic UI",
+      "summary": "Build public-interest tools with a consistent interface.",
+      "body": "Reusable React primitives and an HTML/CSS contract for civic applications. Explore the showcase and consult the source for compatibility and release details."
+    },
+    "ro": {
+      "slug": "civic-ui",
+      "title": "Civic UI",
+      "summary": "Construiește instrumente civice cu o interfață consecventă.",
+      "body": "Componente React reutilizabile și un contract HTML/CSS pentru aplicații civice. Explorează exemplele și consultă sursa pentru compatibilitate și versiuni."
+    }
+  },
+  "google-contacts": {
+    "repository": "Google-Contacts-Coda-Pack",
+    "collection": "coda-packs",
+    "lifecycle": "beta",
+    "languages": [
+      "en"
+    ],
+    "en": {
+      "slug": "google-contacts",
+      "title": "Google Contacts for Coda",
+      "summary": "Keep contact workflows close to the work they support.",
+      "body": "A beta Coda Pack for contact tables, groups and Google Contacts updates. Public marketplace installation and provider acceptance have not been verified."
+    },
+    "ro": {
+      "slug": "google-contacts",
+      "title": "Google Contacts pentru Coda",
+      "summary": "Adu gestionarea contactelor alături de munca echipei.",
+      "body": "Un Pack Coda în versiune beta pentru tabele de contacte, grupuri și actualizări în Google Contacts. Instalarea publică din galerie și acceptarea de către furnizor nu sunt încă verificate."
+    }
+  },
+  "usr-digital-platform-wireframe": {
+    "repository": "usr-digital-platform-wireframe",
+    "collection": "experiments",
+    "lifecycle": "prototype",
+    "languages": [
+      "en"
+    ],
+    "en": {
+      "slug": "usr-digital-platform",
+      "title": "USR Platform Prototype",
+      "summary": "Explore a possible membership-service experience.",
+      "body": "An unofficial prototype using synthetic content. It has no real authentication, payments or voting and does not represent an official USR service."
+    },
+    "ro": {
+      "slug": "platforma-digitala-usr",
+      "title": "Prototip de platformă USR",
+      "summary": "Explorează o posibilă experiență pentru serviciile membrilor.",
+      "body": "Un prototip neoficial cu informații fictive. Nu oferă autentificare, plăți sau vot real și nu reprezintă un serviciu oficial USR."
+    }
+  }
+}

@@ -1,155 +1,299 @@
+import { ArrowUpRight, ArrowLeft } from "lucide-react";
 import {
-  ArrowRight,
-  BadgeCheck,
-  Boxes,
-  Database,
-  ExternalLink,
-  FileCheck2,
-  GitBranch,
-  ShieldCheck,
-  UserRoundCheck,
-} from "lucide-react";
-import { categories, projects, type Project } from "./projects";
-
-const STATUS_LABEL: Record<Project["kind"], string> = {
-  proxied: "Live",
-  mounted: "Live",
-  external: "Source only",
+  alternatePath,
+  catalogue,
+  collections,
+  collectionPath,
+  entryPath,
+  home,
+  resolvePage,
+  runtimeHref,
+  type Entry,
+  type Locale,
+} from "./catalogue";
+const contact = "mailto:cristian@cristian-nichifor.com";
+const status = {
+  en: { beta: "Beta", prototype: "Prototype", maintained: "Maintained" },
+  ro: { beta: "Beta", prototype: "Prototip", maintained: "Întreținut" },
 };
-
-function hrefFor(project: Project): string {
-  return project.kind === "external" ? (project.href ?? "#") : `/${project.slug}/`;
-}
-
-const flow = [
-  {
-    title: "Citizen action",
-    copy: "The mounted demo starts with a local identity, credential, signed request payload, and no personal data on the public trail.",
-    icon: UserRoundCheck,
-  },
-  {
-    title: "State transition",
-    copy: "Each Law 544 step moves through deterministic rules: registry, routing, processing, evidence, response, or exception.",
-    icon: GitBranch,
-  },
-  {
-    title: "Public ledger proof",
-    copy: "The browser records action type, hashes, signer role, timestamp, and chain links so the audit history stays inspectable.",
-    icon: Database,
-  },
-  {
-    title: "Verification surface",
-    copy: "Citizens can open the mounted app, inspect the trail, export receipts, and compare received documents with recorded hashes.",
-    icon: FileCheck2,
-  },
-];
-
-export function App() {
+function Card({ entry, locale }: { entry: Entry; locale: Locale }) {
   return (
-    <main className="appShell">
-      <header className="hero">
-        <div>
-          <p className="eyebrow">Civic projects</p>
-          <h1>Romanian civic tech, in one place</h1>
-          <p>
-            Deterministic, explainable, browser-first instruments for public debate: reform
-            simulators, open procurement and budget data, draft-legislation linting, and digital
-            public administration demos.
-          </p>
-        </div>
-        <a className="primaryLink" href="/bureaucracy-as-code/">
-          Open Bureaucracy as Code
-          <ArrowRight aria-hidden="true" size={18} />
+    <article className="project">
+      <span className="tag">
+        {status[locale][entry.lifecycle as keyof typeof status.en]}
+      </span>
+      <h3>
+        <a href={entryPath(entry, locale)}>
+          {entry[locale].title}
+          <ArrowUpRight aria-hidden="true" size={20} />
         </a>
+      </h3>
+      <p>{entry[locale].summary}</p>
+      <span className="project-action">
+        {locale === "en" ? "Explore the project" : "Descoperă proiectul"} ↗
+      </span>
+    </article>
+  );
+}
+export function App({
+  pathname = typeof window === "undefined" ? "/" : window.location.pathname,
+}: {
+  pathname?: string;
+}) {
+  const page = resolvePage(pathname);
+  if (!page)
+    return (
+      <main>
+        <h1>Page not found</h1>
+        <a href="/">Explore projects</a>
+      </main>
+    );
+  const { locale, entry, collection } = page;
+  const ro = locale === "ro";
+  const other = alternatePath(pathname)!;
+  const items = collection
+    ? catalogue.filter((item) => item.collection === collection.id)
+    : catalogue;
+  return (
+    <>
+      <a className="skip" href="#main">
+        {ro ? "Sari la conținut" : "Skip to content"}
+      </a>
+      <header className="site-header wrap">
+        <a className="brand" href={home(locale)}>
+          Cristian Nichifor
+          <span>
+            {ro
+              ? "Proiecte și idei în practică"
+              : "Projects & ideas in practice"}
+          </span>
+        </a>
+        <nav aria-label={ro ? "Navigare principală" : "Main navigation"}>
+          <a href={`https://cristian-nichifor.com${home(locale)}`}>
+            {ro ? "Lucrează cu mine" : "Work with me"}
+          </a>
+          <a href={other} lang={ro ? "en" : "ro"} hrefLang={ro ? "en" : "ro"}>
+            {ro ? "English" : "Română"}
+          </a>
+        </nav>
       </header>
-
-      <section className="statusBand" aria-label="How this host works">
-        <article>
-          <BadgeCheck aria-hidden="true" />
-          <span>One host</span>
-          <strong>Every project is a path, not a subdomain</strong>
-        </article>
-        <article>
-          <ShieldCheck aria-hidden="true" />
-          <span>Runtime boundary</span>
-          <strong>Static browser demos, no required backend</strong>
-        </article>
-        <article>
-          <Boxes aria-hidden="true" />
-          <span>Independence</span>
-          <strong>Each project builds and deploys from its own repo</strong>
-        </article>
-      </section>
-
-      {categories.map((category) => {
-        const inCategory = projects.filter((project) => project.category === category);
-
-        if (inCategory.length === 0) {
-          return null;
-        }
-
-        return (
-          <section className="moduleSection" aria-labelledby={`category-${category}`} key={category}>
-            <div className="sectionHeader">
-              <p className="eyebrow">Projects</p>
-              <h2 id={`category-${category}`}>{category}</h2>
-            </div>
-            <div className="moduleGrid">
-              {inCategory.map((project) => (
-                <a className="moduleCard" href={hrefFor(project)} key={project.slug}>
-                  <span>{STATUS_LABEL[project.kind]}</span>
-                  <strong>{project.title}</strong>
-                  <p>{project.description}</p>
-                  <small>
-                    {project.kind === "external" ? "View source" : `/${project.slug}`}
-                    <ExternalLink aria-hidden="true" size={14} />
-                  </small>
+      <main id="main" className="wrap">
+        {entry ? (
+          <>
+            <a className="back" href={collectionPath(entry.collection, locale)}>
+              <ArrowLeft size={16} aria-hidden="true" />
+              {collection?.[locale].title}
+            </a>
+            <section className="hero detail">
+              <p className="eyebrow">
+                {status[locale][entry.lifecycle as keyof typeof status.en]}
+              </p>
+              <h1>{entry[locale].title}</h1>
+              <p className="lead">{entry[locale].summary}</p>
+              <p>{entry[locale].body}</p>
+              <div className="actions">
+                {entry.id !== "google-contacts" && (
+                  <a className="button" href={runtimeHref(entry)}>
+                    {entry.id === "civic-ui"
+                      ? ro
+                        ? "Vezi componentele"
+                        : "Explore components"
+                      : ro
+                        ? "Deschide proiectul"
+                        : "Open project"}{" "}
+                    <ArrowUpRight aria-hidden="true" size={18} />
+                  </a>
+                )}
+                <a
+                  className={
+                    entry.id === "google-contacts" ? "button" : "text-link"
+                  }
+                  href={entry.source}
+                >
+                  {ro ? "Vezi codul sursă" : "View source"} ↗
+                </a>
+              </div>
+              {entry.collection === "civic" && (
+                <p className="note">
+                  {ro
+                    ? "Instrumentele vizează România. Limba aplicației și disponibilitatea datelor pot diferi de această pagină de prezentare."
+                    : "These tools focus on Romania. Application language and data availability may differ from this presentation page."}
+                </p>
+              )}
+            </section>
+            {entry.id === "google-contacts" && (
+              <section className="pack-story" aria-labelledby="workflow">
+                <div>
+                  <p className="eyebrow">
+                    {ro ? "Exemplu de utilizare" : "An example workflow"}
+                  </p>
+                  <h2 id="workflow">
+                    {ro
+                      ? "Un loc pentru contacte și context."
+                      : "One place for contacts and context."}
+                  </h2>
+                  <p>
+                    {ro
+                      ? "O echipă poate organiza contactele lângă proiectele și relațiile gestionate în Coda. Exemplul de mai jos este ilustrativ, nu o demonstrație conectată."
+                      : "A team can organize contacts alongside the projects and relationships it manages in Coda. The example below is illustrative, not a connected demo."}
+                  </p>
+                  <ol>
+                    <li>
+                      {ro
+                        ? "Conectează un cont de test Google."
+                        : "Connect a Google test account."}
+                    </li>
+                    <li>
+                      {ro
+                        ? "Adu contactele și grupurile într-un document Coda."
+                        : "Bring contacts and groups into a Coda document."}
+                    </li>
+                    <li>
+                      {ro
+                        ? "Testează actualizările pe date demonstrative înainte de utilizarea reală."
+                        : "Test updates with sample data before using real contacts."}
+                    </li>
+                  </ol>
+                </div>
+                <aside className="example">
+                  <span className="tag">
+                    {ro ? "Date fictive" : "Sample data"}
+                  </span>
+                  <h3>Alex Morgan</h3>
+                  <p>alex@example.com</p>
+                  <div className="example-row">
+                    <span>{ro ? "Grup" : "Group"}</span>
+                    <strong>{ro ? "Colaboratori" : "Collaborators"}</strong>
+                  </div>
+                  <div className="example-row">
+                    <span>{ro ? "Următorul pas" : "Next step"}</span>
+                    <strong>
+                      {ro ? "Discută proiectul" : "Discuss the project"}
+                    </strong>
+                  </div>
+                </aside>
+              </section>
+            )}
+            {entry.id === "google-contacts" && (
+              <section className="practical">
+                <h2>{ro ? "Înainte de utilizare" : "Before you use it"}</h2>
+                <dl>
+                  <div>
+                    <dt>{ro ? "Configurare" : "Setup"}</dt>
+                    <dd>
+                      {ro
+                        ? "Implementarea documentează un proiect Google Cloud cu People API, credențiale OAuth și configurare în Coda Pack Studio. Consultă instrucțiunile din sursă."
+                        : "The implementation documents a Google Cloud project with People API, OAuth credentials and Coda Pack Studio setup. Follow the source instructions."}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{ro ? "Acces la date" : "Data access"}</dt>
+                    <dd>
+                      {ro
+                        ? "Conectarea solicită acces la contacte și profil. Acțiunile de actualizare pot modifica Google Contacts. Verifică permisiunile și folosește un cont de test."
+                        : "Connecting requests contacts and profile access. Update actions can change Google Contacts. Review permissions and use a test account."}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{ro ? "Stadiu și limite" : "Status & limitations"}</dt>
+                    <dd>
+                      {ro
+                        ? "Versiune beta. Sincronizarea și operațiunile de scriere necesită validare cu furnizorul înainte de utilizarea în producție. Nu este disponibil aici un link de instalare verificat."
+                        : "Beta. Sync and write operations need provider acceptance testing before production use. No verified public installation link is available here."}
+                    </dd>
+                  </div>
+                </dl>
+              </section>
+            )}
+          </>
+        ) : (
+          <>
+            <section className="hero">
+              <p className="eyebrow">
+                {ro
+                  ? "Construit de Cristian Nichifor"
+                  : "Built by Cristian Nichifor"}
+              </p>
+              <h1>
+                {collection ? (
+                  collection[locale].title
+                ) : ro ? (
+                  <>
+                    Idei care devin
+                    <br />
+                    <em>instrumente utile.</em>
+                  </>
+                ) : (
+                  <>
+                    Ideas turned into
+                    <br />
+                    <em>useful tools.</em>
+                  </>
+                )}
+              </h1>
+              <p className="lead">
+                {ro
+                  ? "Integrări pentru munca de zi cu zi, componente reutilizabile și instrumente pentru întrebări publice mai bune. Explorează ce construiesc și cum gândesc."
+                  : "Integrations for everyday work, reusable components, and tools for better public questions. Explore what I build and how I think."}
+              </p>
+            </section>
+            <nav
+              className="collections"
+              aria-label={ro ? "Colecții de proiecte" : "Project collections"}
+            >
+              <a
+                href={home(locale)}
+                aria-current={!collection ? "page" : undefined}
+              >
+                {ro ? "Toate proiectele" : "All projects"}
+              </a>
+              {collections.map((item) => (
+                <a
+                  key={item.id}
+                  href={collectionPath(item.id, locale)}
+                  aria-current={collection?.id === item.id ? "page" : undefined}
+                >
+                  {item[locale].title}
                 </a>
               ))}
-            </div>
-          </section>
-        );
-      })}
-
-      <section className="flowSection" aria-labelledby="flow-title">
-        <div className="sectionHeader">
-          <p className="eyebrow">Data flow</p>
-          <h2 id="flow-title">What happens in Bureaucracy as Code</h2>
-        </div>
-        <div className="flowRail" aria-label="Bureaucracy as Code data flow">
-          {flow.map((step, index) => {
-            const Icon = step.icon;
-
-            return (
-              <article className="flowCard" key={step.title}>
-                <span className="flowIndex">{String(index + 1).padStart(2, "0")}</span>
-                <Icon aria-hidden="true" size={20} />
-                <strong>{step.title}</strong>
-                <p>{step.copy}</p>
-              </article>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="notes" id="host-model" aria-labelledby="host-model-title">
-        <div>
-          <p className="eyebrow">Scope</p>
-          <h2 id="host-model-title">Route, do not rebuild</h2>
-        </div>
-        <p>
-          Each project stays authoritative in its own repository and deploys on its own cadence.
-          This host owns the public URL and nothing else: <code>/bureaucracy-as-code/</code> is
-          built into it, and every other path is proxied to the origin that already serves that
-          project. Moving a project to a different origin therefore changes one line in{" "}
-          <code>src/projects.ts</code> and no public URL.
-        </p>
-        <p>
-          One consequence worth naming: everything served here shares a single browser origin, so
-          the storage isolation that separate subdomains gave the signed-identity demo no longer
-          applies. Treat the demo keys in <code>/bureaucracy-as-code/</code> as demo keys.
-        </p>
-      </section>
-    </main>
+            </nav>
+            <section
+              className="project-grid"
+              aria-label={ro ? "Proiecte" : "Projects"}
+            >
+              {items.map((item) => (
+                <Card entry={item} locale={locale} key={item.id} />
+              ))}
+            </section>
+          </>
+        )}
+        <section className="invitation">
+          <p className="eyebrow">
+            {ro
+              ? "De la exemplu la nevoia ta"
+              : "From an example to your own challenge"}
+          </p>
+          <h2>
+            {ro
+              ? "Ai o problemă pe care merită să o rezolvăm?"
+              : "Have a problem worth working through?"}
+          </h2>
+          <p>
+            {ro
+              ? "Spune-mi ce încerci să îmbunătățești. Putem discuta un flux Coda, o integrare sau o experiență web mai bună."
+              : "Tell me what you are trying to improve. We can discuss a Coda workflow, an integration, or a better web experience."}
+          </p>
+          <a className="button" href={contact}>
+            {ro ? "Hai să discutăm" : "Let’s talk"}
+            <ArrowUpRight aria-hidden="true" size={18} />
+          </a>
+        </section>
+      </main>
+      <footer className="wrap">
+        <span>© {new Date().getFullYear()} Cristian Nichifor</span>
+        <a href="https://github.com/CristianNichifor">GitHub ↗</a>
+        <a href={contact}>{ro ? "Contact" : "Get in touch"}</a>
+      </footer>
+    </>
   );
 }

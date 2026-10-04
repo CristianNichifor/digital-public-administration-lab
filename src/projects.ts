@@ -1,16 +1,4 @@
-/**
- * Single source of truth for the civic fleet index and the proxy routing table.
- *
- * The public URL of a project is `/<slug>/`, and `slug` is always the GitHub
- * repository name. That is not cosmetic: every project already builds with a
- * `/<repo>/` base path because it is served as a GitHub Pages project site, so
- * a 1:1 path proxy resolves its assets with no rebuild anywhere.
- *
- * `upstream` is a full base URL, which is what lets an origin move without the
- * public URL changing:
- *   github.io today  -> https://cristiannichifor.github.io/legislativ + /assets/x
- *   pages.dev later  -> https://legislativ.pages.dev                  + /assets/x
- */
+/** Runtime routing registry. Slugs are stable public paths, independent of repository names. */
 
 export type ProjectKind =
   /** Served from its own origin through the proxy in `functions/_middleware.ts`. */
@@ -100,10 +88,10 @@ export const projects: Project[] = [
     slug: "ro-budget-dashboard",
     title: "Citizen Budget Dashboard",
     description:
-      "Romania's consolidated budget for citizens, over the transparenta.eu data. No public deployment yet — source only.",
+      "Romania's consolidated budget for citizens, over the transparenta.eu data. Explore public spending with source and year context.",
     category: "Transparency & data",
     kind: "external",
-    href: "https://github.com/CristianNichifor/ro-budget-dashboard",
+    href: "https://buget.cristian-nichifor.com/",
   },
   {
     slug: "civic-ui",
@@ -114,9 +102,27 @@ export const projects: Project[] = [
     kind: "external",
     href: `${GH_PAGES}/civic-ui/`,
   },
+  {
+    slug: "google-contacts",
+    title: "Google Contacts for Coda",
+    description: "A beta integration for managing contacts in Coda.",
+    category: "Coda Packs",
+    kind: "external",
+    href: "https://github.com/CristianNichifor/Google-Contacts-Coda-Pack",
+  },
+  {
+    slug: "usr-digital-platform-wireframe",
+    title: "USR platform prototype",
+    description: "An unofficial, synthetic membership-platform exploration.",
+    category: "Experiments",
+    kind: "external",
+    href: `${GH_PAGES}/usr-digital-platform-wireframe/`,
+  },
 ];
 
 export const categories: string[] = [
+  "Coda Packs",
+  "Experiments",
   "Reform simulators",
   "Transparency & data",
   "Digital public administration",
@@ -162,7 +168,11 @@ export function matchProxyRoute(pathname: string): ProxyMatch | null {
  * Returns `null` when the target leaves the upstream base entirely, in which
  * case the caller should pass the original `Location` through untouched.
  */
-export function rewriteLocation(location: string, match: ProxyMatch, requestUrl: URL): string | null {
+export function rewriteLocation(
+  location: string,
+  match: ProxyMatch,
+  requestUrl: URL,
+): string | null {
   const upstreamBase = new URL(match.project.upstream ?? "");
   const resolved = new URL(location, match.upstreamUrl);
 
@@ -174,7 +184,11 @@ export function rewriteLocation(location: string, match: ProxyMatch, requestUrl:
   // "/legislativ" for a GitHub Pages project site.
   const base = upstreamBase.pathname.replace(/\/$/, "");
 
-  if (base !== "" && resolved.pathname !== base && !resolved.pathname.startsWith(`${base}/`)) {
+  if (
+    base !== "" &&
+    resolved.pathname !== base &&
+    !resolved.pathname.startsWith(`${base}/`)
+  ) {
     return null;
   }
 
