@@ -78,7 +78,7 @@ export async function onRequest(context: PagesContext): Promise<Response> {
     responseHeaders.set(name, value);
   }
 
-  // GitHub Pages 301s `/legislativ` to `/legislativ/`. Left alone, that would
+  // GitHub Pages 301s `/legislation-linter` to `/legislation-linter/`. Left alone, that would
   // send the visitor off this host and onto the upstream origin.
   const location = responseHeaders.get("location");
 

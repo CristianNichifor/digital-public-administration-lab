@@ -1,4 +1,4 @@
-/** Runtime routing registry. Slugs are stable public paths, independent of repository names. */
+/** Runtime routing registry. Slugs are the public paths and match the English repository names, so each GitHub Pages build base proxies 1:1. */
 
 export type ProjectKind =
   /** Served from its own origin through the proxy in `functions/_middleware.ts`. */
@@ -25,9 +25,9 @@ const GH_PAGES = "https://cristiannichifor.github.io";
 /**
  * `public-pay-simulator` and `administrative-reform-simulator` are deliberately
  * absent. Both repos now serve a meta-refresh stub pointing into
- * `romania-reforms/salarizare/` and `romania-reforms/administrativ/`, so
- * proxying them would bounce a visitor straight off this host. Their short
- * paths are 301s in `public/_redirects` instead.
+ * `romania-reforms/public-pay/` and `romania-reforms/administrative-reform/`,
+ * so proxying them would bounce a visitor straight off this host. Visitors
+ * reach both simulators through `/romania-reforms/`.
  */
 
 export const projects: Project[] = [
@@ -41,22 +41,22 @@ export const projects: Project[] = [
     upstream: `${GH_PAGES}/romania-reforms`,
   },
   {
-    slug: "achizitii-deschise",
-    title: "Achiziții Deschise",
+    slug: "open-procurement",
+    title: "Open Procurement",
     description:
       "Romanian public procurement as open data: comparable unit prices in OCDS format, queried in the browser over Parquet.",
     category: "Transparency & data",
     kind: "proxied",
-    upstream: `${GH_PAGES}/achizitii-deschise`,
+    upstream: `${GH_PAGES}/open-procurement`,
   },
   {
-    slug: "legislativ",
-    title: "Legislativ",
+    slug: "legislation-linter",
+    title: "Legislation Linter",
     description:
       "A linter for draft Romanian legislation: unfulfilled statutory deadlines, terminology drift, and candidate contradictions — every finding carrying the article it came from.",
     category: "Transparency & data",
     kind: "proxied",
-    upstream: `${GH_PAGES}/legislativ`,
+    upstream: `${GH_PAGES}/legislation-linter`,
   },
   {
     slug: "bureaucracy-as-code",
@@ -76,22 +76,22 @@ export const projects: Project[] = [
     upstream: `${GH_PAGES}/digital-romania-atlas`,
   },
   {
-    slug: "ro-intel-reform-dataflows",
+    slug: "romania-intelligence-reform-dataflows",
     title: "Intelligence Reform Data Flows",
     description:
       "Current and target-state information flows between Romanian intelligence, oversight, judicial and civilian institutions.",
     category: "Digital public administration",
     kind: "proxied",
-    upstream: `${GH_PAGES}/ro-intel-reform-dataflows`,
+    upstream: `${GH_PAGES}/romania-intelligence-reform-dataflows`,
   },
   {
-    slug: "ro-budget-dashboard",
+    slug: "romania-budget-dashboard",
     title: "Citizen Budget Dashboard",
     description:
       "Romania's consolidated budget for citizens, over the transparenta.eu data. Explore public spending with source and year context.",
     category: "Transparency & data",
     kind: "external",
-    href: "https://buget.cristian-nichifor.com/",
+    href: "https://budget.cristian-nichifor.com/",
   },
   {
     slug: "civic-ui",
@@ -161,8 +161,8 @@ export function matchProxyRoute(pathname: string): ProxyMatch | null {
 }
 
 /**
- * Maps an upstream redirect target back onto this host, so a `/legislativ` ->
- * `/legislativ/` normalisation from GitHub Pages does not walk the visitor off
+ * Maps an upstream redirect target back onto this host, so a `/legislation-linter` ->
+ * `/legislation-linter/` normalisation from GitHub Pages does not walk the visitor off
  * onto the upstream origin.
  *
  * Returns `null` when the target leaves the upstream base entirely, in which
@@ -180,8 +180,8 @@ export function rewriteLocation(
     return null;
   }
 
-  // "" for an origin-rooted upstream (`https://legislativ.pages.dev`),
-  // "/legislativ" for a GitHub Pages project site.
+  // "" for an origin-rooted upstream (`https://legislation-linter.pages.dev`),
+  // "/legislation-linter" for a GitHub Pages project site.
   const base = upstreamBase.pathname.replace(/\/$/, "");
 
   if (

@@ -19,8 +19,8 @@
       "body": "Șapte simulatoare fac vizibile compromisurile propunerilor de reformă. Explorează scenarii; rezultatele nu stabilesc drepturi legale."
     }
   },
-  "achizitii-deschise": {
-    "repository": "achizitii-deschise",
+  "open-procurement": {
+    "repository": "open-procurement",
     "collection": "civic",
     "lifecycle": "prototype",
     "languages": [
@@ -33,28 +33,28 @@
       "body": "Explore published procurement snapshots and comparable prices. Check coverage, dates and source provenance before drawing conclusions."
     },
     "ro": {
-      "slug": "achizitii-deschise",
-      "title": "Achiziții Deschise",
+      "slug": "open-procurement",
+      "title": "Open Procurement",
       "summary": "Pune întrebări mai bune despre achizițiile publice.",
       "body": "Explorează seturi de date despre achiziții și prețuri comparabile. Verifică acoperirea, perioada și proveniența datelor înainte de a trage concluzii."
     }
   },
-  "legislativ": {
-    "repository": "legislativ",
+  "legislation-linter": {
+    "repository": "legislation-linter",
     "collection": "civic",
     "lifecycle": "prototype",
     "languages": [
       "ro"
     ],
     "en": {
-      "slug": "legislative-linter",
-      "title": "Legislative Linter",
+      "slug": "legislation-linter",
+      "title": "Legislation Linter",
       "summary": "Make draft legislation easier to examine.",
       "body": "Inspect candidate inconsistencies with references back to the underlying articles. Findings support human review; they are not legal advice."
     },
     "ro": {
-      "slug": "analizor-legislativ",
-      "title": "Analizor legislativ",
+      "slug": "legislation-linter",
+      "title": "Legislation Linter",
       "summary": "Analizează mai ușor proiectele legislative.",
       "body": "Examinează posibile neconcordanțe cu trimiteri la articolele relevante. Rezultatele sprijină analiza umană și nu reprezintă consultanță juridică."
     }
@@ -99,8 +99,8 @@
       "body": "Explorează identitatea digitală și arhitectura propusă pentru serviciile publice. Distinge sistemele existente de propuneri folosind explicațiile și sursele instrumentului."
     }
   },
-  "ro-intel-reform-dataflows": {
-    "repository": "ro-intel-reform-dataflows",
+  "romania-intelligence-reform-dataflows": {
+    "repository": "romania-intelligence-reform-dataflows",
     "collection": "civic",
     "lifecycle": "prototype",
     "languages": [
@@ -119,8 +119,8 @@
       "body": "Un material explicativ care compară fluxuri instituționale actuale și propuse. Scenariile sunt ilustrative și nu conțin date operative."
     }
   },
-  "ro-budget-dashboard": {
-    "repository": "ro-budget-dashboard",
+  "romania-budget-dashboard": {
+    "repository": "romania-budget-dashboard",
     "collection": "civic",
     "lifecycle": "prototype",
     "languages": [

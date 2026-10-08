@@ -16,7 +16,7 @@ describe("localized catalogue contract", () => {
       "/ro/pachete-coda/google-contacts/",
     );
     expect(alternatePath("/civic/open-procurement/")).toBe(
-      "/ro/proiecte-civice/achizitii-deschise/",
+      "/ro/proiecte-civice/open-procurement/",
     );
     expect(resolvePage("/ro/tools/")).toBeUndefined();
   });
@@ -34,18 +34,26 @@ describe("localized catalogue contract", () => {
         expect(catalogue.some((p) => p.collection === c.id)).toBe(true);
       }
   });
-  it("keeps presentation identity independent from runtime and repository names", () => {
-    const project = catalogue.find((p) => p.id === "legislativ")!;
-    expect(entryPath(project, "en")).toBe("/civic/legislative-linter/");
-    expect(matchProxyRoute("/legislativ/assets/app.js")?.upstreamUrl).toContain(
-      "/legislativ/assets/app.js",
+  it("names a project in English in both languages, runtime path and repository alike", () => {
+    const project = catalogue.find((p) => p.id === "legislation-linter")!;
+    expect(entryPath(project, "en")).toBe("/civic/legislation-linter/");
+    expect(entryPath(project, "ro")).toBe(
+      "/ro/proiecte-civice/legislation-linter/",
     );
-    expect(project.source).toContain("/legislativ");
+    expect(project.ro.title).toBe("Legislation Linter");
+    expect(
+      matchProxyRoute("/legislation-linter/assets/app.js")?.upstreamUrl,
+    ).toBe(
+      "https://cristiannichifor.github.io/legislation-linter/assets/app.js",
+    );
+    expect(project.source).toBe(
+      "https://github.com/CristianNichifor/legislation-linter",
+    );
   });
   it("does not invent translated app paths or turn unknown pages into catalogue pages", () => {
-    expect(resolvePage("/ro/legislativ/")).toBeUndefined();
+    expect(resolvePage("/ro/legislation-linter/")).toBeUndefined();
     expect(resolvePage("/missing/")).toBeUndefined();
     expect(alternatePath("/missing/")).toBeNull();
-    expect(matchProxyRoute("/ro/legislativ/")).toBeNull();
+    expect(matchProxyRoute("/ro/legislation-linter/")).toBeNull();
   });
 });
