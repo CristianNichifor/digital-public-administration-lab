@@ -1,19 +1,16 @@
 # Cristian Nichifor — project catalogue
 
-Bilingual project catalogue with Coda Packs, tools, civic projects and experiments. Existing civic application paths remain stable.
+Bilingual project catalogue with Coda Packs, tools, civic projects and experiments, and the hub that serves the civic apps without an origin of their own.
 
-Target hostname:
+Hostname (English at `/`, Romanian at `/ro/`):
 
 ```txt
 https://projects.cristian-nichifor.com/
 ```
 
-Currently serving at:
-
-```txt
-https://digital.cristian-nichifor.com/
-https://digital-public-administration-lab.pages.dev/
-```
+`digital.cristian-nichifor.com` and the Core account's
+`digital-public-administration-lab.pages.dev` retire at the cut-over to the
+CN Webify Customers account; neither gets an alias or a redirect.
 
 ## Routes
 
@@ -22,17 +19,22 @@ https://digital-public-administration-lab.pages.dev/
 | `/` | generated index of the fleet |
 | `/bureaucracy-as-code/` | built into this host at build time |
 | `/romania-reforms/` | proxied to its own origin |
-| `/legislativ/` | proxied |
-| `/achizitii-deschise/` | proxied |
+| `/legislation-linter/` | proxied |
+| `/legislation-linter/api/*` | Worker `legislation-linter-rewrite` (a Workers route, which runs before this project) |
+| `/open-procurement/` | proxied |
 | `/digital-romania-atlas/` | proxied |
-| `/ro-intel-reform-dataflows/` | proxied |
-| `/salarizare`, `/administrativ` | 301 into `/romania-reforms/` |
+| `/romania-intelligence-reform-dataflows/` | proxied |
 
-Runtime path segments retain their existing values independently of repository names. They currently match the upstream build bases; a rename must explicitly preserve or migrate those asset paths.
+Runtime paths are the English repository names, which are also the upstream
+GitHub Pages build bases, so the proxy maps them 1:1. The budget dashboard has
+its own origin, `https://budget.cristian-nichifor.com/`, and is linked, not
+proxied; its catalogue entry carries the dashboard and API links that the
+retired `tablou` page used to list.
 
 `public-pay-simulator` and `administrative-reform-simulator` are not proxied.
-Both repos now serve a meta-refresh stub into `romania-reforms`, so proxying
-them would bounce a visitor off this host; their short paths are redirects.
+Both repos serve a meta-refresh stub into `romania-reforms` (`/public-pay/`,
+`/administrative-reform/`), so proxying them would bounce a visitor off this
+host. The host serves no redirects or short-path aliases.
 
 ## Host model
 
@@ -50,8 +52,8 @@ project later — changes one `upstream` value and no public URL. `upstream` is 
 full base URL, so both shapes work:
 
 ```txt
-https://cristiannichifor.github.io/legislativ   ->  /legislativ/assets/x
-https://legislativ.pages.dev                    ->  /legislativ/assets/x
+https://cristiannichifor.github.io/legislation-linter  ->  /legislation-linter/assets/x
+https://legislation-linter.pages.dev                   ->  /legislation-linter/assets/x
 ```
 
 Two consequences worth stating plainly:
@@ -84,28 +86,29 @@ pnpm build && pnpm exec wrangler pages dev dist
 
 ## Cloudflare
 
-Pages project: `digital-public-administration-lab`, on the CN Webify account.
+Pages project: `digital-public-administration-lab`, on the **CN Webify
+Customers** account. Create it once:
 
-Required repository secrets:
+```bash
+wrangler pages project create digital-public-administration-lab --production-branch main
+```
+
+Required repository secrets (a Customers account token with *Cloudflare Pages
+Write*):
 
 ```txt
 CLOUDFLARE_API_TOKEN
-CLOUDFLARE_ACCOUNT_ID=432316a05c0d6000c6e196fe32e47dd7
+CLOUDFLARE_ACCOUNT_ID=5d5a0c8a05e5d8292065cd0c0cf60291
 ```
 
-### Not applied by this repo
+The plain `pages.dev` name stays with the old account until it is deleted, so
+the project's `pages.dev` host carries a random suffix; nobody links to it.
+Terraform in `cnw-infrastructure` binds `projects.cristian-nichifor.com` and
+the Workers routes in front of it; this repo binds no hostname. Update
+`homepage` in `package.json` once `projects.` answers, not before.
 
-The hostname cutover is deliberately left as an operator step:
-
-1. Attach `proiecte.cristian-nichifor.com` to this Pages project.
-2. Add a zone redirect `digital.cristian-nichifor.com/*` ->
-   `proiecte.cristian-nichifor.com/:splat` (301).
-3. Update `homepage` in `package.json` once the hostname resolves — not before,
-   or it becomes a published 404.
-
-`date.cristian-nichifor.com` stays a subdomain. It is an R2 custom domain
-serving dataset readers, not a browser app, and does not belong behind this
-proxy.
+`data.cristian-nichifor.com` is its own host: an R2 custom domain serving
+dataset readers, not a browser app, so it does not belong behind this proxy.
 
 ## Bilingual presentation pages
 
@@ -120,4 +123,4 @@ proxy.
 
 Presentation routes do not translate application paths. Google Contacts is labelled beta and links to source until a public installation is verified. USR is explicitly unofficial and synthetic. Lifecycle labels do not certify production readiness.
 
-See [domain rollout](docs/domain-rollout.md) for release order, repository naming, compatibility gates and rollback. The full personal website links to selected examples; this catalogue owns project setup and status.
+See [domain rollout](docs/domain-rollout.md) for release order, repository names and rollback. The full personal website links to selected examples; this catalogue owns project setup and status.

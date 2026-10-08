@@ -1,4 +1,3 @@
-import { compatibilityRedirect } from "../src/compatibility";
 import { matchProxyRoute, rewriteLocation } from "../src/projects";
 
 /**
@@ -7,7 +6,6 @@ import { matchProxyRoute, rewriteLocation } from "../src/projects";
  * file; `next()` hands the request back to static asset serving.
  */
 interface PagesContext {
-  env?: { CANONICAL_REDIRECTS_ENABLED?: string };
   request: Request;
   next: () => Promise<Response>;
 }
@@ -38,15 +36,6 @@ const SECURITY_HEADERS: Record<string, string> = {
 
 export async function onRequest(context: PagesContext): Promise<Response> {
   const url = new URL(context.request.url);
-  const redirect = compatibilityRedirect(
-    url,
-    context.env?.CANONICAL_REDIRECTS_ENABLED === "true",
-  );
-  if (redirect)
-    return new Response(null, {
-      status: 301,
-      headers: { Location: redirect, ...SECURITY_HEADERS },
-    });
   const match = matchProxyRoute(url.pathname);
 
   if (!match) {
@@ -89,7 +78,7 @@ export async function onRequest(context: PagesContext): Promise<Response> {
     responseHeaders.set(name, value);
   }
 
-  // GitHub Pages 301s `/legislativ` to `/legislativ/`. Left alone, that would
+  // GitHub Pages 301s `/legislation-linter` to `/legislation-linter/`. Left alone, that would
   // send the visitor off this host and onto the upstream origin.
   const location = responseHeaders.get("location");
 

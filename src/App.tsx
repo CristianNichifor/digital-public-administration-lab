@@ -11,6 +11,7 @@ import {
   type Entry,
   type Locale,
 } from "./catalogue";
+import { budgetApi, budgetHref, budgetPages } from "./budget-links";
 const contact = "mailto:cristian@cristian-nichifor.com";
 const status = {
   en: { beta: "Beta", prototype: "Prototype", maintained: "Maintained" },
@@ -121,6 +122,44 @@ export function App({
                 </p>
               )}
             </section>
+            {entry.id === "romania-budget-dashboard" && (
+              <section className="practical" aria-labelledby="dashboards">
+                <h2 id="dashboards">
+                  {ro ? "Dashboard-uri" : "Dashboards"}
+                </h2>
+                <div className="project-grid">
+                  {budgetPages.map((link) => (
+                    <article className="project" key={link.path.en}>
+                      <h3>
+                        <a href={budgetHref(link, locale)}>
+                          {link[locale].title}
+                          <ArrowUpRight aria-hidden="true" size={20} />
+                        </a>
+                      </h3>
+                      <p>{link[locale].body}</p>
+                      <span className="project-action">
+                        {ro ? "Surse" : "Sources"}: {link.sources}
+                      </span>
+                    </article>
+                  ))}
+                </div>
+                <h2>{ro ? "Pentru dezvoltatori" : "For developers"}</h2>
+                <div className="project-grid">
+                  <article className="project">
+                    <h3>
+                      <a href={budgetApi.href}>
+                        {budgetApi[locale].title}
+                        <ArrowUpRight aria-hidden="true" size={20} />
+                      </a>
+                    </h3>
+                    <p>{budgetApi[locale].body}</p>
+                    <span className="project-action">
+                      {budgetApi.endpoints}
+                    </span>
+                  </article>
+                </div>
+              </section>
+            )}
             {entry.id === "google-contacts" && (
               <section className="pack-story" aria-labelledby="workflow">
                 <div>
