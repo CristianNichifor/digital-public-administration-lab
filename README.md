@@ -87,25 +87,23 @@ pnpm build && pnpm exec wrangler pages dev dist
 ## Cloudflare
 
 Pages project: `digital-public-administration-lab`, on the **CN Webify
-Customers** account. Create it once:
+Customers** account (`5d5a0c8a05e5d8292065cd0c0cf60291`).
+
+`.github/workflows/deploy-cloudflare.yml` deploys on every push to `main` and
+on `workflow_dispatch`. It holds no Cloudflare secret: the job trades its
+GitHub OIDC token for a one-hour Cloudflare token from the CN Webify broker
+(`https://tokens.cnwebify.com`), which accepts only that file, on `main`. The
+first run creates the Pages project:
 
 ```bash
 wrangler pages project create digital-public-administration-lab --production-branch main
 ```
 
-Required repository secrets (a Customers account token with *Cloudflare Pages
-Write*):
-
-```txt
-CLOUDFLARE_API_TOKEN
-CLOUDFLARE_ACCOUNT_ID=5d5a0c8a05e5d8292065cd0c0cf60291
-```
-
 The plain `pages.dev` name stays with the old account until it is deleted, so
-the project's `pages.dev` host carries a random suffix; nobody links to it.
-Terraform in `cnw-infrastructure` binds `projects.cristian-nichifor.com` and
-the Workers routes in front of it; this repo binds no hostname. Update
-`homepage` in `package.json` once `projects.` answers, not before.
+the project's `pages.dev` host carries a random suffix; the job prints it in
+its summary, and nobody links to it. Terraform in `cnw-infrastructure` binds
+`projects.cristian-nichifor.com` and the Workers routes in front of it; this
+repo binds no hostname.
 
 `data.cristian-nichifor.com` is its own host: an R2 custom domain serving
 dataset readers, not a browser app, so it does not belong behind this proxy.
