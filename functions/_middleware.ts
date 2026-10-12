@@ -71,12 +71,14 @@ export async function onRequest(context: PagesContext): Promise<Response> {
   const responseHeaders = new Headers(upstreamResponse.headers);
 
   responseHeaders.delete("set-cookie");
+  if (url.hostname.endsWith(".pages.dev"))
+    responseHeaders.set("X-Robots-Tag", "noindex, nofollow");
 
   for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
     responseHeaders.set(name, value);
   }
 
-  // GitHub Pages 301s `/legislativ` to `/legislativ/`. Left alone, that would
+  // GitHub Pages 301s `/legislation-linter` to `/legislation-linter/`. Left alone, that would
   // send the visitor off this host and onto the upstream origin.
   const location = responseHeaders.get("location");
 
@@ -94,4 +96,3 @@ export async function onRequest(context: PagesContext): Promise<Response> {
     headers: responseHeaders,
   });
 }
-

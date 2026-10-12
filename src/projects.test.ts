@@ -7,7 +7,7 @@ import {
   type ProxyMatch,
 } from "./projects";
 
-const HOST = new URL("https://proiecte.cristian-nichifor.com/legislativ");
+const HOST = new URL("https://projects.cristian-nichifor.com/legislation-linter");
 
 describe("matchProxyRoute", () => {
   it("leaves the index and its own assets to static serving", () => {
@@ -27,24 +27,24 @@ describe("matchProxyRoute", () => {
   });
 
   it("maps a proxied project 1:1 onto its upstream base", () => {
-    expect(matchProxyRoute("/legislativ")?.upstreamUrl).toBe(
-      "https://cristiannichifor.github.io/legislativ",
+    expect(matchProxyRoute("/legislation-linter")?.upstreamUrl).toBe(
+      "https://cristiannichifor.github.io/legislation-linter",
     );
-    expect(matchProxyRoute("/legislativ/")?.upstreamUrl).toBe(
-      "https://cristiannichifor.github.io/legislativ/",
+    expect(matchProxyRoute("/legislation-linter/")?.upstreamUrl).toBe(
+      "https://cristiannichifor.github.io/legislation-linter/",
     );
-    expect(matchProxyRoute("/legislativ/assets/app.js")?.upstreamUrl).toBe(
-      "https://cristiannichifor.github.io/legislativ/assets/app.js",
+    expect(matchProxyRoute("/legislation-linter/assets/app.js")?.upstreamUrl).toBe(
+      "https://cristiannichifor.github.io/legislation-linter/assets/app.js",
     );
   });
 
   it("matches on a whole path segment, not a string prefix", () => {
-    expect(matchProxyRoute("/legislativul-romaniei")).toBeNull();
+    expect(matchProxyRoute("/legislation-linter-archive")).toBeNull();
   });
 
   it("does not proxy the simulator repos that now serve redirect stubs", () => {
     // Both meta-refresh to romania-reforms on github.io; proxying them would
-    // walk the visitor off this host. `_redirects` handles their short paths.
+    // walk the visitor off this host. Both are reached through /romania-reforms/.
     expect(matchProxyRoute("/public-pay-simulator")).toBeNull();
     expect(matchProxyRoute("/administrative-reform-simulator")).toBeNull();
   });
@@ -66,45 +66,45 @@ describe("matchProxyRoute", () => {
 
 describe("rewriteLocation", () => {
   it("keeps a GitHub Pages trailing-slash redirect on this host", () => {
-    const match = matchProxyRoute("/legislativ");
+    const match = matchProxyRoute("/legislation-linter");
 
     expect(match).not.toBeNull();
-    expect(rewriteLocation("/legislativ/", match as ProxyMatch, HOST)).toBe(
-      "https://proiecte.cristian-nichifor.com/legislativ/",
+    expect(rewriteLocation("/legislation-linter/", match as ProxyMatch, HOST)).toBe(
+      "https://projects.cristian-nichifor.com/legislation-linter/",
     );
   });
 
   it("re-prefixes the slug when the upstream is origin-rooted", () => {
     // The shape an upstream takes once a project moves to its own Pages
-    // project: the public path stays /legislativ/, the origin serves it at /.
+    // project: the public path stays /legislation-linter/, the origin serves it at /.
     const match: ProxyMatch = {
       project: {
-        slug: "legislativ",
-        title: "Legislativ",
+        slug: "legislation-linter",
+        title: "Legislation Linter",
         description: "",
         category: "Transparency & data",
         kind: "proxied",
-        upstream: "https://legislativ.pages.dev",
+        upstream: "https://legislation-linter.pages.dev",
       },
-      upstreamUrl: "https://legislativ.pages.dev/acte",
+      upstreamUrl: "https://legislation-linter.pages.dev/acte",
     };
 
     expect(rewriteLocation("/acte/", match, HOST)).toBe(
-      "https://proiecte.cristian-nichifor.com/legislativ/acte/",
+      "https://projects.cristian-nichifor.com/legislation-linter/acte/",
     );
   });
 
   it("passes through a redirect that leaves the upstream origin", () => {
-    const match = matchProxyRoute("/legislativ");
+    const match = matchProxyRoute("/legislation-linter");
 
     expect(rewriteLocation("https://example.org/x", match as ProxyMatch, HOST)).toBeNull();
   });
 
   it("preserves query and fragment", () => {
-    const match = matchProxyRoute("/legislativ");
+    const match = matchProxyRoute("/legislation-linter");
 
-    expect(rewriteLocation("/legislativ/?q=1#top", match as ProxyMatch, HOST)).toBe(
-      "https://proiecte.cristian-nichifor.com/legislativ/?q=1#top",
+    expect(rewriteLocation("/legislation-linter/?q=1#top", match as ProxyMatch, HOST)).toBe(
+      "https://projects.cristian-nichifor.com/legislation-linter/?q=1#top",
     );
   });
 });

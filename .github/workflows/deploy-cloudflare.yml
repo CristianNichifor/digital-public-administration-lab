@@ -1,0 +1,84 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write          # the broker reads this job's GitHub OIDC token
+
+env:
+  PROJECT_NAME: digital-public-administration-lab
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout digital host
+        uses: actions/checkout@v4
+        with:
+          path: digital-public-administration-lab
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.1
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: |
+            digital-public-administration-lab/pnpm-lock.yaml
+
+      - name: Prepare pinned sibling
+        run: pnpm setup:sibling
+        working-directory: digital-public-administration-lab
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+        working-directory: digital-public-administration-lab
+
+      - name: Build
+        run: pnpm build && pnpm smoke
+        working-directory: digital-public-administration-lab
+
+      - name: Cloudflare token from the CN Webify broker
+        run: |
+          set -euo pipefail
+          jwt=$(curl -sf -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=https://tokens.cnwebify.com" | jq -r .value)
+          reply=$(curl -sf -X POST -H "Authorization: Bearer $jwt" https://tokens.cnwebify.com/token)
+          token=$(jq -r .token <<<"$reply"); echo "::add-mask::$token"
+          echo "CLOUDFLARE_API_TOKEN=$token" >> "$GITHUB_ENV"
+          echo "CLOUDFLARE_ACCOUNT_ID=5d5a0c8a05e5d8292065cd0c0cf60291" >> "$GITHUB_ENV"
+
+      # Created once; the plain pages.dev name belongs to the Core account, so
+      # Cloudflare gives this project a random suffix.
+      - name: Create Pages project if missing
+        run: |
+          set -uo pipefail
+          if ! out=$(pnpm exec wrangler pages project create "$PROJECT_NAME" --production-branch main 2>&1); then
+            if grep -qi "already exists" <<<"$out"; then
+              echo "Pages project $PROJECT_NAME already exists"
+            else
+              echo "$out"
+              exit 1
+            fi
+          fi
+        working-directory: digital-public-administration-lab
+
+      - name: Deploy to Cloudflare Pages
+        run: pnpm exec wrangler pages deploy dist --project-name="$PROJECT_NAME" --branch=main
+        working-directory: digital-public-administration-lab
+
+      - name: Report pages.dev hostname
+        run: |
+          set -euo pipefail
+          subdomain=$(curl -sf -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$PROJECT_NAME" \
+            | jq -r .result.subdomain)
+          echo "Pages project \`$PROJECT_NAME\`: https://$subdomain/" >> "$GITHUB_STEP_SUMMARY"

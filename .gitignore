@@ -3,3 +3,7 @@ dist/
 .wrangler/
 .DS_Store
 *.log
+
+.cache/
+
+.prerender/

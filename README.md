@@ -1,20 +1,16 @@
-# Civic projects host
+# Cristian Nichifor — project catalogue
 
-Single public host for the Romanian civic fleet. Every project is a path on one
-origin rather than a subdomain of its own.
+Bilingual project catalogue with Coda Packs, tools, civic projects and experiments, and the hub that serves the civic apps without an origin of their own.
 
-Target hostname:
-
-```txt
-https://proiecte.cristian-nichifor.com/
-```
-
-Currently serving at:
+Hostname (English at `/`, Romanian at `/ro/`):
 
 ```txt
-https://digital.cristian-nichifor.com/
-https://digital-public-administration-lab.pages.dev/
+https://projects.cristian-nichifor.com/
 ```
+
+`digital.cristian-nichifor.com` and the Core account's
+`digital-public-administration-lab.pages.dev` retire at the cut-over to the
+CN Webify Customers account; neither gets an alias or a redirect.
 
 ## Routes
 
@@ -23,20 +19,22 @@ https://digital-public-administration-lab.pages.dev/
 | `/` | generated index of the fleet |
 | `/bureaucracy-as-code/` | built into this host at build time |
 | `/romania-reforms/` | proxied to its own origin |
-| `/legislativ/` | proxied |
-| `/achizitii-deschise/` | proxied |
+| `/legislation-linter/` | proxied |
+| `/legislation-linter/api/*` | Worker `legislation-linter-rewrite` (a Workers route, which runs before this project) |
+| `/open-procurement/` | proxied |
 | `/digital-romania-atlas/` | proxied |
-| `/ro-intel-reform-dataflows/` | proxied |
-| `/salarizare`, `/administrativ` | 301 into `/romania-reforms/` |
+| `/romania-intelligence-reform-dataflows/` | proxied |
 
-The path segment is always the GitHub repository name. That is load-bearing:
-each project already builds with a `/<repo>/` base because it is served as a
-GitHub Pages project site, so a 1:1 proxy resolves its assets with no rebuild in
-any of those repos.
+Runtime paths are the English repository names, which are also the upstream
+GitHub Pages build bases, so the proxy maps them 1:1. The budget dashboard has
+its own origin, `https://budget.cristian-nichifor.com/`, and is linked, not
+proxied; its catalogue entry carries the dashboard and API links that the
+retired `tablou` page used to list.
 
 `public-pay-simulator` and `administrative-reform-simulator` are not proxied.
-Both repos now serve a meta-refresh stub into `romania-reforms`, so proxying
-them would bounce a visitor off this host; their short paths are redirects.
+Both repos serve a meta-refresh stub into `romania-reforms` (`/public-pay/`,
+`/administrative-reform/`), so proxying them would bounce a visitor off this
+host. The host serves no redirects or short-path aliases.
 
 ## Host model
 
@@ -54,8 +52,8 @@ project later — changes one `upstream` value and no public URL. `upstream` is 
 full base URL, so both shapes work:
 
 ```txt
-https://cristiannichifor.github.io/legislativ   ->  /legislativ/assets/x
-https://legislativ.pages.dev                    ->  /legislativ/assets/x
+https://cristiannichifor.github.io/legislation-linter  ->  /legislation-linter/assets/x
+https://legislation-linter.pages.dev                   ->  /legislation-linter/assets/x
 ```
 
 Two consequences worth stating plainly:
@@ -69,8 +67,9 @@ Two consequences worth stating plainly:
 ## Build model
 
 ```bash
-pnpm install
-BAC_SOURCE_DIR=../bureaucracy-as-code pnpm verify   # lint, typecheck, test, build, functions build
+pnpm install --frozen-lockfile
+pnpm setup:sibling
+pnpm verify   # lint, typecheck, test, build, functions build
 pnpm smoke
 pnpm dev
 ```
@@ -87,25 +86,39 @@ pnpm build && pnpm exec wrangler pages dev dist
 
 ## Cloudflare
 
-Pages project: `digital-public-administration-lab`, on the CN Webify account.
+Pages project: `digital-public-administration-lab`, on the **CN Webify
+Customers** account (`5d5a0c8a05e5d8292065cd0c0cf60291`).
 
-Required repository secrets:
+`.github/workflows/deploy-cloudflare.yml` deploys on every push to `main` and
+on `workflow_dispatch`. It holds no Cloudflare secret: the job trades its
+GitHub OIDC token for a one-hour Cloudflare token from the CN Webify broker
+(`https://tokens.cnwebify.com`), which accepts only that file, on `main`. The
+first run creates the Pages project:
 
-```txt
-CLOUDFLARE_API_TOKEN
-CLOUDFLARE_ACCOUNT_ID=432316a05c0d6000c6e196fe32e47dd7
+```bash
+wrangler pages project create digital-public-administration-lab --production-branch main
 ```
 
-### Not applied by this repo
+The plain `pages.dev` name stays with the old account until it is deleted, so
+the project's `pages.dev` host carries a random suffix; the job prints it in
+its summary, and nobody links to it. Terraform in `cnw-infrastructure` binds
+`projects.cristian-nichifor.com` and the Workers routes in front of it; this
+repo binds no hostname.
 
-The hostname cutover is deliberately left as an operator step:
+`data.cristian-nichifor.com` is its own host: an R2 custom domain serving
+dataset readers, not a browser app, so it does not belong behind this proxy.
 
-1. Attach `proiecte.cristian-nichifor.com` to this Pages project.
-2. Add a zone redirect `digital.cristian-nichifor.com/*` ->
-   `proiecte.cristian-nichifor.com/:splat` (301).
-3. Update `homepage` in `package.json` once the hostname resolves — not before,
-   or it becomes a published 404.
+## Bilingual presentation pages
 
-`date.cristian-nichifor.com` stays a subdomain. It is an R2 custom domain
-serving dataset readers, not a browser app, and does not belong behind this
-proxy.
+`src/catalogue-content.json` supplies editorial content keyed by the routing registry’s stable IDs. `src/catalogue.ts` resolves explicit English and Romanian paths and reciprocal language links. `src/prerender.tsx` renders 30 complete HTML pages plus canonical/alternate metadata and sitemap; browsing and contact links work without JavaScript.
+
+| Collection | English | Romanian |
+| --- | --- | --- |
+| Coda Packs | `/coda-packs/` | `/ro/pachete-coda/` |
+| Tools | `/tools/` | `/ro/instrumente/` |
+| Civic projects | `/civic/` | `/ro/proiecte-civice/` |
+| Experiments | `/experiments/` | `/ro/experimente/` |
+
+Presentation routes do not translate application paths. Google Contacts is labelled beta and links to source until a public installation is verified. USR is explicitly unofficial and synthetic. Lifecycle labels do not certify production readiness.
+
+See [domain rollout](docs/domain-rollout.md) for release order, repository names and rollback. The full personal website links to selected examples; this catalogue owns project setup and status.
