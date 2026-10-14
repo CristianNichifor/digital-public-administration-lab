@@ -49,7 +49,7 @@ describe("UX-9 about & method page", () => {
       expect(html).toContain(`<h1>${h1.replaceAll("&", "&amp;")}</h1>`);
       let last = 0;
       for (const heading of h2s) {
-        const at = html.indexOf(`<h2>${heading}</h2>`);
+        const at = html.search(new RegExp(`<h2[^>]*>${heading}</h2>`));
         expect(at, `${locale} ${heading}`).toBeGreaterThan(last);
         last = at;
       }
@@ -79,6 +79,29 @@ describe("UX-9 about & method page", () => {
       expect(footer, page.path).toContain(
         `href="${aboutPath(page.locale)}">${labels[page.locale].replaceAll("&", "&amp;")}</a>`,
       );
+    }
+  });
+});
+
+describe("DS-3 section index and header link", () => {
+  const sections = {
+    en: [["independence", "Independence"], ["sources", "Sources shown"], ["corrections", "Corrections"], ["tracking", "No tracking"]],
+    ro: [["independenta", "Independență"], ["surse", "Surse la vedere"], ["corectari", "Corectări"], ["urmarire", "Fără urmărire"]],
+  } as const;
+  it("lists the four sections under the lead and every link resolves", () => {
+    for (const locale of ["en", "ro"] as const) {
+      const html = render(aboutPath(locale));
+      const index = html.match(/<nav class="section-index"[^>]*>.*?<\/nav>/s)?.[0] ?? "";
+      expect(html.indexOf('class="lead"')).toBeLessThan(html.indexOf('class="section-index"'));
+      const links = [...index.matchAll(/href="#([^"]+)"[^>]*>([^<]+)</g)].map((m) => [m[1], m[2]]);
+      expect(links).toEqual(sections[locale].map(([id, title]) => [id, title]));
+      for (const [id, title] of sections[locale]) expect(html).toContain(`<h2 id="${id}">${title}</h2>`);
+    }
+  });
+  it("is linked from the header in each language", () => {
+    for (const locale of ["en", "ro"] as const) {
+      const header = render(locale === "ro" ? "/ro/" : "/").split("</header>")[0];
+      expect(header).toContain(`href="${aboutPath(locale)}"`);
     }
   });
 });

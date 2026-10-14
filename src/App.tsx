@@ -191,6 +191,9 @@ export function App({
           </span>
         </a>
         <nav aria-label={ro ? "Navigare principală" : "Main navigation"}>
+          <a href={aboutPath(locale)}>
+            {ro ? "Despre și metodă" : "About & method"}
+          </a>
           <a href={`https://cristian-nichifor.com${home(locale)}`}>
             {ro ? "Lucrează cu mine" : "Work with me"}
           </a>
