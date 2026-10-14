@@ -82,7 +82,7 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
 
 ## Theme C: dependencies
 
-### DPAL-8 Dependency majors (`todo`)
+### DPAL-8 Dependency majors (`done`)
 
 - Given the open Dependabot bumps (eslint 10, lucide-react 1.x, typescript-eslint,
   eslint-plugin-react-refresh, wrangler), when applied together, then
