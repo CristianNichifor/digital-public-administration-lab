@@ -18,22 +18,44 @@ import {
   themes,
   type Entry,
   type Locale,
+  type Status,
 } from "./catalogue";
 import { About } from "./About";
 import { Privacy } from "./Privacy";
 import { projectPages } from "./project-pages";
 import { budgetApi, budgetHref, budgetPages } from "./budget-links";
+import { countLabel } from "./count-label";
 const contact = "mailto:cristian@cristian-nichifor.com";
 const month = (value: string, locale: Locale) =>
   new Date(`${value}-01T00:00:00Z`).toLocaleDateString(
     locale === "ro" ? "ro-RO" : "en-GB",
     { month: "long", year: "numeric", timeZone: "UTC" },
   );
+/** DS-1: the badge tone; the text stays the only meaning, the tone adds a border and stripe. */
+const statusTone: Partial<Record<Status, "success" | "warning">> = {
+  "live-data": "success",
+  "demo-data": "warning",
+};
+/** DS-1: a collection page with no entries says so and points back to all projects. */
+export function EmptyCollection({ locale }: { locale: Locale }) {
+  const ro = locale === "ro";
+  return (
+    <p className="empty">
+      {ro ? "Nu există proiecte aici încă." : "No projects here yet."}{" "}
+      <a href={home(locale)}>
+        {ro ? "Vezi toate proiectele" : "See all projects"}
+        <ArrowRight aria-hidden="true" size={16} />
+      </a>
+    </p>
+  );
+}
 function Status({ entry, locale }: { entry: Entry; locale: Locale }) {
   const ro = locale === "ro";
   return (
     <p className="status">
-      <span className="tag">{statusLabels[entry.status][locale]}</span>
+      <span className="tag" data-tone={statusTone[entry.status]}>
+        {statusLabels[entry.status][locale]}
+      </span>
       <span>
         {ro ? "Actualizat în" : "Updated"} {month(entry.updated, locale)}
       </span>
@@ -42,6 +64,38 @@ function Status({ entry, locale }: { entry: Entry; locale: Locale }) {
           {ro ? "Date la" : "Data as of"} {month(entry.dataAsOf.slice(0, 7), locale)}
         </span>
       )}
+    </p>
+  );
+}
+/** DS-2: one provenance line under the summary; "—" where the catalogue holds no value. */
+function Provenance({ entry, locale }: { entry: Entry; locale: Locale }) {
+  const ro = locale === "ro";
+  const dash = "—";
+  const page = projectPages[entry.id] ?? {};
+  const sources = page.sources?.map((source) => source.name).join(", ");
+  const licences = [...new Set(page.sources?.map((source) => source.licence).filter(Boolean))].join(", ");
+  const method = ro ? "Metodologie" : "Method";
+  return (
+    <p className="provenance">
+      <span>
+        <b>{`${ro ? "Sursa" : "Source"}:`}</b> {sources || dash}
+      </span>
+      <span>
+        <b>{`${ro ? "Date la" : "Data as of"}:`}</b>{" "}
+        {entry.dataAsOf ? month(entry.dataAsOf.slice(0, 7), locale) : dash}
+      </span>
+      <span>
+        <b>{`${ro ? "Licență" : "Licence"}:`}</b> {licences || dash}
+      </span>
+      <span>
+        {page.methodHref ? (
+          <a href={page.methodHref}>{`${method} ↗`}</a>
+        ) : (
+          <>
+            <b>{`${method}:`}</b> {dash}
+          </>
+        )}
+      </span>
     </p>
   );
 }
@@ -145,8 +199,9 @@ function ProjectDetails({ entry, locale }: { entry: Entry; locale: Locale }) {
             {related.map((item) => (
               <li key={item.id}>
                 <a href={entryPath(item, locale)}>
-                  {item[locale].title}
-                  <ArrowRight aria-hidden="true" size={16} />
+                  <b>{item[locale].title}</b>
+                  <span className="tag">{statusLabels[item.status][locale]}</span>
+                  <span>{item[locale].summary}</span>
                 </a>
               </li>
             ))}
@@ -217,6 +272,7 @@ export function App({
               <Status entry={entry} locale={locale} />
               <h1>{entry[locale].title}</h1>
               <p className="lead">{entry[locale].summary}</p>
+              {entry.collection === "civic" && <Provenance entry={entry} locale={locale} />}
               <div className="actions">
                 {entry.id !== "google-contacts" && (
                   <a className="button" href={runtimeHref(entry)}>
@@ -225,8 +281,8 @@ export function App({
                         ? "Vezi componentele"
                         : "Explore components"
                       : ro
-                        ? "Deschide proiectul"
-                        : "Open project"}{" "}
+                        ? "Deschide instrumentul"
+                        : "Open the tool"}{" "}
                     {entry.runtime.kind === "external" ? (
                       <ArrowUpRight aria-hidden="true" size={18} />
                     ) : (
@@ -236,7 +292,7 @@ export function App({
                 )}
                 <a
                   className={
-                    entry.id === "google-contacts" ? "button" : "text-link"
+                    entry.id === "google-contacts" ? "button" : "button button--secondary"
                   }
                   href={entry.source}
                 >
@@ -426,12 +482,16 @@ export function App({
                 </a>
               ))}
             </nav>
+            {items.length === 0 && <EmptyCollection locale={locale} />}
             {themes.map((theme) => {
               const group = civic.filter((item) => item.theme === theme.id);
               return (
                 group.length > 0 && (
                   <section className="theme" key={theme.id}>
-                    <h2>{theme[locale]}</h2>
+                    <h2>
+                      {`${theme[locale]} `}
+                      <small>{countLabel(group.length, locale, "tool")}</small>
+                    </h2>
                     <Grid items={group} locale={locale} label={theme[locale]} />
                   </section>
                 )
@@ -440,7 +500,10 @@ export function App({
             {rest.length > 0 &&
               (civic.length > 0 ? (
                 <section className="theme">
-                  <h2>{otherTitle}</h2>
+                  <h2>
+                    {`${otherTitle} `}
+                    <small>{countLabel(rest.length, locale, "project")}</small>
+                  </h2>
                   <Grid items={rest} locale={locale} label={otherTitle} />
                 </section>
               ) : (

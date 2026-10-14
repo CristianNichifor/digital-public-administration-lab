@@ -266,7 +266,46 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
   `docs/ux-guidelines.md` section 2).
 - Test: `src/data-as-of.test.ts`.
 
-### DS-3 About page: anchors and header link (`done`)
+### DS-2 Project page provenance line implemented (`done`)
+
+Implements `docs/design/screens/02-project-page.html` (PR #47).
+
+- Given a civic project page (not a Coda pack or tool page), then under the
+  summary and before the buttons it shows one provenance line: source names, "Data as of" / "Date la", licence and a
+  method link, each "—" when the catalogue holds no value. `methodHref` is
+  recorded only where the app publishes a methodology: Open Procurement
+  `METHODOLOGY.md`, Digital Romania Atlas `docs/METHODOLOGY.md` and the
+  romania-reforms simulators folder (one methodology per simulator); nothing
+  is invented. Styles live in `src/screens.css`, layered over `styles.css`,
+  which #49 owns this round.
+- Given the buttons, then the primary reads "Open the tool" / "Deschide
+  instrumentul" (Civic UI keeps "Explore components") and "View source" is a
+  secondary bordered button.
+- Given related tools, then each item shows title, status badge and summary.
+- Test: `src/ds2-project.test.ts`; DPAL-12 tests unchanged.
+
+
+### DS-1 Home screen implemented (`done`, header link pending UX-9)
+
+Implements `docs/design/screens/01-home.html` (PR #47) on the live home and
+collection pages.
+
+- Given a theme heading on the home or civic page, then it carries the count of
+  tools under it ("2 tools" / "2 instrumente"; "Other" counts projects).
+- Given a status badge, then `live-data` renders `data-tone="success"` and
+  `demo-data` `data-tone="warning"`, each with a border and a colour stripe in
+  the stylesheet; other statuses keep the plain tag. The text stays the only
+  carrier of meaning.
+- Given a collection page with no entries, then it shows "No projects here
+  yet" / "Nu există proiecte aici încă" with a link to all projects.
+- Touch targets (chips, header links at 44 px) are #49 / #46 (other
+  sessions); styles here live in `src/screens.css`, layered over `styles.css`.
+- Not in this item: the header "About & method" link, which needs the UX-9
+  route (#42); it lands with DS-3.
+- Test: `src/ds1-home.test.ts`. Romanian: needs human review.
+
+
+### DS-3.1 About page: anchors and header link (`done`)
 
 Implements `docs/design/screens/03-about-method.html` (PR #47) on the UX-9
 page from #42.
