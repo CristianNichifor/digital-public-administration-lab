@@ -3,6 +3,7 @@ import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { App } from "./App";
+import { projectPages } from "./project-pages";
 import {
   catalogue,
   collectionPath,
@@ -169,5 +170,66 @@ describe("UX-8 themes", () => {
     }
     const ro = text(render("/ro/proiecte-civice/"));
     for (const theme of themes) expect(ro).toContain(theme.ro);
+  });
+});
+
+describe("DPAL-12 project page template", () => {
+  const headings = {
+    en: ["What it answers", "What it is not", "How it works", "Sources", "Related tools"],
+    ro: ["Ce răspunde", "Ce nu este", "Cum funcționează", "Surse", "Instrumente înrudite"],
+  };
+  it("renders the sections in order and the caveat as a callout", () => {
+    for (const locale of ["en", "ro"] as const) {
+      const html = render(entryPath(catalogue.find((e) => e.id === "open-procurement")!, locale));
+      const at = headings[locale].map((h) => html.indexOf(`>${h}</h2>`));
+      expect(at.every((i) => i > 0), at.join()).toBe(true);
+      expect([...at].sort((a, b) => a - b)).toEqual(at);
+      expect(html).toMatch(/<aside class="callout"[^>]*>.*?<\/aside>/s);
+      const callout = html.match(/<aside class="callout"[^>]*>.*?<\/aside>/s)![0];
+      expect(text(callout)).toContain(catalogue.find((e) => e.id === "open-procurement")![locale].body);
+      expect(text(html.split('class="answers"')[1].split("</ul>")[0]).length).toBeGreaterThan(0);
+      expect(text(html)).toContain("Open Government Licence v1.0");
+    }
+  });
+  it("has at most three answers per entry and both languages", () => {
+    for (const [id, page] of Object.entries(projectPages)) {
+      expect(page.answers?.en.length ?? 0, id).toBeLessThanOrEqual(3);
+      expect(page.answers?.en.length, id).toBe(page.answers?.ro.length);
+      expect(catalogue.map((e) => e.id), id).toContain(id);
+    }
+  });
+  it("omits sections it has no content for", () => {
+    const html = render(entryPath(catalogue.find((e) => e.id === "google-contacts")!, "en"));
+    for (const h of ["What it answers", "How it works", "Sources"]) expect(html).not.toContain(`>${h}</h2>`);
+  });
+  it("links related tools to their catalogue pages", () => {
+    for (const entry of catalogue)
+      for (const locale of ["en", "ro"] as const) {
+        const html = render(entryPath(entry, locale));
+        const section = html.split(`>${headings[locale][4]}</h2>`)[1]?.split("</section>")[0] ?? "";
+        for (const [, href] of section.matchAll(/href="([^"]+)"/g)) {
+          expect(resolvePage(href)?.entry, href).toBeDefined();
+          expect(href).not.toBe(entryPath(entry, locale));
+        }
+      }
+  });
+});
+
+describe("DPAL-13 how it works from civic-tech-hub", () => {
+  const carried = {
+    "romania-reforms": ["deterministic, explainable, browser-only", "deterministe, explicabile"],
+    "legislation-linter": ["every finding carries its source article", "fiecare rezultat indică articolul sursă"],
+    "open-procurement": ["DuckDB-Wasm", "DuckDB-Wasm"],
+    "digital-romania-atlas": ["digital backbone", "backbone digital"],
+    "romania-intelligence-reform-dataflows": ["current vs. target-state", "starea-țintă"],
+    "usr-digital-platform-wireframe": ["not an approved or connected service", "nu este un serviciu aprobat"],
+    "civic-ui": ["opt-in themes", "teme opționale"],
+  };
+  it("renders the carried-over description in both languages", () => {
+    for (const [id, [en, ro]] of Object.entries(carried)) {
+      const entry = catalogue.find((e) => e.id === id)!;
+      expect(text(render(entryPath(entry, "en"))), id).toContain(en);
+      expect(text(render(entryPath(entry, "ro"))), id).toContain(ro);
+    }
   });
 });

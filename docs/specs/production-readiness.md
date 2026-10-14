@@ -170,7 +170,7 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
 - Tests: `src/freshness.test.ts` (mocked `fetch`: success, HTTP error,
   network error, token header, branch), `src/ux.test.ts` (UX-7 formats).
 
-### DPAL-12 Project page template (`todo`)
+### DPAL-12 Project page template (`done`)
 
 - Given a project page, then it shows, in this order when present: "What it
   answers" (up to three bullets), "What it is not" (the existing catalogue
@@ -182,9 +182,13 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
   restates an existing catalogue, README or project-description fact.
 - Tests: `src/ux.test.ts` (rendered sections, order, empty-section omission,
   related links resolve to catalogue pages).
-- Agent-written Romanian and the chosen bullets: needs human review.
+- Content lives in `src/project-pages.ts`. The Google Contacts Coda Pack keeps
+  its own sections and gets no bullets; civic-ui and the USR wireframe get
+  "How it works" only.
+- Agent-written Romanian and the chosen bullets: needs human review. The
+  Open Procurement figure (26.6M records) is civic-tech-hub's and may be stale.
 
-### DPAL-13 "How it works" from civic-tech-hub (`todo`)
+### DPAL-13 "How it works" from civic-tech-hub (`done`)
 
 - Given a project that civic-tech-hub described (its `index.html` before the
   redirect, commit `f0184cd`), then its project page carries that concrete

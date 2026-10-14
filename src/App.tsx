@@ -19,6 +19,7 @@ import {
   type Locale,
 } from "./catalogue";
 import { Privacy } from "./Privacy";
+import { projectPages } from "./project-pages";
 import { budgetApi, budgetHref, budgetPages } from "./budget-links";
 const contact = "mailto:cristian@cristian-nichifor.com";
 const month = (value: string, locale: Locale) =>
@@ -84,6 +85,75 @@ function Grid({
     </section>
   );
 }
+/** DPAL-12: the project page sections; a section without curated content is left out. */
+function ProjectDetails({ entry, locale }: { entry: Entry; locale: Locale }) {
+  const ro = locale === "ro";
+  const page = projectPages[entry.id] ?? {};
+  const related = catalogue.filter(
+    (item) =>
+      item.id !== entry.id &&
+      (entry.collection === "civic"
+        ? item.theme === entry.theme
+        : filterOf(item) === filterOf(entry)),
+  );
+  return (
+    <section className="practical project-details">
+      {page.answers && (
+        <>
+          <h2>{ro ? "Ce răspunde" : "What it answers"}</h2>
+          <ul className="answers">
+            {page.answers[locale].map((answer) => (
+              <li key={answer}>{answer}</li>
+            ))}
+          </ul>
+        </>
+      )}
+      <aside className="callout" aria-labelledby="not">
+        <h2 id="not">{ro ? "Ce nu este" : "What it is not"}</h2>
+        <p>{entry[locale].body}</p>
+      </aside>
+      {page.howItWorks && (
+        <>
+          <h2>{ro ? "Cum funcționează" : "How it works"}</h2>
+          <p>{page.howItWorks[locale]}</p>
+        </>
+      )}
+      {page.sources && (
+        <>
+          <h2>{ro ? "Surse" : "Sources"}</h2>
+          <ul>
+            {page.sources.map((source) => (
+              <li key={source.name}>
+                {source.href ? (
+                  <a href={source.href}>{source.name} ↗</a>
+                ) : (
+                  source.name
+                )}
+                {source.licence &&
+                  ` (${ro ? "licență" : "licence"}: ${source.licence})`}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+      {related.length > 0 && (
+        <>
+          <h2>{ro ? "Instrumente înrudite" : "Related tools"}</h2>
+          <ul className="related">
+            {related.map((item) => (
+              <li key={item.id}>
+                <a href={entryPath(item, locale)}>
+                  {item[locale].title}
+                  <ArrowRight aria-hidden="true" size={16} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </section>
+  );
+}
 export function App({
   pathname = typeof window === "undefined" ? "/" : window.location.pathname,
 }: {
@@ -140,7 +210,6 @@ export function App({
               <Status entry={entry} locale={locale} />
               <h1>{entry[locale].title}</h1>
               <p className="lead">{entry[locale].summary}</p>
-              <p>{entry[locale].body}</p>
               <div className="actions">
                 {entry.id !== "google-contacts" && (
                   <a className="button" href={runtimeHref(entry)}>
@@ -175,6 +244,7 @@ export function App({
                 </p>
               )}
             </section>
+            <ProjectDetails entry={entry} locale={locale} />
             {entry.id === "romania-budget-dashboard" && (
               <section className="practical" aria-labelledby="dashboards">
                 <h2 id="dashboards">
