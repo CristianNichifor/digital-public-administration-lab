@@ -250,8 +250,7 @@ describe("UXG-2 content rules", () => {
     /\b(proxied|mounted|upstream|slug|Pages build|BFF|P0|P2|TODO|beta|alpha|WIP|coming soon)\b/i;
   it("uses comma-below ș ț and no internal or off-vocabulary terms", () => {
     for (const page of pages) {
-      const html = render(page.path);
-      const visible = text(html.replace(/<(script|style)[^>]*>.*?<\/\1>/gs, ""));
+      const visible = text(render(page.path));
       expect(visible, page.path).not.toMatch(/[şţŞŢ]/);
       expect(visible, page.path).not.toMatch(banned);
     }
