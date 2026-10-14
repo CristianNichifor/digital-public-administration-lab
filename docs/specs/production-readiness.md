@@ -261,7 +261,8 @@ page from #42.
 - Given any page, then the header navigation links the About page in the page
   language, with `aria-current="page"` on the About page only; the footer link
   from UX-9 stays.
-- Given the stylesheet, then the anchor links are 44 px targets.
+- Given `src/screens.css` (layered over `styles.css`, which #49/#46 own this
+  round), then the anchor links are 44 px targets.
 - Test: `src/ds3-about.test.ts`.
 
 ## Maintainer-only

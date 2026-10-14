@@ -37,7 +37,7 @@ describe("DS-3 about page anchors and header link", () => {
     }
   });
   it("gives the anchor links 44 px targets", () => {
-    const css = readFileSync("src/styles.css", "utf8");
+    const css = readFileSync("src/screens.css", "utf8");
     expect(css).toMatch(/\.toc a\s*\{[^}]*min-height:\s*44px/);
   });
 });

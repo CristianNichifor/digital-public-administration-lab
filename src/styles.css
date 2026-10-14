@@ -456,25 +456,3 @@ footer span {
     padding: 0 4px;
   }
 }
-/* DS-3: the about page's "on this page" list and the current header link. */
-.toc {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  list-style: none;
-  padding: 0;
-  margin: 24px 0 0;
-}
-.toc a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0 14px;
-  border: 1px solid var(--line);
-  border-radius: 99px;
-  text-decoration: none;
-  font-size: 14px;
-}
-.site-header nav a[aria-current] {
-  box-shadow: inset 0 -2px 0 currentColor;
-}
