@@ -18,22 +18,44 @@ import {
   themes,
   type Entry,
   type Locale,
+  type Status,
 } from "./catalogue";
 import { About } from "./About";
 import { Privacy } from "./Privacy";
 import { projectPages } from "./project-pages";
 import { budgetApi, budgetHref, budgetPages } from "./budget-links";
+import { countLabel } from "./count-label";
 const contact = "mailto:cristian@cristian-nichifor.com";
 const month = (value: string, locale: Locale) =>
   new Date(`${value}-01T00:00:00Z`).toLocaleDateString(
     locale === "ro" ? "ro-RO" : "en-GB",
     { month: "long", year: "numeric", timeZone: "UTC" },
   );
+/** DS-1: the badge tone; the text stays the only meaning, the tone adds a border and stripe. */
+const statusTone: Partial<Record<Status, "success" | "warning">> = {
+  "live-data": "success",
+  "demo-data": "warning",
+};
+/** DS-1: a collection page with no entries says so and points back to all projects. */
+export function EmptyCollection({ locale }: { locale: Locale }) {
+  const ro = locale === "ro";
+  return (
+    <p className="empty">
+      {ro ? "Nu există proiecte aici încă." : "No projects here yet."}{" "}
+      <a href={home(locale)}>
+        {ro ? "Vezi toate proiectele" : "See all projects"}
+        <ArrowRight aria-hidden="true" size={16} />
+      </a>
+    </p>
+  );
+}
 function Status({ entry, locale }: { entry: Entry; locale: Locale }) {
   const ro = locale === "ro";
   return (
     <p className="status">
-      <span className="tag">{statusLabels[entry.status][locale]}</span>
+      <span className="tag" data-tone={statusTone[entry.status]}>
+        {statusLabels[entry.status][locale]}
+      </span>
       <span>
         {ro ? "Actualizat în" : "Updated"} {month(entry.updated, locale)}
       </span>
@@ -457,12 +479,16 @@ export function App({
                 </a>
               ))}
             </nav>
+            {items.length === 0 && <EmptyCollection locale={locale} />}
             {themes.map((theme) => {
               const group = civic.filter((item) => item.theme === theme.id);
               return (
                 group.length > 0 && (
                   <section className="theme" key={theme.id}>
-                    <h2>{theme[locale]}</h2>
+                    <h2>
+                      {`${theme[locale]} `}
+                      <small>{countLabel(group.length, locale, "tool")}</small>
+                    </h2>
                     <Grid items={group} locale={locale} label={theme[locale]} />
                   </section>
                 )
@@ -471,7 +497,10 @@ export function App({
             {rest.length > 0 &&
               (civic.length > 0 ? (
                 <section className="theme">
-                  <h2>{otherTitle}</h2>
+                  <h2>
+                    {`${otherTitle} `}
+                    <small>{countLabel(rest.length, locale, "project")}</small>
+                  </h2>
                   <Grid items={rest} locale={locale} label={otherTitle} />
                 </section>
               ) : (

@@ -38,3 +38,36 @@
     grid-template-columns: 1fr;
   }
 }
+/* DS-1: a badge tone adds a border and a colour stripe; the text alone carries the meaning. */
+.tag[data-tone] {
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.tag[data-tone="success"] {
+  border-color: #1f7a4d;
+  box-shadow: inset 3px 0 0 #1f7a4d;
+}
+.tag[data-tone="warning"] {
+  border-color: #a07600;
+  box-shadow: inset 3px 0 0 #e0a800;
+}
+.theme h2 small {
+  margin-left: 8px;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.empty {
+  padding: 40px 0;
+  color: #4e6257;
+  max-width: 60ch;
+}
+.empty a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  text-decoration: none;
+}
