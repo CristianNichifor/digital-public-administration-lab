@@ -67,6 +67,38 @@ function Status({ entry, locale }: { entry: Entry; locale: Locale }) {
     </p>
   );
 }
+/** DS-2: one provenance line under the summary; "—" where the catalogue holds no value. */
+function Provenance({ entry, locale }: { entry: Entry; locale: Locale }) {
+  const ro = locale === "ro";
+  const dash = "—";
+  const page = projectPages[entry.id] ?? {};
+  const sources = page.sources?.map((source) => source.name).join(", ");
+  const licences = [...new Set(page.sources?.map((source) => source.licence).filter(Boolean))].join(", ");
+  const method = ro ? "Metodologie" : "Method";
+  return (
+    <p className="provenance">
+      <span>
+        <b>{`${ro ? "Sursa" : "Source"}:`}</b> {sources || dash}
+      </span>
+      <span>
+        <b>{`${ro ? "Date la" : "Data as of"}:`}</b>{" "}
+        {entry.dataAsOf ? month(entry.dataAsOf.slice(0, 7), locale) : dash}
+      </span>
+      <span>
+        <b>{`${ro ? "Licență" : "Licence"}:`}</b> {licences || dash}
+      </span>
+      <span>
+        {page.methodHref ? (
+          <a href={page.methodHref}>{`${method} ↗`}</a>
+        ) : (
+          <>
+            <b>{`${method}:`}</b> {dash}
+          </>
+        )}
+      </span>
+    </p>
+  );
+}
 function Card({ entry, locale }: { entry: Entry; locale: Locale }) {
   const languages = entry.languages.map(
     (code) => languageNames[locale][code as Locale],
@@ -167,8 +199,9 @@ function ProjectDetails({ entry, locale }: { entry: Entry; locale: Locale }) {
             {related.map((item) => (
               <li key={item.id}>
                 <a href={entryPath(item, locale)}>
-                  {item[locale].title}
-                  <ArrowRight aria-hidden="true" size={16} />
+                  <b>{item[locale].title}</b>
+                  <span className="tag">{statusLabels[item.status][locale]}</span>
+                  <span>{item[locale].summary}</span>
                 </a>
               </li>
             ))}
@@ -236,6 +269,7 @@ export function App({
               <Status entry={entry} locale={locale} />
               <h1>{entry[locale].title}</h1>
               <p className="lead">{entry[locale].summary}</p>
+              {entry.collection === "civic" && <Provenance entry={entry} locale={locale} />}
               <div className="actions">
                 {entry.id !== "google-contacts" && (
                   <a className="button" href={runtimeHref(entry)}>
@@ -244,8 +278,8 @@ export function App({
                         ? "Vezi componentele"
                         : "Explore components"
                       : ro
-                        ? "Deschide proiectul"
-                        : "Open project"}{" "}
+                        ? "Deschide instrumentul"
+                        : "Open the tool"}{" "}
                     {entry.runtime.kind === "external" ? (
                       <ArrowUpRight aria-hidden="true" size={18} />
                     ) : (
@@ -255,7 +289,7 @@ export function App({
                 )}
                 <a
                   className={
-                    entry.id === "google-contacts" ? "button" : "text-link"
+                    entry.id === "google-contacts" ? "button" : "button button--secondary"
                   }
                   href={entry.source}
                 >
