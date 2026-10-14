@@ -220,6 +220,14 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
   badge. Agent-written Romanian: needs human review.
 - Test: `src/ux.test.ts` UXG-2.
 
+### UXG-3 Reduced motion and forced colours (`done`)
+
+- Given `prefers-reduced-motion: reduce`, then no transition, animation or
+  smooth scroll runs.
+- Given `forced-colors: active`, then buttons and status badges keep a
+  visible border.
+- Test: `src/ux.test.ts` UXG-3 (stylesheet rules).
+
 ## Maintainer-only
 
 - DPAL-7 uptime probe workflow: `needs-human` (workflow changes; diff in the PR body).
