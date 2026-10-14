@@ -9,6 +9,7 @@ import {
   collections,
   collectionPath,
   entryPath,
+  inCollection,
   origin,
   pages,
   privacyPath,
@@ -37,7 +38,7 @@ describe("localized catalogue contract", () => {
     for (const c of collections)
       for (const locale of ["en", "ro"] as const) {
         expect(resolvePage(collectionPath(c.id, locale))).toBeDefined();
-        expect(catalogue.some((p) => p.collection === c.id)).toBe(true);
+        expect(catalogue.some((p) => inCollection(p, c.id))).toBe(true);
       }
   });
   it("keeps a project's English slug in both languages, runtime path and repository alike", () => {

@@ -184,6 +184,34 @@ h3 {
   max-width: 30ch;
   min-height: 72px;
 }
+.project .status,
+.project .caveat,
+.project .meta {
+  min-height: 0;
+  margin: 10px 0 0;
+  font-size: 13px;
+}
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  font-size: 13px;
+  color: #52655e;
+}
+.project .caveat {
+  color: #5c6e65;
+}
+.project .meta {
+  color: var(--green);
+}
+.theme h2 {
+  margin: 48px 0 0;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #466d59;
+}
 .project-action {
   font-size: 13px;
   color: var(--green);
@@ -349,6 +377,13 @@ footer span {
   }
   .project-grid {
     grid-template-columns: 1fr;
+  }
+  .collections {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  .collections a {
+    flex-shrink: 0;
   }
   .project p {
     min-height: 0;

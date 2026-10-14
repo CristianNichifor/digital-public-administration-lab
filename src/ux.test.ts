@@ -153,7 +153,7 @@ describe("UX-7 status", () => {
     expect(text(card)).toContain(label.en);
     expect(text(card)).toMatch(/Updated \w+ \d{4}/);
     expect(text(render(entryPath(entry, "ro")))).toMatch(
-      new RegExp(`${label.ro}.*Actualizat \\S+ \\d{4}`),
+      new RegExp(`${label.ro}.*Actualizat (în )?\\S+ \\d{4}`),
     );
   });
 });
