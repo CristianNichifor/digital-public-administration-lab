@@ -1,4 +1,5 @@
 import { matchProxyRoute, rewriteLocation } from "../src/projects";
+import { securityHeaders } from "../src/security-headers";
 
 /**
  * Minimal shape of the Cloudflare Pages Functions context. Declared locally so
@@ -51,11 +52,7 @@ const FORWARDED_REQUEST_HEADERS = [
  * `public/_headers` only applies to static assets, so proxied responses would
  * otherwise be the one part of the host without these.
  */
-const SECURITY_HEADERS: Record<string, string> = {
-  "X-Content-Type-Options": "nosniff",
-  "Referrer-Policy": "strict-origin-when-cross-origin",
-  "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
-};
+const SECURITY_HEADERS = securityHeaders;
 
 export async function onRequest(context: PagesContext): Promise<Response> {
   const gate = context.env?.PREVIEW_GATE_SECRET;
@@ -113,6 +110,8 @@ export async function onRequest(context: PagesContext): Promise<Response> {
     responseHeaders.set("X-Robots-Tag", "noindex, nofollow");
 
   for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
+    // An app's own framing rule may be stricter; the host only fills the gap.
+    if (name === "X-Frame-Options" && responseHeaders.has(name)) continue;
     responseHeaders.set(name, value);
   }
 

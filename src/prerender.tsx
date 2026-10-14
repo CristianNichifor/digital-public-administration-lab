@@ -2,6 +2,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { renderToString } from "react-dom/server";
 import { App } from "./App";
 import { pages, origin, alternatePath, privacyMeta } from "./catalogue";
+import { catalogueHeaderRules } from "./security-headers";
 const template = await readFile("dist/index.html", "utf8");
 const escape = (s: string) =>
   s
@@ -40,6 +41,11 @@ for (const page of pages) {
 await writeFile(
   "dist/sitemap.xml",
   `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${pages.map((p) => `<url><loc>${origin}${p.path}</loc></url>`).join("")}</urlset>`,
+);
+await writeFile(
+  "dist/_headers",
+  (await readFile("dist/_headers", "utf8")) +
+    catalogueHeaderRules(pages.map((p) => p.path)),
 );
 await writeFile(
   "dist/robots.txt",
