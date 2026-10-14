@@ -1,7 +1,7 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { renderToString } from "react-dom/server";
 import { App } from "./App";
-import { pages, origin, alternatePath } from "./catalogue";
+import { pages, origin, alternatePath, privacyMeta } from "./catalogue";
 const template = await readFile("dist/index.html", "utf8");
 const escape = (s: string) =>
   s
@@ -10,9 +10,11 @@ const escape = (s: string) =>
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;");
 for (const page of pages) {
-  const title = `${page.entry?.[page.locale].title ?? page.collection?.[page.locale].title ?? (page.locale === "en" ? "Projects & ideas in practice" : "Proiecte și idei în practică")} — Cristian Nichifor`;
+  const privacy = "privacy" in page ? privacyMeta[page.locale] : undefined;
+  const title = `${page.entry?.[page.locale].title ?? privacy?.title ?? page.collection?.[page.locale].title ?? (page.locale === "en" ? "Projects & ideas in practice" : "Proiecte și idei în practică")} — Cristian Nichifor`;
   const description =
     page.entry?.[page.locale].summary ??
+    privacy?.description ??
     (page.locale === "en"
       ? "Coda Packs, developer tools and civic projects by Cristian Nichifor."
       : "Pachete Coda, instrumente pentru dezvoltatori și proiecte civice create de Cristian Nichifor.");
