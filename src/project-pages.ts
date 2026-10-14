@@ -12,6 +12,8 @@ export interface Source {
 }
 export interface ProjectPage {
   answers?: Bilingual<string[]>;
+  /** The project's own methodology document, where its repository publishes one. */
+  methodHref?: string;
   howItWorks?: Bilingual<string>;
   sources?: Source[];
 }
@@ -43,6 +45,8 @@ export const projectPages: Record<string, ProjectPage> = {
     ],
   },
   "open-procurement": {
+    methodHref:
+      "https://github.com/CristianNichifor/open-procurement/blob/main/METHODOLOGY.md",
     answers: {
       en: [
         "What comparable unit prices Romanian public buyers paid.",
@@ -103,6 +107,8 @@ export const projectPages: Record<string, ProjectPage> = {
     },
   },
   "digital-romania-atlas": {
+    methodHref:
+      "https://github.com/CristianNichifor/digital-romania-atlas/blob/main/docs/METHODOLOGY.md",
     answers: {
       en: [
         "How Romania's digital-identity ecosystem (EUDI Wallet) is organised: institutions, data flows and timeline.",

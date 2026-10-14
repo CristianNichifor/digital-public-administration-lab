@@ -87,6 +87,35 @@ function Grid({
     </section>
   );
 }
+/** DS-2: where a civic tool's data comes from, with "—" for what the catalogue does not hold. */
+function Provenance({ entry, locale }: { entry: Entry; locale: Locale }) {
+  const ro = locale === "ro";
+  const page = projectPages[entry.id] ?? {};
+  const source = page.sources?.[0];
+  const missing = "—";
+  return (
+    <p className="provenance">
+      <span>
+        <b>{ro ? "Sursa:" : "Source:"}</b> {source?.name ?? missing}
+      </span>
+      <span>
+        <b>{ro ? "Date la:" : "Data as of:"}</b>{" "}
+        {entry.dataAsOf ? month(entry.dataAsOf.slice(0, 7), locale) : missing}
+      </span>
+      <span>
+        <b>{ro ? "Licență:" : "Licence:"}</b> {source?.licence ?? missing}
+      </span>
+      <span>
+        <b>{ro ? "Metodologie:" : "Method:"}</b>{" "}
+        {page.methodHref ? (
+          <a href={page.methodHref}>{ro ? "documentul" : "the document"} ↗</a>
+        ) : (
+          missing
+        )}
+      </span>
+    </p>
+  );
+}
 /** DPAL-12: the project page sections; a section without curated content is left out. */
 function ProjectDetails({ entry, locale }: { entry: Entry; locale: Locale }) {
   const ro = locale === "ro";
@@ -148,6 +177,8 @@ function ProjectDetails({ entry, locale }: { entry: Entry; locale: Locale }) {
                   {item[locale].title}
                   <ArrowRight aria-hidden="true" size={16} />
                 </a>
+                <span className="tag">{statusLabels[item.status][locale]}</span>{" "}
+                <span>{item[locale].summary}</span>
               </li>
             ))}
           </ul>
@@ -214,6 +245,9 @@ export function App({
               <Status entry={entry} locale={locale} />
               <h1>{entry[locale].title}</h1>
               <p className="lead">{entry[locale].summary}</p>
+              {entry.collection === "civic" && (
+                <Provenance entry={entry} locale={locale} />
+              )}
               <div className="actions">
                 {entry.id !== "google-contacts" && (
                   <a className="button" href={runtimeHref(entry)}>
@@ -222,8 +256,8 @@ export function App({
                         ? "Vezi componentele"
                         : "Explore components"
                       : ro
-                        ? "Deschide proiectul"
-                        : "Open project"}{" "}
+                        ? "Deschide instrumentul"
+                        : "Open the tool"}{" "}
                     {entry.runtime.kind === "external" ? (
                       <ArrowUpRight aria-hidden="true" size={18} />
                     ) : (
