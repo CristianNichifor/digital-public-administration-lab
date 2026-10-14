@@ -28,7 +28,10 @@ export interface Project {
 
 const GH_PAGES = "https://cristiannichifor.github.io";
 
-/** A project's dev build on Cloudflare Pages, laid out at `/<slug>/` like its GitHub Pages site. */
+/** A project's production build on Cloudflare Pages (its `main` branch), laid out at `/<slug>/`. */
+const pages = (slug: string) => `https://${slug}.pages.dev/${slug}`;
+
+/** A project's dev build on Cloudflare Pages, laid out at `/<slug>/` like its production build. */
 const pagesDev = (slug: string) => `https://dev.${slug}.pages.dev/${slug}`;
 
 /**
@@ -47,7 +50,7 @@ export const projects: Project[] = [
       "Deterministic, explainable simulators for Romanian public-policy reforms — pay, administrative consolidation and more, each at its own path under /romania-reforms/. Instruments for public debate, not calculators of entitlement.",
     category: "Reform simulators",
     kind: "proxied",
-    upstream: `${GH_PAGES}/romania-reforms`,
+    upstream: pages("romania-reforms"),
     previewUpstream: pagesDev("romania-reforms"),
   },
   {
@@ -57,7 +60,7 @@ export const projects: Project[] = [
       "Romanian public procurement as open data: comparable unit prices in OCDS format, queried in the browser over Parquet.",
     category: "Transparency & data",
     kind: "proxied",
-    upstream: `${GH_PAGES}/open-procurement`,
+    upstream: pages("open-procurement"),
     previewUpstream: pagesDev("open-procurement"),
   },
   {
@@ -67,7 +70,7 @@ export const projects: Project[] = [
       "A linter for draft Romanian legislation: unfulfilled statutory deadlines, terminology drift, and candidate contradictions — every finding carrying the article it came from.",
     category: "Transparency & data",
     kind: "proxied",
-    upstream: `${GH_PAGES}/legislation-linter`,
+    upstream: pages("legislation-linter"),
     previewUpstream: pagesDev("legislation-linter"),
   },
   {
@@ -85,7 +88,7 @@ export const projects: Project[] = [
       "The Romanian digital identity ecosystem (EUDI Wallet) mapped against a proposed digital-backbone design.",
     category: "Digital public administration",
     kind: "proxied",
-    upstream: `${GH_PAGES}/digital-romania-atlas`,
+    upstream: pages("digital-romania-atlas"),
     previewUpstream: pagesDev("digital-romania-atlas"),
   },
   {
@@ -95,7 +98,7 @@ export const projects: Project[] = [
       "Current and target-state information flows between Romanian intelligence, oversight, judicial and civilian institutions.",
     category: "Digital public administration",
     kind: "proxied",
-    upstream: `${GH_PAGES}/romania-intelligence-reform-dataflows`,
+    upstream: pages("romania-intelligence-reform-dataflows"),
     previewUpstream: pagesDev("romania-intelligence-reform-dataflows"),
   },
   {

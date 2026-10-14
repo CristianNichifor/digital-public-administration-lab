@@ -25,7 +25,7 @@ describe('Pages proxy boundary', () => {
       method, headers: { cookie: 'session=private', authorization: 'Bearer private', accept: 'text/plain', range: 'bytes=0-9', 'if-none-match': 'v1' },
     }), next: vi.fn() });
     const [url, init] = fetch.mock.calls[0];
-    expect(String(url)).toBe('https://cristiannichifor.github.io/legislation-linter/assets/a.js?q=1');
+    expect(String(url)).toBe('https://legislation-linter.pages.dev/legislation-linter/assets/a.js?q=1');
     expect(init.method).toBe(method); expect(init.redirect).toBe('manual');
     expect(init.headers.get('cookie')).toBeNull(); expect(init.headers.get('authorization')).toBeNull();
     expect(init.headers.get('accept')).toBe('text/plain'); expect(init.headers.get('range')).toBe('bytes=0-9');
@@ -99,7 +99,7 @@ describe('Dev preview proxying', () => {
     const fetch = vi.fn().mockResolvedValue(new Response('ok')); vi.stubGlobal('fetch', fetch);
     await onRequest({ request: new Request(host + '/open-procurement/'), next: vi.fn(), env: {} });
     const [url, init] = fetch.mock.calls[0];
-    expect(String(url)).toBe('https://cristiannichifor.github.io/open-procurement/');
+    expect(String(url)).toBe('https://open-procurement.pages.dev/open-procurement/');
     expect(init.headers.get('x-cnw-preview-gate')).toBeNull();
   });
 });

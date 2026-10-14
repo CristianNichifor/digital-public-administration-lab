@@ -28,13 +28,13 @@ describe("matchProxyRoute", () => {
 
   it("maps a proxied project 1:1 onto its upstream base", () => {
     expect(matchProxyRoute("/legislation-linter")?.upstreamUrl).toBe(
-      "https://cristiannichifor.github.io/legislation-linter",
+      "https://legislation-linter.pages.dev/legislation-linter",
     );
     expect(matchProxyRoute("/legislation-linter/")?.upstreamUrl).toBe(
-      "https://cristiannichifor.github.io/legislation-linter/",
+      "https://legislation-linter.pages.dev/legislation-linter/",
     );
     expect(matchProxyRoute("/legislation-linter/assets/app.js")?.upstreamUrl).toBe(
-      "https://cristiannichifor.github.io/legislation-linter/assets/app.js",
+      "https://legislation-linter.pages.dev/legislation-linter/assets/app.js",
     );
   });
 
@@ -112,9 +112,9 @@ describe("rewriteLocation", () => {
 });
 
 describe("dev preview upstreams", () => {
-  it("proxies production to GitHub Pages, ungated", () => {
+  it("proxies production to the project's Cloudflare Pages build, ungated", () => {
     const match = matchProxyRoute("/open-procurement/data/x.json");
-    expect(match?.upstreamUrl).toBe("https://cristiannichifor.github.io/open-procurement/data/x.json");
+    expect(match?.upstreamUrl).toBe("https://open-procurement.pages.dev/open-procurement/data/x.json");
     expect(match?.gated).toBe(false);
   });
 
