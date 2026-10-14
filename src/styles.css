@@ -438,3 +438,21 @@ footer span {
   align-items: center;
   gap: 8px;
 }
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto;
+    transition: none;
+    animation: none;
+  }
+}
+@media (forced-colors: active) {
+  .button {
+    border: 1px solid ButtonText;
+  }
+  .tag {
+    border: 1px solid CanvasText;
+    padding: 0 4px;
+  }
+}
