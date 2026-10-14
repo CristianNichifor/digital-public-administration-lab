@@ -82,3 +82,15 @@ describe("UX-9 about & method page", () => {
     }
   });
 });
+
+describe("DS-3 about page section index", () => {
+  it.each(["/about/", "/ro/despre/"])("links every section from an anchored list on %s", (path) => {
+    const html = render(path);
+    const ids = [...html.matchAll(/<h2 id="([^"]+)">/g)].map((m) => m[1]);
+    expect(ids).toHaveLength(4);
+    const nav = html.match(/<nav class="collections"[^>]*aria-label="[^"]+"[^>]*>(.*?)<\/nav>/s);
+    expect(nav).not.toBeNull();
+    const hrefs = [...nav![1].matchAll(/href="#([^"]+)"/g)].map((m) => m[1]);
+    expect(hrefs).toEqual(ids);
+  });
+});
