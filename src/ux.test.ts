@@ -22,8 +22,8 @@ const cards = (html: string) =>
 const text = (html: string) =>
   html
     .replace(/<[^>]+>/g, " ")
-    .replaceAll("&amp;", "&")
     .replaceAll("&#x27;", "'")
+    .replaceAll("&amp;", "&")
     .replace(/\s+/g, " ");
 
 describe("UX-1 hero", () => {
