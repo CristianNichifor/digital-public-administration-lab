@@ -304,6 +304,22 @@ collection pages.
   route (#42); it lands with DS-3.
 - Test: `src/ds1-home.test.ts`. Romanian: needs human review.
 
+
+### DS-3.1 About page: anchors and header link (`done`)
+
+Implements `docs/design/screens/03-about-method.html` (PR #47) on the UX-9
+page from #42.
+
+- Given `/about/` or `/ro/despre/`, then an "On this page" / "Pe această
+  pagină" navigation under the lead lists the four sections, each link
+  resolves to an `h2` with that id, and the four H2s keep their order.
+- Given any page, then the header navigation links the About page in the page
+  language, with `aria-current="page"` on the About page only; the footer link
+  from UX-9 stays.
+- Given `src/screens.css` (layered over `styles.css`, which #49/#46 own this
+  round), then the anchor links are 44 px targets.
+- Test: `src/ds3-about.test.ts`.
+
 ## Maintainer-only
 
 - DPAL-7 uptime probe workflow: `needs-human` (workflow changes; diff in the PR body).
