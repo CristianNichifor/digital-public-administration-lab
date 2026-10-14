@@ -9,7 +9,12 @@ const escape = (s: string) =>
     .replaceAll('"', "&quot;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;");
+const image = `${origin}/og-image.png`;
 for (const page of pages) {
+  const imageAlt =
+    page.locale === "ro"
+      ? "Cristian Nichifor: idei care devin instrumente utile."
+      : "Cristian Nichifor: ideas turned into useful tools.";
   const privacy = "privacy" in page ? privacyMeta[page.locale] : undefined;
   const title = `${page.entry?.[page.locale].title ?? privacy?.title ?? page.collection?.[page.locale].title ?? (page.locale === "en" ? "Projects & ideas in practice" : "Proiecte și idei în practică")} — Cristian Nichifor`;
   const description =
@@ -20,7 +25,7 @@ for (const page of pages) {
       : "Pachete Coda, instrumente pentru dezvoltatori și proiecte civice create de Cristian Nichifor.");
   const enPath = page.locale === "en" ? page.path : alternatePath(page.path)!;
   const roPath = page.locale === "ro" ? page.path : alternatePath(page.path)!;
-  const metadata = `<meta name="description" content="${escape(description)}"><link rel="canonical" href="${origin}${page.path}"><link rel="alternate" hreflang="en" href="${origin}${enPath}"><link rel="alternate" hreflang="ro" href="${origin}${roPath}"><link rel="alternate" hreflang="x-default" href="${origin}${enPath}"><meta property="og:title" content="${escape(title)}"><meta property="og:description" content="${escape(description)}"><meta property="og:url" content="${origin}${page.path}"><meta property="og:type" content="website">`;
+  const metadata = `<meta name="description" content="${escape(description)}"><link rel="canonical" href="${origin}${page.path}"><link rel="alternate" hreflang="en" href="${origin}${enPath}"><link rel="alternate" hreflang="ro" href="${origin}${roPath}"><link rel="alternate" hreflang="x-default" href="${origin}${enPath}"><meta property="og:title" content="${escape(title)}"><meta property="og:description" content="${escape(description)}"><meta property="og:url" content="${origin}${page.path}"><meta property="og:type" content="website"><meta property="og:site_name" content="Cristian Nichifor"><meta property="og:locale" content="${page.locale === "ro" ? "ro_RO" : "en_US"}"><meta property="og:image" content="${image}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="${escape(imageAlt)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escape(title)}"><meta name="twitter:description" content="${escape(description)}"><meta name="twitter:image" content="${image}">`;
   const html = template
     .replace('<html lang="en">', `<html lang="${page.locale}">`)
     .replace(/<title>.*?<\/title>/s, `<title>${escape(title)}</title>`)
