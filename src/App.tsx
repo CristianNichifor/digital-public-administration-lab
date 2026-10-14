@@ -21,6 +21,7 @@ import {
 } from "./catalogue";
 import { About } from "./About";
 import { Privacy } from "./Privacy";
+import { countLabel } from "./counts";
 import { projectPages } from "./project-pages";
 import { budgetApi, budgetHref, budgetPages } from "./budget-links";
 const contact = "mailto:cristian@cristian-nichifor.com";
@@ -29,11 +30,30 @@ const month = (value: string, locale: Locale) =>
     locale === "ro" ? "ro-RO" : "en-GB",
     { month: "long", year: "numeric", timeZone: "UTC" },
   );
+/** DS-1: a tone backs the badge text and border; the label always carries the meaning. */
+const tones: Partial<Record<Entry["status"], string>> = {
+  "live-data": "success",
+  "demo-data": "warning",
+};
+/** DS-1: what a filter with no entries shows instead of an empty grid. */
+export function EmptyListing({ locale }: { locale: Locale }) {
+  const ro = locale === "ro";
+  return (
+    <p className="empty">
+      {ro ? "Nu există proiecte aici încă." : "There are no projects here yet."}{" "}
+      <a href={home(locale)}>
+        {ro ? "Vezi toate proiectele" : "See all projects"} →
+      </a>
+    </p>
+  );
+}
 function Status({ entry, locale }: { entry: Entry; locale: Locale }) {
   const ro = locale === "ro";
   return (
     <p className="status">
-      <span className="tag">{statusLabels[entry.status][locale]}</span>
+      <span className="tag" data-tone={tones[entry.status]}>
+        {statusLabels[entry.status][locale]}
+      </span>
       <span>
         {ro ? "Actualizat în" : "Updated"} {month(entry.updated, locale)}
       </span>
@@ -428,16 +448,23 @@ export function App({
               return (
                 group.length > 0 && (
                   <section className="theme" key={theme.id}>
-                    <h2>{theme[locale]}</h2>
+                    <h2>
+                      {theme[locale]}{" "}
+                      <small>{countLabel(group.length, locale, "tool")}</small>
+                    </h2>
                     <Grid items={group} locale={locale} label={theme[locale]} />
                   </section>
                 )
               );
             })}
+            {items.length === 0 && <EmptyListing locale={locale} />}
             {rest.length > 0 &&
               (civic.length > 0 ? (
                 <section className="theme">
-                  <h2>{otherTitle}</h2>
+                  <h2>
+                    {otherTitle}{" "}
+                    <small>{countLabel(rest.length, locale, "project")}</small>
+                  </h2>
                   <Grid items={rest} locale={locale} label={otherTitle} />
                 </section>
               ) : (
