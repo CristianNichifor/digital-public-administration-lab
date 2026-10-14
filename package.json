@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "vite",
     "build": "pnpm build:shell && node scripts/mount-bureaucracy-as-code.mjs",
-    "build:shell": "tsc -b && vite build && vite build --ssr src/prerender.tsx --outDir .prerender && node .prerender/prerender.js",
+    "build:shell": "node scripts/refresh-freshness.mjs && tsc -b && vite build && vite build --ssr src/prerender.tsx --outDir .prerender && node .prerender/prerender.js",
     "build:functions": "wrangler pages functions build --outdir=.wrangler/functions-build",
     "preview": "vite preview",
     "typecheck": "tsc -b",
