@@ -248,7 +248,7 @@ export function App({
               <Status entry={entry} locale={locale} />
               <h1>{entry[locale].title}</h1>
               <p className="lead">{entry[locale].summary}</p>
-              <Provenance entry={entry} locale={locale} />
+              {entry.collection === "civic" && <Provenance entry={entry} locale={locale} />}
               <div className="actions">
                 {entry.id !== "google-contacts" && (
                   <a className="button" href={runtimeHref(entry)}>

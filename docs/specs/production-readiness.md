@@ -254,8 +254,8 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
 
 Implements `docs/design/screens/02-project-page.html` (PR #47).
 
-- Given a project page, then under the summary and before the buttons it shows
-  one provenance line: source names, "Data as of" / "Date la", licence and a
+- Given a civic project page (not a Coda pack or tool page), then under the
+  summary and before the buttons it shows one provenance line: source names, "Data as of" / "Date la", licence and a
   method link, each "—" when the catalogue holds no value. The method link
   reads `methodHref`, recorded per project by #53 (ds-hub); nothing is
   invented here. Styles live in `src/screens.css`, layered over

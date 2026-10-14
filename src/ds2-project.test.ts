@@ -13,7 +13,7 @@ const text = (html: string) =>
 const by = (id: string) => catalogue.find((e) => e.id === id)!;
 
 describe("DS-2 project page provenance line", () => {
-  it("shows source, date, licence and method under the summary, with dashes for missing values", () => {
+  it("shows source, date, licence and method on civic pages, with dashes for missing values", () => {
     for (const locale of ["en", "ro"] as const) {
       const ro = locale === "ro";
       const op = render(entryPath(by("open-procurement"), locale));
@@ -27,10 +27,12 @@ describe("DS-2 project page provenance line", () => {
       const method = (page as { methodHref?: string }).methodHref;
       if (method) expect(line).toContain(`<a href="${method}">${ro ? "Metodologie" : "Method"} ↗</a>`);
       else expect(text(line)).toContain(`${ro ? "Metodologie" : "Method"}: —`);
-      const gc = render(entryPath(by("google-contacts"), locale)).match(/<p class="provenance">.*?<\/p>/s)![0];
-      expect(text(gc)).toContain(`${ro ? "Sursa" : "Source"}: —`);
-      expect(text(gc)).toContain(`${ro ? "Licență" : "Licence"}: —`);
-      expect(text(gc)).toContain(`${ro ? "Metodologie" : "Method"}: —`);
+      const bare = catalogue.find((e) => e.collection === "civic" && !projectPages[e.id]?.sources)!;
+      const line2 = render(entryPath(bare, locale)).match(/<p class="provenance">.*?<\/p>/s)![0];
+      expect(text(line2)).toContain(`${ro ? "Sursa" : "Source"}: —`);
+      expect(text(line2)).toContain(`${ro ? "Licență" : "Licence"}: —`);
+      for (const other of catalogue.filter((e) => e.collection !== "civic"))
+        expect(render(entryPath(other, locale)), other.id).not.toContain('class="provenance"');
     }
   });
   it("only links methodology documents the apps actually publish", () => {
