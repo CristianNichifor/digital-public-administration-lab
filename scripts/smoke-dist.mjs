@@ -65,7 +65,7 @@ for (const path of paths)
   assert.match(headers, new RegExp(`\\n${path.replaceAll("/", "\\/")}\\n  Content-Security-Policy: default-src 'self';[^\\n]*frame-ancestors 'none'`), `${path}: no catalogue CSP rule in _headers`);
 
 const notFound = await read("dist/404.html");
-for (const privacy of ["/privacy/", "/ro/confidentialitate/"])
-  assert.ok(notFound.includes(`href="${privacy}"`), `404.html does not link ${privacy}`);
+for (const link of ["/privacy/", "/ro/confidentialitate/", "/about/", "/ro/despre/"])
+  assert.ok(notFound.includes(`href="${link}"`), `404.html does not link ${link}`);
 
 console.log("Civic host dist smoke passed.");
