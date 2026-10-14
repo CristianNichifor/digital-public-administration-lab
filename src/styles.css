@@ -434,9 +434,12 @@ footer span {
   margin: 0;
 }
 .related a {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
 }
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -454,5 +457,35 @@ footer span {
   .tag {
     border: 1px solid CanvasText;
     padding: 0 4px;
+  }
+}
+/* DS-2: provenance line and the secondary (bordered) button. */
+.provenance {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #40594e;
+}
+.button--secondary {
+  background: transparent;
+  color: inherit;
+  border: 1px solid var(--line);
+}
+.related {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 32px;
+  padding: 0;
+  list-style: none;
+  max-width: 720px;
+}
+.related a b {
+  font-weight: 600;
+}
+@media (max-width: 520px) {
+  .related {
+    grid-template-columns: 1fr;
   }
 }
