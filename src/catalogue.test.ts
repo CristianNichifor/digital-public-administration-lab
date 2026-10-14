@@ -1,11 +1,17 @@
+import { readFileSync } from "node:fs";
+import { createElement } from "react";
+import { renderToString } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import { App } from "./App";
 import {
   alternatePath,
   catalogue,
   collections,
   collectionPath,
   entryPath,
+  origin,
   pages,
+  privacyPath,
   resolvePage,
 } from "./catalogue";
 import { matchProxyRoute } from "./projects";
@@ -55,5 +61,43 @@ describe("localized catalogue contract", () => {
     expect(resolvePage("/missing/")).toBeUndefined();
     expect(alternatePath("/missing/")).toBeNull();
     expect(matchProxyRoute("/ro/legislation-linter/")).toBeNull();
+  });
+});
+describe("site identity", () => {
+  it("publishes the catalogue origin as the package homepage", () => {
+    const pkg = JSON.parse(readFileSync("package.json", "utf8"));
+    expect(pkg.homepage).toBe(`${origin}/`);
+  });
+});
+describe("privacy page", () => {
+  it("has a page per language that are each other's alternates", () => {
+    expect(privacyPath("en")).toBe("/privacy/");
+    expect(privacyPath("ro")).toBe("/ro/confidentialitate/");
+    expect(resolvePage("/privacy/")?.locale).toBe("en");
+    expect(resolvePage("/ro/confidentialitate/")?.locale).toBe("ro");
+    expect(alternatePath("/privacy/")).toBe("/ro/confidentialitate/");
+    expect(matchProxyRoute("/privacy/")).toBeNull();
+  });
+  it("names the operator, the contact and the processors actually used", () => {
+    for (const locale of ["en", "ro"] as const) {
+      const html = renderToString(
+        createElement(App, { pathname: privacyPath(locale) }),
+      );
+      expect(html).toContain("Cristian Nichifor");
+      expect(html).toContain(
+        "https://github.com/CristianNichifor/digital-public-administration-lab/issues",
+      );
+      expect(html).toContain("Cloudflare");
+      expect(html).toMatch(/Network Error Logging/);
+      expect(html).toMatch(/email-decode|obfusc/i);
+      expect(html).not.toMatch(/[şţŞŢ]/);
+    }
+  });
+  it("is linked from the footer of every page in that page's language", () => {
+    for (const page of pages) {
+      const html = renderToString(createElement(App, { pathname: page.path }));
+      const footer = html.slice(html.lastIndexOf("<footer"));
+      expect(footer, page.path).toContain(`href="${privacyPath(page.locale)}"`);
+    }
   });
 });
