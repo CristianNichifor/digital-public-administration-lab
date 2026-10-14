@@ -225,3 +225,57 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
 - DPAL-7 uptime probe workflow: `needs-human` (workflow changes; diff in the PR body).
 - DPAL-10 decoupling from the CN Webify preview broker: `needs-human`, user
   decision pending; nothing done.
+
+## Theme G: target-state screen designs
+
+Static mockups in `docs/design/screens/`, indexed by `docs/design/README.md`.
+They are the target state for the hub screens; implementation sessions turn
+the acceptance criteria below into tests.
+
+### DS-1 Home: theme groups, status badges, empty filter (`done`)
+
+- Given the home mockup, then it shows the hero, the three filter chips at
+  44 px height, every civic tool under its theme with a count, a status badge
+  with a border and a colour stripe (never colour alone), "Actualizat în" and,
+  when the catalogue has it, "Date la", and a designed empty-filter state
+  ("Nu există proiecte aici încă" with a link to all projects).
+- Test (implementation): `src/ux.test.ts` asserts the theme count, the empty
+  state markup when a collection has no entries, and the badge border rule in
+  the stylesheet; screenshot at 390 px checks the one-column grid.
+- Mockup: `docs/design/screens/01-home.html`. Romanian: needs human review.
+
+### DS-2 Project page template with provenance line (`done`)
+
+- Given a project page, then under the summary and before the primary button
+  it shows a provenance line with source, "Date la", licence and a method
+  link, each "—" when the catalogue lacks the value; the primary button reads
+  "Deschide instrumentul" / "Open the tool"; "View source" is a secondary
+  bordered button; related tools show their status and summary.
+- Test (implementation): `src/ux.test.ts` DPAL-12 extended with the
+  provenance line and the button labels.
+- Mockup: `docs/design/screens/02-project-page.html`.
+
+### DS-3 About and method page with section index (`done`)
+
+- Given `/ro/despre/`, then it has the four sections from UX-9 (PR #42) and
+  an anchored "on this page" list under the lead; header and footer link to it.
+- Test (implementation): `src/about.test.ts` (PR #42) plus the anchor list and
+  the header link.
+- Mockup: `docs/design/screens/03-about-method.html`.
+
+### DS-4 Family bar and footer inside an app (`done`)
+
+- Given any app page, then the first screen shows the civic-ui family bar
+  (hub back link to `https://projects.cristian-nichifor.com/ro/`, registry
+  name, status badge, language switch), one H1, one purpose line, the
+  provenance line, and the four designed states (staged loading, error with
+  retry, empty, demo data with labelled bars and a table alternative); the
+  footer carries method, privacy, source, contact and a link to the hub's
+  About page.
+- Test (implementation, per app): civic-ui UX-1, UX-3, UX-9, UX-10, UX-17.
+- Mockup: `docs/design/screens/04-app-family-bar.html`.
+
+- Screenshots of the mockups and of the live site were not produced: the
+  fleet ran without browsers on 2026-10-14 (memory limit). Needs human: run
+  `npx -y playwright screenshot --full-page --wait-for-timeout=4000 <file> out.png`
+  at 1440 and 390 and commit the PNGs next to the mockups.
