@@ -196,6 +196,30 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
 - Tests: `src/ux.test.ts` (the carried-over text renders on the EN and RO
   pages of each described project).
 
+## Theme F: UX guideline
+
+### UXG-1 Hub UX guideline and naming registry (`done`)
+
+- Given `docs/ux-guidelines.md`, then it covers users and first-screen job,
+  page anatomy, how the hub presents an app (card, status badge, updated and
+  data-as-of dates, naming registry), content, data-viz, states, mobile and
+  accessibility, status vocabulary, a conformance table and a deviations
+  backlog, and defers to civic-ui `docs/ux-guidelines.md`.
+- Given the naming registry table, then it equals the catalogue's slug, EN and
+  RO titles in order.
+- Test: `src/ux.test.ts` UXG-1.
+- The registry and the two EN/RO name pairs that differ in meaning: needs
+  human review.
+
+### UXG-2 Content rules on every page (`done`)
+
+- Given any prerendered page, then its visible text has no cedilla ş ţ and
+  none of the banned internal or off-vocabulary terms (proxied, upstream,
+  slug, BFF, TODO, beta, alpha, WIP, coming soon).
+- The Google Contacts copy said "beta"; it now says Prototype, matching its
+  badge. Agent-written Romanian: needs human review.
+- Test: `src/ux.test.ts` UXG-2.
+
 ## Maintainer-only
 
 - DPAL-7 uptime probe workflow: `needs-human` (workflow changes; diff in the PR body).

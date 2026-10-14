@@ -233,3 +233,26 @@ describe("DPAL-13 how it works from civic-tech-hub", () => {
     }
   });
 });
+
+describe("UXG-1 naming registry", () => {
+  it("mirrors the catalogue names in docs/ux-guidelines.md", () => {
+    const doc = readFileSync("docs/ux-guidelines.md", "utf8");
+    const table = doc.split("<!-- names:start -->")[1].split("<!-- names:end -->")[0];
+    const rows = [...table.matchAll(/^\| `([^`]+)` \| (.+?) \| (.+?) \|$/gm)].map(
+      ([, slug, en, ro]) => [slug, en, ro],
+    );
+    expect(rows).toEqual(catalogue.map((e) => [e.id, e.en.title, e.ro.title]));
+  });
+});
+
+describe("UXG-2 content rules", () => {
+  const banned =
+    /\b(proxied|mounted|upstream|slug|Pages build|BFF|P0|P2|TODO|beta|alpha|WIP|coming soon)\b/i;
+  it("uses comma-below ș ț and no internal or off-vocabulary terms", () => {
+    for (const page of pages) {
+      const visible = text(render(page.path));
+      expect(visible, page.path).not.toMatch(/[şţŞŢ]/);
+      expect(visible, page.path).not.toMatch(banned);
+    }
+  });
+});
