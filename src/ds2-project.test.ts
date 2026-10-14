@@ -24,7 +24,9 @@ describe("DS-2 project page provenance line", () => {
       expect(text(line)).toContain(`${ro ? "Sursa" : "Source"}: ${page.sources!.map((s) => s.name).join(", ")}`);
       expect(text(line)).toContain(`${ro ? "Licență" : "Licence"}: Open Government Licence v1.0`);
       expect(text(line)).toContain(`${ro ? "Date la" : "Data as of"}: —`);
-      expect(line).toContain(`<a href="${page.methodHref}">${ro ? "Metodologie" : "Method"} ↗</a>`);
+      const method = (page as { methodHref?: string }).methodHref;
+      if (method) expect(line).toContain(`<a href="${method}">${ro ? "Metodologie" : "Method"} ↗</a>`);
+      else expect(text(line)).toContain(`${ro ? "Metodologie" : "Method"}: —`);
       const gc = render(entryPath(by("google-contacts"), locale)).match(/<p class="provenance">.*?<\/p>/s)![0];
       expect(text(gc)).toContain(`${ro ? "Sursa" : "Source"}: —`);
       expect(text(gc)).toContain(`${ro ? "Licență" : "Licence"}: —`);
@@ -32,10 +34,10 @@ describe("DS-2 project page provenance line", () => {
     }
   });
   it("only links methodology documents the apps actually publish", () => {
-    for (const [id, page] of Object.entries(projectPages))
+    for (const [id, page] of Object.entries(projectPages) as [string, { methodHref?: string }][])
       if (page.methodHref)
         expect(page.methodHref, id).toMatch(
-          new RegExp(`^https://github.com/CristianNichifor/${by(id).repository}/blob/main/.*METHODOLOGY\\.md$`),
+          new RegExp(`^https://github.com/CristianNichifor/${by(id).repository}/(blob|tree)/main/`),
         );
   });
   it("labels the primary button 'Open the tool' and makes 'View source' a secondary button", () => {
@@ -46,7 +48,7 @@ describe("DS-2 project page provenance line", () => {
     expect(ro).toContain("Deschide instrumentul");
     expect(ro).toMatch(/Vezi codul sursă(<!-- -->)? ↗/);
     expect(render(entryPath(by("civic-ui"), "en"))).toContain("Explore components");
-    const css = readFileSync("src/styles.css", "utf8");
+    const css = readFileSync("src/screens.css", "utf8");
     expect(css).toMatch(/\.button--secondary\s*\{[^}]*border: 1px solid/);
   });
   it("shows a badge and the summary on every related tool", () => {

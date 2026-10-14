@@ -14,8 +14,6 @@ export interface ProjectPage {
   answers?: Bilingual<string[]>;
   howItWorks?: Bilingual<string>;
   sources?: Source[];
-  /** The app's own methodology document, when it publishes one (DS-2). */
-  methodHref?: string;
 }
 
 export const projectPages: Record<string, ProjectPage> = {
@@ -45,7 +43,6 @@ export const projectPages: Record<string, ProjectPage> = {
     ],
   },
   "open-procurement": {
-    methodHref: "https://github.com/CristianNichifor/open-procurement/blob/main/METHODOLOGY.md",
     answers: {
       en: [
         "What comparable unit prices Romanian public buyers paid.",
@@ -106,7 +103,6 @@ export const projectPages: Record<string, ProjectPage> = {
     },
   },
   "digital-romania-atlas": {
-    methodHref: "https://github.com/CristianNichifor/digital-romania-atlas/blob/main/docs/METHODOLOGY.md",
     answers: {
       en: [
         "How Romania's digital-identity ecosystem (EUDI Wallet) is organised: institutions, data flows and timeline.",
