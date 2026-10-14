@@ -250,6 +250,21 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
   exactly one H1, a header, a `main#main` and a footer, and every image has
   an `alt`.
 - Test: `src/ux.test.ts` UXG-4 (a regression guard; it passed on arrival).
+### DS-2 Project page provenance line implemented (`done`)
+
+Implements `docs/design/screens/02-project-page.html` (PR #47).
+
+- Given a project page, then under the summary and before the buttons it shows
+  one provenance line: source names, "Data as of" / "Date la", licence and a
+  method link, each "—" when the catalogue holds no value. Method links exist
+  only where the app publishes a methodology document (Open Procurement
+  `METHODOLOGY.md`, Digital Romania Atlas `docs/METHODOLOGY.md`); nothing is
+  invented.
+- Given the buttons, then the primary reads "Open the tool" / "Deschide
+  instrumentul" (Civic UI keeps "Explore components") and "View source" is a
+  secondary bordered button.
+- Given related tools, then each item shows title, status badge and summary.
+- Test: `src/ds2-project.test.ts`; DPAL-12 tests unchanged.
 
 ## Maintainer-only
 
