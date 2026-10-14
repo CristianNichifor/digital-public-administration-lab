@@ -149,9 +149,25 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
   Law & reform, and State & digital.
 - Test: `src/ux.test.ts`.
 
-### UX-9 About page and project template (`needs-human`)
+### UX-9 About & method page (`Draft: needs owner review`)
 
-- Not started: content needs the author's method statement.
+- Given `/about/` and `/ro/despre/`, then each is a prerendered page in its
+  language, the other's alternate, linked from the footer of every page, in the
+  sitemap and in the live-path check list.
+- Given the page, then it covers independence (built by Cristian Nichifor, not
+  affiliated with the state, MIT, source public), sources shown (the project
+  methodologies: observation not accusation, facts and proposals kept apart,
+  deterministic simulators), the corrections process (Open Procurement
+  `CORRECTIONS.md`, Digital Romania Atlas `ERRATA.md`, GitHub issues for the
+  rest) and no tracking (no cookies or analytics, no personal data published),
+  and every statement links the repository document it is taken from.
+- Given the page, then it adds no fact that is not in those documents and passes
+  the UXG-2 content rules.
+- Test: `src/about.test.ts`.
+- Draft: needs owner review. The method statement is assembled by an agent from
+  `METHODOLOGY.md`, `CORRECTIONS.md`, `ERRATA.md` and `docs/privacy-model.md`
+  in the projects; the owner decides what to keep and the Romanian wording.
+  The project template part of the old UX-9 is DPAL-12.
 
 ## Theme E: generated freshness and project pages
 

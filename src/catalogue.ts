@@ -74,6 +74,20 @@ export const privacyMeta = {
 };
 export const privacyPath = (locale: Locale) =>
   locale === "ro" ? "/ro/confidentialitate/" : "/privacy/";
+export const aboutMeta = {
+  en: {
+    title: "About & method",
+    description:
+      "Who builds these civic tools, how their figures are sourced, how to get an error corrected and why a visit is not tracked.",
+  },
+  ro: {
+    title: "Despre și metodă",
+    description:
+      "Cine construiește aceste instrumente civice, de unde vin cifrele, cum se corectează o eroare și de ce o vizită nu este urmărită.",
+  },
+};
+export const aboutPath = (locale: Locale) =>
+  locale === "ro" ? "/ro/despre/" : "/about/";
 function lastCommitMonth(repository: string) {
   const date = (freshness as Record<string, string>)[repository];
   if (!date) throw new Error(`Missing freshness for ${repository}; run scripts/refresh-freshness.mjs`);
@@ -111,6 +125,13 @@ export const pages = (["en", "ro"] as const).flatMap((locale) => [
     entry: undefined,
     privacy: true,
   },
+  {
+    path: aboutPath(locale),
+    locale,
+    collection: undefined,
+    entry: undefined,
+    about: true,
+  },
   ...collections.map((collection) => ({
     path: collectionPath(collection.id, locale),
     locale,
@@ -133,6 +154,7 @@ export function alternatePath(path: string) {
   const locale = page.locale === "en" ? "ro" : "en";
   if (page.entry) return entryPath(page.entry, locale);
   if ("privacy" in page) return privacyPath(locale);
+  if ("about" in page) return aboutPath(locale);
   if (page.collection) return collectionPath(page.collection.id, locale);
   return home(locale);
 }

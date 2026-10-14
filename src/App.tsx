@@ -1,5 +1,6 @@
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import {
+  aboutPath,
   alternatePath,
   catalogue,
   collections,
@@ -18,6 +19,7 @@ import {
   type Entry,
   type Locale,
 } from "./catalogue";
+import { About } from "./About";
 import { Privacy } from "./Privacy";
 import { projectPages } from "./project-pages";
 import { budgetApi, budgetHref, budgetPages } from "./budget-links";
@@ -198,7 +200,9 @@ export function App({
         </nav>
       </header>
       <main id="main" className="wrap">
-        {"privacy" in page ? (
+        {"about" in page ? (
+          <About locale={locale} />
+        ) : "privacy" in page ? (
           <Privacy locale={locale} />
         ) : entry ? (
           <>
@@ -445,7 +449,7 @@ export function App({
               ))}
           </>
         )}
-        {!("privacy" in page) && entry?.collection !== "civic" && (
+        {!("privacy" in page) && !("about" in page) && entry?.collection !== "civic" && (
           <section className="invitation">
             <p className="eyebrow">
               {ro
@@ -473,6 +477,7 @@ export function App({
         <span>© {new Date().getFullYear()} Cristian Nichifor</span>
         <a href="https://github.com/CristianNichifor">GitHub ↗</a>
         <a href={contact}>{ro ? "Contact" : "Get in touch"}</a>
+        <a href={aboutPath(locale)}>{ro ? "Despre și metodă" : "About & method"}</a>
         <a href={privacyPath(locale)}>
           {ro ? "Confidențialitate" : "Privacy"}
         </a>

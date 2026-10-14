@@ -20,6 +20,8 @@ export function livePaths(): string[] {
     "/ro/",
     "/privacy/",
     "/ro/confidentialitate/",
+    "/about/",
+    "/ro/despre/",
     ...projects
       .filter((project) => project.kind !== "external")
       .map((project) => `/${project.slug}/`),
