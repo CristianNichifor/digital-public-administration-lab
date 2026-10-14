@@ -43,7 +43,7 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
 
 ## Theme B: hub correctness
 
-### DPAL-2 Stale routing comment and live path check (`todo`)
+### DPAL-2 Stale routing comment and live path check (`done`)
 
 - Given `src/projects.ts`, then the comment on the absent simulator repos
   describes what those repos publish today (a redirect stub into
@@ -54,16 +54,18 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
   `/romania-reforms/{salarizare,administrativ,public-pay,administrative-reform}/`
   paths, prints the status of each, and exits 0 unless `--strict` is passed.
   It is not a PR gate and is not run in CI.
-- Test: `src/live-paths.test.ts` covers the path list.
+- Test: `src/live-paths.test.ts` covers the path list. Run with `pnpm check:live`.
+  On 2026-10-14 the salarizare and administrativ paths answered 404 (romania-reforms
+  redirect stubs pending) and the privacy pages 404 until this work is promoted.
 
-### DPAL-4 Canonical Link header on proxied HTML (`todo`)
+### DPAL-4 Canonical Link header on proxied HTML (`done`)
 
 - Given a proxied request whose upstream answers 200 with `text/html`, then the
   response carries `Link: <https://projects.cristian-nichifor.com{path}>; rel="canonical"`,
   appended to any upstream `Link` value; non-HTML and non-200 responses are untouched.
 - Test: `functions/_middleware.test.ts`.
 
-### DPAL-5 Security headers (`todo`)
+### DPAL-5 Security headers (`done`)
 
 - Given a catalogue page (every sitemap path), then `dist/_headers` gives it a
   strict `Content-Security-Policy` (`default-src 'self'`, scripts from `'self'`
