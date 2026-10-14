@@ -360,8 +360,8 @@ export function App({
                     <dt>{ro ? "Stadiu și limite" : "Status & limitations"}</dt>
                     <dd>
                       {ro
-                        ? "Versiune beta. Sincronizarea și operațiunile de scriere necesită validare cu furnizorul înainte de utilizarea în producție. Nu este disponibil aici un link de instalare verificat."
-                        : "Beta. Sync and write operations need provider acceptance testing before production use. No verified public installation link is available here."}
+                        ? "Prototip. Sincronizarea și operațiunile de scriere necesită validare cu furnizorul înainte de utilizarea în producție. Nu este disponibil aici un link de instalare verificat."
+                        : "Prototype. Sync and write operations need provider acceptance testing before production use. No verified public installation link is available here."}
                     </dd>
                   </div>
                 </dl>
