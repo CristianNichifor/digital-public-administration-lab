@@ -49,7 +49,7 @@ describe("UX-9 about & method page", () => {
       expect(html).toContain(`<h1>${h1.replaceAll("&", "&amp;")}</h1>`);
       let last = 0;
       for (const heading of h2s) {
-        const at = html.indexOf(`<h2>${heading}</h2>`);
+        const at = html.search(new RegExp(`<h2[^>]*>${heading}</h2>`));
         expect(at, `${locale} ${heading}`).toBeGreaterThan(last);
         last = at;
       }
