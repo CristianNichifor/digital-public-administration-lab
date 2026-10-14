@@ -1,41 +1,87 @@
-import { ArrowUpRight, ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import {
   alternatePath,
   catalogue,
   collections,
   collectionPath,
   entryPath,
+  filterOf,
+  filters,
   home,
+  inCollection,
+  languageNames,
   privacyPath,
   resolvePage,
   runtimeHref,
+  statusLabels,
+  themes,
   type Entry,
   type Locale,
 } from "./catalogue";
 import { Privacy } from "./Privacy";
 import { budgetApi, budgetHref, budgetPages } from "./budget-links";
 const contact = "mailto:cristian@cristian-nichifor.com";
-const status = {
-  en: { beta: "Beta", prototype: "Prototype", maintained: "Maintained" },
-  ro: { beta: "Beta", prototype: "Prototip", maintained: "Întreținut" },
-};
+const month = (value: string, locale: Locale) =>
+  new Date(`${value}-01T00:00:00Z`).toLocaleDateString(
+    locale === "ro" ? "ro-RO" : "en-GB",
+    { month: "long", year: "numeric", timeZone: "UTC" },
+  );
+function Status({ entry, locale }: { entry: Entry; locale: Locale }) {
+  const ro = locale === "ro";
+  return (
+    <p className="status">
+      <span className="tag">{statusLabels[entry.status][locale]}</span>
+      <span>
+        {ro ? "Actualizat în" : "Updated"} {month(entry.updated, locale)}
+      </span>
+      {entry.dataAsOf && (
+        <span>
+          {ro ? "Date la" : "Data as of"} {month(entry.dataAsOf.slice(0, 7), locale)}
+        </span>
+      )}
+    </p>
+  );
+}
 function Card({ entry, locale }: { entry: Entry; locale: Locale }) {
+  const languages = entry.languages.map(
+    (code) => languageNames[locale][code as Locale],
+  );
+  const label =
+    locale === "ro"
+      ? "Limba"
+      : languages.length > 1
+        ? "Languages"
+        : "Language";
   return (
     <article className="project">
-      <span className="tag">
-        {status[locale][entry.lifecycle as keyof typeof status.en]}
-      </span>
+      <Status entry={entry} locale={locale} />
       <h3>
-        <a href={entryPath(entry, locale)}>
+        <a className="card-link" href={entryPath(entry, locale)}>
           {entry[locale].title}
-          <ArrowUpRight aria-hidden="true" size={20} />
+          <ArrowRight aria-hidden="true" size={20} />
         </a>
       </h3>
       <p>{entry[locale].summary}</p>
-      <span className="project-action">
-        {locale === "en" ? "Explore the project" : "Descoperă proiectul"} ↗
-      </span>
+      <p className="caveat">{entry[locale].body}</p>
+      <p className="meta">{`${label}: ${languages.join(", ")}`}</p>
     </article>
+  );
+}
+function Grid({
+  items,
+  locale,
+  label,
+}: {
+  items: Entry[];
+  locale: Locale;
+  label: string;
+}) {
+  return (
+    <section className="project-grid" aria-label={label}>
+      {items.map((item) => (
+        <Card entry={item} locale={locale} key={item.id} />
+      ))}
+    </section>
   );
 }
 export function App({
@@ -55,8 +101,11 @@ export function App({
   const ro = locale === "ro";
   const other = alternatePath(pathname)!;
   const items = collection
-    ? catalogue.filter((item) => item.collection === collection.id)
+    ? catalogue.filter((item) => inCollection(item, collection.id))
     : catalogue;
+  const civic = items.filter((item) => item.collection === "civic");
+  const rest = items.filter((item) => item.collection !== "civic");
+  const otherTitle = collections.find((c) => c.id === "other")![locale].title;
   return (
     <>
       <a className="skip" href="#main">
@@ -66,9 +115,7 @@ export function App({
         <a className="brand" href={home(locale)}>
           Cristian Nichifor
           <span>
-            {ro
-              ? "Proiecte și idei în practică"
-              : "Projects & ideas in practice"}
+            {ro ? "Instrumente civice deschise" : "Open civic tools"}
           </span>
         </a>
         <nav aria-label={ro ? "Navigare principală" : "Main navigation"}>
@@ -85,14 +132,12 @@ export function App({
           <Privacy locale={locale} />
         ) : entry ? (
           <>
-            <a className="back" href={collectionPath(entry.collection, locale)}>
+            <a className="back" href={collectionPath(filterOf(entry), locale)}>
               <ArrowLeft size={16} aria-hidden="true" />
-              {collection?.[locale].title}
+              {collections.find((c) => c.id === filterOf(entry))?.[locale].title}
             </a>
             <section className="hero detail">
-              <p className="eyebrow">
-                {status[locale][entry.lifecycle as keyof typeof status.en]}
-              </p>
+              <Status entry={entry} locale={locale} />
               <h1>{entry[locale].title}</h1>
               <p className="lead">{entry[locale].summary}</p>
               <p>{entry[locale].body}</p>
@@ -106,7 +151,11 @@ export function App({
                       : ro
                         ? "Deschide proiectul"
                         : "Open project"}{" "}
-                    <ArrowUpRight aria-hidden="true" size={18} />
+                    {entry.runtime.kind === "external" ? (
+                      <ArrowUpRight aria-hidden="true" size={18} />
+                    ) : (
+                      <ArrowRight aria-hidden="true" size={18} />
+                    )}
                   </a>
                 )}
                 <a
@@ -262,22 +311,22 @@ export function App({
                   collection[locale].title
                 ) : ro ? (
                   <>
-                    Idei care devin
+                    Instrumente deschise pentru a înțelege
                     <br />
-                    <em>instrumente utile.</em>
+                    <em>statul român.</em>
                   </>
                 ) : (
                   <>
-                    Ideas turned into
+                    Open tools for understanding
                     <br />
-                    <em>useful tools.</em>
+                    <em>the Romanian state.</em>
                   </>
                 )}
               </h1>
               <p className="lead">
                 {ro
-                  ? "Integrări pentru munca de zi cu zi, componente reutilizabile și instrumente pentru întrebări publice mai bune. Explorează ce construiesc și cum gândesc."
-                  : "Integrations for everyday work, reusable components, and tools for better public questions. Explore what I build and how I think."}
+                  ? "Instrumente civice independente și open source care explică date publice din România: buget, achiziții, legislație și propuneri de reformă, cu sursele la vedere. Nu sunt afiliate statului român sau vreunei instituții publice."
+                  : "Independent, open-source civic tools that explain Romanian public data: budgets, procurement, legislation and reform proposals, with their sources shown. Not affiliated with the Romanian state or any public institution."}
               </p>
             </section>
             <nav
@@ -290,27 +339,43 @@ export function App({
               >
                 {ro ? "Toate proiectele" : "All projects"}
               </a>
-              {collections.map((item) => (
+              {filters.map((id) => (
                 <a
-                  key={item.id}
-                  href={collectionPath(item.id, locale)}
-                  aria-current={collection?.id === item.id ? "page" : undefined}
+                  key={id}
+                  href={collectionPath(id, locale)}
+                  aria-current={collection?.id === id ? "page" : undefined}
                 >
-                  {item[locale].title}
+                  {collections.find((c) => c.id === id)![locale].title}
                 </a>
               ))}
             </nav>
-            <section
-              className="project-grid"
-              aria-label={ro ? "Proiecte" : "Projects"}
-            >
-              {items.map((item) => (
-                <Card entry={item} locale={locale} key={item.id} />
+            {themes.map((theme) => {
+              const group = civic.filter((item) => item.theme === theme.id);
+              return (
+                group.length > 0 && (
+                  <section className="theme" key={theme.id}>
+                    <h2>{theme[locale]}</h2>
+                    <Grid items={group} locale={locale} label={theme[locale]} />
+                  </section>
+                )
+              );
+            })}
+            {rest.length > 0 &&
+              (civic.length > 0 ? (
+                <section className="theme">
+                  <h2>{otherTitle}</h2>
+                  <Grid items={rest} locale={locale} label={otherTitle} />
+                </section>
+              ) : (
+                <Grid
+                  items={rest}
+                  locale={locale}
+                  label={ro ? "Proiecte" : "Projects"}
+                />
               ))}
-            </section>
           </>
         )}
-        {!("privacy" in page) && (
+        {!("privacy" in page) && entry?.collection !== "civic" && (
           <section className="invitation">
             <p className="eyebrow">
               {ro

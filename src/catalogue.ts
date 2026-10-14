@@ -1,7 +1,7 @@
 import metadata from "./catalogue-content.json";
-import { projects } from "./projects";
+import { projects, siteOrigin } from "./projects";
 export type Locale = "en" | "ro";
-export const origin = "https://projects.cristian-nichifor.com";
+export const origin = siteOrigin;
 export const collections = [
   {
     id: "coda-packs",
@@ -23,7 +23,41 @@ export const collections = [
     en: { slug: "experiments", title: "Experiments & prototypes" },
     ro: { slug: "experimente", title: "Experimente și prototipuri" },
   },
+  {
+    id: "other",
+    en: { slug: "other", title: "Other" },
+    ro: { slug: "altele", title: "Altele" },
+  },
 ];
+/**
+ * The filters offered in the navigation. Coda Packs, tools and experiments hold one entry each,
+ * so they share "Other"; their own collection pages stay reachable at their old URLs.
+ */
+export const filters = ["civic", "other"];
+/** Whether an entry belongs on a collection's page; "other" gathers everything that is not civic. */
+export function inCollection(entry: { collection: string }, id: string) {
+  return id === "other" ? entry.collection !== "civic" : entry.collection === id;
+}
+/** The listing an entry's back link returns to: its filter, not its one-entry collection. */
+export function filterOf(entry: { collection: string }) {
+  return entry.collection === "civic" ? "civic" : "other";
+}
+export const statusLabels = {
+  "live-data": { en: "Live data", ro: "Date reale" },
+  "demo-data": { en: "Demo data", ro: "Date demonstrative" },
+  prototype: { en: "Prototype", ro: "Prototip" },
+  archived: { en: "Archived", ro: "Arhivat" },
+};
+export type Status = keyof typeof statusLabels;
+export const themes = [
+  { id: "money", en: "Money", ro: "Bani publici" },
+  { id: "law-reform", en: "Law & reform", ro: "Legi și reforme" },
+  { id: "state-digital", en: "State & digital", ro: "Stat și digital" },
+];
+export const languageNames = {
+  en: { en: "English", ro: "Romanian" },
+  ro: { en: "engleză", ro: "română" },
+};
 export const home = (locale: Locale) => (locale === "ro" ? "/ro/" : "/");
 export const privacyMeta = {
   en: {
@@ -44,6 +78,9 @@ export const catalogue = projects.map((runtime) => {
   if (!content) throw new Error(`Missing catalogue content: ${runtime.slug}`);
   return {
     ...content,
+    status: content.status as Status,
+    theme: "theme" in content ? content.theme : undefined,
+    dataAsOf: "dataAsOf" in content ? (content.dataAsOf as string) : undefined,
     id: runtime.slug,
     runtime,
     source: `https://github.com/CristianNichifor/${content.repository}`,

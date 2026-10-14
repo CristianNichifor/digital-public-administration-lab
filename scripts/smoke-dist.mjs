@@ -35,6 +35,9 @@ for (const path of paths) {
   const footer = html.slice(html.lastIndexOf("<footer"));
   assert.ok(footer.includes(`href="${privacy}"`), `${path}: footer does not link ${privacy}`);
 
+  for (const [, href, body] of html.matchAll(/<a [^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/gs))
+    if (href.startsWith("/")) assert.ok(!body.includes("↗"), `${path}: same-site link ${href} uses ↗`);
+
   const once = (pattern, what) => {
     const found = [...html.matchAll(pattern)];
     assert.equal(found.length, 1, `${path}: expected one ${what}, found ${found.length}`);
@@ -56,6 +59,10 @@ for (const path of paths) {
   once(/<meta name="twitter:description" content="([^"]+)"/g, "twitter:description");
   assert.equal(once(/<meta name="twitter:image" content="([^"]+)"/g, "twitter:image"), image, `${path}: twitter:image`);
 }
+
+const headers = await read("dist/_headers");
+for (const path of paths)
+  assert.match(headers, new RegExp(`\\n${path.replaceAll("/", "\\/")}\\n  Content-Security-Policy: default-src 'self';[^\\n]*frame-ancestors 'none'`), `${path}: no catalogue CSP rule in _headers`);
 
 const notFound = await read("dist/404.html");
 for (const privacy of ["/privacy/", "/ro/confidentialitate/"])

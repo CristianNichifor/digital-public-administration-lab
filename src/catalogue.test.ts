@@ -9,6 +9,7 @@ import {
   collections,
   collectionPath,
   entryPath,
+  inCollection,
   origin,
   pages,
   privacyPath,
@@ -37,16 +38,16 @@ describe("localized catalogue contract", () => {
     for (const c of collections)
       for (const locale of ["en", "ro"] as const) {
         expect(resolvePage(collectionPath(c.id, locale))).toBeDefined();
-        expect(catalogue.some((p) => p.collection === c.id)).toBe(true);
+        expect(catalogue.some((p) => inCollection(p, c.id))).toBe(true);
       }
   });
-  it("names a project in English in both languages, runtime path and repository alike", () => {
+  it("keeps a project's English slug in both languages, runtime path and repository alike", () => {
     const project = catalogue.find((p) => p.id === "legislation-linter")!;
     expect(entryPath(project, "en")).toBe("/civic/legislation-linter/");
     expect(entryPath(project, "ro")).toBe(
       "/ro/proiecte-civice/legislation-linter/",
     );
-    expect(project.ro.title).toBe("Legislation Linter");
+    expect(project.ro.title).toBe("Linter legislativ");
     expect(
       matchProxyRoute("/legislation-linter/assets/app.js")?.upstreamUrl,
     ).toBe(

@@ -43,7 +43,7 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
 
 ## Theme B: hub correctness
 
-### DPAL-2 Stale routing comment and live path check (`todo`)
+### DPAL-2 Stale routing comment and live path check (`done`)
 
 - Given `src/projects.ts`, then the comment on the absent simulator repos
   describes what those repos publish today (a redirect stub into
@@ -54,16 +54,18 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
   `/romania-reforms/{salarizare,administrativ,public-pay,administrative-reform}/`
   paths, prints the status of each, and exits 0 unless `--strict` is passed.
   It is not a PR gate and is not run in CI.
-- Test: `src/live-paths.test.ts` covers the path list.
+- Test: `src/live-paths.test.ts` covers the path list. Run with `pnpm check:live`.
+  On 2026-10-14 the salarizare and administrativ paths answered 404 (romania-reforms
+  redirect stubs pending) and the privacy pages 404 until this work is promoted.
 
-### DPAL-4 Canonical Link header on proxied HTML (`todo`)
+### DPAL-4 Canonical Link header on proxied HTML (`done`)
 
 - Given a proxied request whose upstream answers 200 with `text/html`, then the
   response carries `Link: <https://projects.cristian-nichifor.com{path}>; rel="canonical"`,
   appended to any upstream `Link` value; non-HTML and non-200 responses are untouched.
 - Test: `functions/_middleware.test.ts`.
 
-### DPAL-5 Security headers (`todo`)
+### DPAL-5 Security headers (`done`)
 
 - Given a catalogue page (every sitemap path), then `dist/_headers` gives it a
   strict `Content-Security-Policy` (`default-src 'self'`, scripts from `'self'`
@@ -80,12 +82,76 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
 
 ## Theme C: dependencies
 
-### DPAL-8 Dependency majors (`todo`)
+### DPAL-8 Dependency majors (`done`)
 
 - Given the open Dependabot bumps (eslint 10, lucide-react 1.x, typescript-eslint,
   eslint-plugin-react-refresh, wrangler), when applied together, then
   `pnpm verify && pnpm smoke` is green.
 - Test: the full verify gate.
+
+## Theme D: UX review quick wins
+
+### UX-1 Hero passes the five-second test (`done`)
+
+- Given `/` or `/ro/`, then the hero says, in its language, that these are
+  independent, open-source civic tools about the Romanian state that explain
+  public data, and that they are not affiliated with any public institution;
+  the home `<title>` and description say the same.
+- Test: `src/ux.test.ts` (rendered hero text).
+- Romanian copy: needs human review.
+
+### UX-2 No Coda CTA on civic pages (`done`)
+
+- Given a civic project page, then it has no "discuss a Coda workflow"
+  invitation; non-civic pages keep it.
+- Test: `src/ux.test.ts`.
+
+### UX-3 Cards: one link, caveat, languages, honest arrows (`done`)
+
+- Given any card, then it contains exactly one link, the whole card is its hit
+  area, it shows the catalogue `body` caveat and the app's languages, and
+  internal links use → while only off-site links use ↗ (catalogue-wide).
+- Test: `src/ux.test.ts` (rendered markup), `scripts/smoke-dist.mjs` (no ↗ on
+  same-origin links).
+
+### UX-4 "Other" replaces one-item filters (`done`)
+
+- Given the filter nav, then it offers All, Civic projects and Other; Other
+  (`/other/`, `/ro/altele/`) lists the Coda Pack, tool and experiment, and
+  their back links point to it. The old collection URLs keep working.
+- Test: `src/catalogue.test.ts`, `src/ux.test.ts`; route count 34.
+
+### UX-5 Romanian app names on /ro/ (`done`)
+
+- Given a Romanian page, then apps carry the names they use in Romanian
+  (Achiziții publice din România, Linter legislativ, Simulatoare și monitoare,
+  Bugetul României).
+- Test: `src/ux.test.ts`.
+
+### UX-6 Filter chips on one row on phones (`done`)
+
+- Given a 390px viewport, then the filter chips stay on one row (three chips,
+  no wrapping; horizontal scroll as a fallback).
+- Test: `src/ux.test.ts` asserts the nav has three links and the stylesheet
+  keeps it unwrapped on small screens; checked by screenshot.
+
+### UX-7 Status badges, last updated, data as of (`done`)
+
+- Given the catalogue, then every entry has `status` in Live data / Demo data /
+  Prototype / Archived, `updated` (YYYY-MM, the month of the repository's last
+  commit on main) and optional `dataAsOf`; cards and project pages show them.
+- Test: `src/ux.test.ts` (vocabulary, formats, rendering).
+- The status assignments and the missing `dataAsOf` values: needs human review.
+
+### UX-8 Civic tools grouped by theme (`done`)
+
+- Given the home and civic pages, then civic tools are grouped under Money,
+  Law & reform, and State & digital.
+- Test: `src/ux.test.ts`.
+
+### UX-9 About page and project template (`needs-human`)
+
+- Not started: content needs the author's method statement.
 
 ## Maintainer-only
 
