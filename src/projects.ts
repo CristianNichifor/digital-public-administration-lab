@@ -16,11 +16,20 @@ export interface Project {
   kind: ProjectKind;
   /** Base URL the proxy forwards to. Required for `proxied`. */
   upstream?: string;
+  /**
+   * Base URL the protected dev preview (projects-dev.) forwards to instead: the project's Cloudflare
+   * Pages `dev` alias, which answers only requests carrying the preview gate header. Unset, the
+   * preview proxies `upstream` like production.
+   */
+  previewUpstream?: string;
   /** Link target for `external`. */
   href?: string;
 }
 
 const GH_PAGES = "https://cristiannichifor.github.io";
+
+/** A project's dev build on Cloudflare Pages, laid out at `/<slug>/` like its GitHub Pages site. */
+const pagesDev = (slug: string) => `https://dev.${slug}.pages.dev/${slug}`;
 
 /**
  * `public-pay-simulator` and `administrative-reform-simulator` are deliberately
@@ -39,6 +48,7 @@ export const projects: Project[] = [
     category: "Reform simulators",
     kind: "proxied",
     upstream: `${GH_PAGES}/romania-reforms`,
+    previewUpstream: pagesDev("romania-reforms"),
   },
   {
     slug: "open-procurement",
@@ -48,6 +58,7 @@ export const projects: Project[] = [
     category: "Transparency & data",
     kind: "proxied",
     upstream: `${GH_PAGES}/open-procurement`,
+    previewUpstream: pagesDev("open-procurement"),
   },
   {
     slug: "legislation-linter",
@@ -57,6 +68,7 @@ export const projects: Project[] = [
     category: "Transparency & data",
     kind: "proxied",
     upstream: `${GH_PAGES}/legislation-linter`,
+    previewUpstream: pagesDev("legislation-linter"),
   },
   {
     slug: "bureaucracy-as-code",
@@ -74,6 +86,7 @@ export const projects: Project[] = [
     category: "Digital public administration",
     kind: "proxied",
     upstream: `${GH_PAGES}/digital-romania-atlas`,
+    previewUpstream: pagesDev("digital-romania-atlas"),
   },
   {
     slug: "romania-intelligence-reform-dataflows",
@@ -83,6 +96,7 @@ export const projects: Project[] = [
     category: "Digital public administration",
     kind: "proxied",
     upstream: `${GH_PAGES}/romania-intelligence-reform-dataflows`,
+    previewUpstream: pagesDev("romania-intelligence-reform-dataflows"),
   },
   {
     slug: "romania-budget-dashboard",
@@ -133,6 +147,10 @@ export interface ProxyMatch {
   project: Project;
   /** Absolute URL on the upstream origin, without query string. */
   upstreamUrl: string;
+  /** The base the URL was built on: `upstream`, or `previewUpstream` on the dev preview. */
+  upstreamBase: string;
+  /** Whether the upstream is a gated Cloudflare Pages preview, which needs the gate header. */
+  gated: boolean;
 }
 
 /**
@@ -140,7 +158,7 @@ export interface ProxyMatch {
  * serve the path itself (the index, its assets, and anything mounted at build
  * time such as `/bureaucracy-as-code/`).
  */
-export function matchProxyRoute(pathname: string): ProxyMatch | null {
+export function matchProxyRoute(pathname: string, preview = false): ProxyMatch | null {
   for (const project of projects) {
     if (project.kind !== "proxied" || !project.upstream) {
       continue;
@@ -153,8 +171,10 @@ export function matchProxyRoute(pathname: string): ProxyMatch | null {
     }
 
     const rest = pathname.slice(prefix.length);
+    const gated = preview && Boolean(project.previewUpstream);
+    const upstreamBase = gated ? (project.previewUpstream as string) : project.upstream;
 
-    return { project, upstreamUrl: `${project.upstream}${rest}` };
+    return { project, upstreamUrl: `${upstreamBase}${rest}`, upstreamBase, gated };
   }
 
   return null;
@@ -173,7 +193,7 @@ export function rewriteLocation(
   match: ProxyMatch,
   requestUrl: URL,
 ): string | null {
-  const upstreamBase = new URL(match.project.upstream ?? "");
+  const upstreamBase = new URL(match.upstreamBase);
   const resolved = new URL(location, match.upstreamUrl);
 
   if (resolved.origin !== upstreamBase.origin) {

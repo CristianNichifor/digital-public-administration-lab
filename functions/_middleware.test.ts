@@ -81,3 +81,25 @@ describe('Preview gate on the dev branch', () => {
     expect(await onRequest({ request: new Request(host + '/'), next, env: {} })).toBe(response);
   });
 });
+
+describe('Dev preview proxying', () => {
+  const env = { PREVIEW_GATE_SECRET: 'g'.repeat(64) };
+  it('forwards to the gated dev build with the gate header, never the visitor\'s cookies', async () => {
+    const fetch = vi.fn().mockResolvedValue(new Response('ok')); vi.stubGlobal('fetch', fetch);
+    const request = new Request('https://projects-dev.example/open-procurement/', {
+      headers: { 'x-cnw-preview-gate': 'g'.repeat(64), cookie: '__Host-cnw-preview=s' },
+    });
+    await onRequest({ request, next: vi.fn(), env });
+    const [url, init] = fetch.mock.calls[0];
+    expect(String(url)).toBe('https://dev.open-procurement.pages.dev/open-procurement/');
+    expect(init.headers.get('x-cnw-preview-gate')).toBe('g'.repeat(64));
+    expect(init.headers.get('cookie')).toBeNull();
+  });
+  it('sends no gate header to production upstreams', async () => {
+    const fetch = vi.fn().mockResolvedValue(new Response('ok')); vi.stubGlobal('fetch', fetch);
+    await onRequest({ request: new Request(host + '/open-procurement/'), next: vi.fn(), env: {} });
+    const [url, init] = fetch.mock.calls[0];
+    expect(String(url)).toBe('https://cristiannichifor.github.io/open-procurement/');
+    expect(init.headers.get('x-cnw-preview-gate')).toBeNull();
+  });
+});

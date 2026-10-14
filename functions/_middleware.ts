@@ -69,7 +69,8 @@ export async function onRequest(context: PagesContext): Promise<Response> {
   }
 
   const url = new URL(context.request.url);
-  const match = matchProxyRoute(url.pathname);
+  // On the dev preview (the gate secret is set), proxied projects come from their own gated dev builds.
+  const match = matchProxyRoute(url.pathname, Boolean(gate));
 
   if (!match) {
     return context.next();
@@ -93,6 +94,10 @@ export async function onRequest(context: PagesContext): Promise<Response> {
     if (value !== null) {
       headers.set(name, value);
     }
+  }
+
+  if (match.gated && gate) {
+    headers.set(PREVIEW_GATE_HEADER, gate);
   }
 
   const upstreamResponse = await fetch(upstreamUrl, {
