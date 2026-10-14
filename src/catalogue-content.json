@@ -2,7 +2,9 @@
   "romania-reforms": {
     "repository": "romania-reforms",
     "collection": "civic",
-    "lifecycle": "prototype",
+    "status": "prototype",
+    "updated": "2026-10",
+    "theme": "law-reform",
     "languages": [
       "ro"
     ],
@@ -14,7 +16,7 @@
     },
     "ro": {
       "slug": "reforme-romania",
-      "title": "Reforme pentru România",
+      "title": "Simulatoare și monitoare",
       "summary": "Compară ipotezele din spatele opțiunilor de politică publică.",
       "body": "Șapte simulatoare fac vizibile compromisurile propunerilor de reformă. Explorează scenarii; rezultatele nu stabilesc drepturi legale."
     }
@@ -22,7 +24,9 @@
   "open-procurement": {
     "repository": "open-procurement",
     "collection": "civic",
-    "lifecycle": "prototype",
+    "status": "live-data",
+    "updated": "2026-10",
+    "theme": "money",
     "languages": [
       "ro"
     ],
@@ -34,7 +38,7 @@
     },
     "ro": {
       "slug": "open-procurement",
-      "title": "Open Procurement",
+      "title": "Achiziții publice din România",
       "summary": "Pune întrebări mai bune despre achizițiile publice.",
       "body": "Explorează seturi de date despre achiziții și prețuri comparabile. Verifică acoperirea, perioada și proveniența datelor înainte de a trage concluzii."
     }
@@ -42,7 +46,9 @@
   "legislation-linter": {
     "repository": "legislation-linter",
     "collection": "civic",
-    "lifecycle": "prototype",
+    "status": "live-data",
+    "updated": "2026-10",
+    "theme": "law-reform",
     "languages": [
       "ro"
     ],
@@ -54,7 +60,7 @@
     },
     "ro": {
       "slug": "legislation-linter",
-      "title": "Legislation Linter",
+      "title": "Linter legislativ",
       "summary": "Analizează mai ușor proiectele legislative.",
       "body": "Examinează posibile neconcordanțe cu trimiteri la articolele relevante. Rezultatele sprijină analiza umană și nu reprezintă consultanță juridică."
     }
@@ -62,7 +68,9 @@
   "bureaucracy-as-code": {
     "repository": "bureaucracy-as-code",
     "collection": "civic",
-    "lifecycle": "prototype",
+    "status": "demo-data",
+    "updated": "2026-10",
+    "theme": "law-reform",
     "languages": [
       "ro"
     ],
@@ -82,7 +90,9 @@
   "digital-romania-atlas": {
     "repository": "digital-romania-atlas",
     "collection": "civic",
-    "lifecycle": "prototype",
+    "status": "prototype",
+    "updated": "2026-10",
+    "theme": "state-digital",
     "languages": [
       "ro"
     ],
@@ -102,7 +112,9 @@
   "romania-intelligence-reform-dataflows": {
     "repository": "romania-intelligence-reform-dataflows",
     "collection": "civic",
-    "lifecycle": "prototype",
+    "status": "demo-data",
+    "updated": "2026-10",
+    "theme": "state-digital",
     "languages": [
       "ro"
     ],
@@ -122,7 +134,9 @@
   "romania-budget-dashboard": {
     "repository": "romania-budget-dashboard",
     "collection": "civic",
-    "lifecycle": "prototype",
+    "status": "live-data",
+    "updated": "2026-10",
+    "theme": "money",
     "languages": [
       "ro"
     ],
@@ -134,7 +148,7 @@
     },
     "ro": {
       "slug": "buget-public",
-      "title": "Bugetul public pe înțelesul tuturor",
+      "title": "Bugetul României",
       "summary": "Înțelege unde merg banii publici.",
       "body": "Explorează informațiile bugetare în contextul anului și al sursei. Verifică indicatorii privind sursa și datele demonstrative atunci când interpretezi un grafic."
     }
@@ -142,7 +156,8 @@
   "civic-ui": {
     "repository": "civic-ui",
     "collection": "tools",
-    "lifecycle": "maintained",
+    "status": "prototype",
+    "updated": "2026-09",
     "languages": [
       "en"
     ],
@@ -162,7 +177,8 @@
   "google-contacts": {
     "repository": "Google-Contacts-Coda-Pack",
     "collection": "coda-packs",
-    "lifecycle": "beta",
+    "status": "prototype",
+    "updated": "2025-08",
     "languages": [
       "en"
     ],
@@ -182,7 +198,8 @@
   "usr-digital-platform-wireframe": {
     "repository": "usr-digital-platform-wireframe",
     "collection": "experiments",
-    "lifecycle": "prototype",
+    "status": "demo-data",
+    "updated": "2026-09",
     "languages": [
       "en"
     ],
