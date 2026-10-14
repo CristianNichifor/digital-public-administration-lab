@@ -159,11 +159,12 @@ demonstrative / Prototip / Arhivat). No other words ("beta", "alpha", "WIP",
 | Project page template | `src/ux.test.ts` DPAL-12 |
 | Naming registry ↔ catalogue in sync | `src/ux.test.ts` UXG-1 |
 | Comma-below ș ț, no banned terms | `src/ux.test.ts` UXG-2 |
+| Reduced motion, forced colours | `src/ux.test.ts` UXG-3 |
 | Security headers | `src/security-headers.test.ts` |
 | Real 404 | `scripts/smoke-dist.mjs` |
 
-Not yet automated: axe scan, touch-target sizes, 390 px screenshot check,
-forced colours. See backlog.
+Not yet automated: axe scan, touch-target sizes, 390 px screenshot check.
+See backlog.
 
 ## 9. Known deviations backlog
 
