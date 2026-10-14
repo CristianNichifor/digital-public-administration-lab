@@ -44,7 +44,7 @@ describe("localized catalogue contract", () => {
     expect(
       matchProxyRoute("/legislation-linter/assets/app.js")?.upstreamUrl,
     ).toBe(
-      "https://cristiannichifor.github.io/legislation-linter/assets/app.js",
+      "https://legislation-linter.pages.dev/legislation-linter/assets/app.js",
     );
     expect(project.source).toBe(
       "https://github.com/CristianNichifor/legislation-linter",

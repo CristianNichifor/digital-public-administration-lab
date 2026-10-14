@@ -28,13 +28,13 @@ describe("matchProxyRoute", () => {
 
   it("maps a proxied project 1:1 onto its upstream base", () => {
     expect(matchProxyRoute("/legislation-linter")?.upstreamUrl).toBe(
-      "https://cristiannichifor.github.io/legislation-linter",
+      "https://legislation-linter.pages.dev/legislation-linter",
     );
     expect(matchProxyRoute("/legislation-linter/")?.upstreamUrl).toBe(
-      "https://cristiannichifor.github.io/legislation-linter/",
+      "https://legislation-linter.pages.dev/legislation-linter/",
     );
     expect(matchProxyRoute("/legislation-linter/assets/app.js")?.upstreamUrl).toBe(
-      "https://cristiannichifor.github.io/legislation-linter/assets/app.js",
+      "https://legislation-linter.pages.dev/legislation-linter/assets/app.js",
     );
   });
 
@@ -87,6 +87,8 @@ describe("rewriteLocation", () => {
         upstream: "https://legislation-linter.pages.dev",
       },
       upstreamUrl: "https://legislation-linter.pages.dev/acte",
+      upstreamBase: "https://legislation-linter.pages.dev",
+      gated: false,
     };
 
     expect(rewriteLocation("/acte/", match, HOST)).toBe(
@@ -106,5 +108,32 @@ describe("rewriteLocation", () => {
     expect(rewriteLocation("/legislation-linter/?q=1#top", match as ProxyMatch, HOST)).toBe(
       "https://projects.cristian-nichifor.com/legislation-linter/?q=1#top",
     );
+  });
+});
+
+describe("dev preview upstreams", () => {
+  it("proxies production to the project's Cloudflare Pages build, ungated", () => {
+    const match = matchProxyRoute("/open-procurement/data/x.json");
+    expect(match?.upstreamUrl).toBe("https://open-procurement.pages.dev/open-procurement/data/x.json");
+    expect(match?.gated).toBe(false);
+  });
+
+  it("proxies the dev preview to the project's gated Cloudflare Pages dev build", () => {
+    const match = matchProxyRoute("/open-procurement/data/x.json", true);
+    expect(match?.upstreamUrl).toBe("https://dev.open-procurement.pages.dev/open-procurement/data/x.json");
+    expect(match?.gated).toBe(true);
+  });
+
+  it("keeps redirects from the dev build on this host", () => {
+    const match = matchProxyRoute("/romania-reforms", true) as ProxyMatch;
+    expect(rewriteLocation("https://dev.romania-reforms.pages.dev/romania-reforms/", match, HOST)).toBe(
+      "https://projects.cristian-nichifor.com/romania-reforms/",
+    );
+  });
+
+  it("gives every proxied project a dev build", () => {
+    for (const project of projects.filter((p) => p.kind === "proxied")) {
+      expect(project.previewUpstream).toBe(`https://dev.${project.slug}.pages.dev/${project.slug}`);
+    }
   });
 });

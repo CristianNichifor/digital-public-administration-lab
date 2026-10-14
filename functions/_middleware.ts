@@ -8,6 +8,29 @@ import { matchProxyRoute, rewriteLocation } from "../src/projects";
 interface PagesContext {
   request: Request;
   next: () => Promise<Response>;
+  env?: { PREVIEW_GATE_SECRET?: string };
+}
+
+/**
+ * The dev branch is a protected preview: only the CN Webify preview gate, which
+ * signs people in first, may fetch it, and it proves that with this header.
+ * PREVIEW_GATE_SECRET is set on the Pages preview environment only, so the
+ * production build never checks it and the branch alias answers 403 to anyone else.
+ * A preview host (`<branch or hash>.<project>.pages.dev`) without the secret also
+ * answers 403: previews fail closed until the gate's deploy script has set it.
+ */
+const isPreviewHost = (hostname: string) => hostname.endsWith(".pages.dev") && hostname.split(".").length > 3;
+const PREVIEW_GATE_HEADER = "x-cnw-preview-gate";
+
+async function sameSecret(given: string | null, expected: string): Promise<boolean> {
+  if (given === null) return false;
+  const encoder = new TextEncoder();
+  const [a, b] = await Promise.all([given, expected].map((value) => crypto.subtle.digest("SHA-256", encoder.encode(value))));
+  const left = new Uint8Array(a);
+  const right = new Uint8Array(b);
+  let difference = 0;
+  for (let i = 0; i < left.length; i += 1) difference |= left[i] ^ right[i];
+  return difference === 0;
 }
 
 /**
@@ -35,8 +58,19 @@ const SECURITY_HEADERS: Record<string, string> = {
 };
 
 export async function onRequest(context: PagesContext): Promise<Response> {
+  const gate = context.env?.PREVIEW_GATE_SECRET;
+  const hostname = new URL(context.request.url).hostname;
+
+  if ((gate || isPreviewHost(hostname)) && !(gate && (await sameSecret(context.request.headers.get(PREVIEW_GATE_HEADER), gate)))) {
+    return new Response("Not found", {
+      status: 403,
+      headers: { "X-Robots-Tag": "noindex, nofollow", ...SECURITY_HEADERS },
+    });
+  }
+
   const url = new URL(context.request.url);
-  const match = matchProxyRoute(url.pathname);
+  // On the dev preview (the gate secret is set), proxied projects come from their own gated dev builds.
+  const match = matchProxyRoute(url.pathname, Boolean(gate));
 
   if (!match) {
     return context.next();
@@ -60,6 +94,10 @@ export async function onRequest(context: PagesContext): Promise<Response> {
     if (value !== null) {
       headers.set(name, value);
     }
+  }
+
+  if (match.gated && gate) {
+    headers.set(PREVIEW_GATE_HEADER, gate);
   }
 
   const upstreamResponse = await fetch(upstreamUrl, {

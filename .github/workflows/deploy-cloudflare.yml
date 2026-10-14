@@ -1,8 +1,10 @@
 name: Deploy
 
+# main is the public hub; dev is its protected preview (projects-dev.cristian-nichifor.com),
+# reachable only through the CN Webify preview gate. The broker accepts this file on both.
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
   workflow_dispatch:
 
 permissions:
@@ -17,17 +19,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout digital host
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: digital-public-administration-lab
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           version: 10.15.1
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: pnpm
@@ -72,7 +74,7 @@ jobs:
         working-directory: digital-public-administration-lab
 
       - name: Deploy to Cloudflare Pages
-        run: pnpm exec wrangler pages deploy dist --project-name="$PROJECT_NAME" --branch=main
+        run: pnpm exec wrangler pages deploy dist --project-name="$PROJECT_NAME" --branch="$GITHUB_REF_NAME"
         working-directory: digital-public-administration-lab
 
       - name: Report pages.dev hostname
