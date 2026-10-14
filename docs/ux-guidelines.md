@@ -156,6 +156,7 @@ demonstrative / Prototip / Arhivat). No other words ("beta", "alpha", "WIP",
 | Chips on one row on phones | `src/ux.test.ts` UX-6 |
 | Status vocabulary, real months | `src/ux.test.ts` UX-7 |
 | Themes | `src/ux.test.ts` UX-8 |
+| Touch targets: 44 px chips, header links, buttons; 24 px footer and back links; current chip bordered in forced colours | `src/ux.test.ts` DS-5 |
 | Project page template | `src/ux.test.ts` DPAL-12 |
 | Naming registry ↔ catalogue in sync | `src/ux.test.ts` UXG-1 |
 | Comma-below ș ț, no banned terms | `src/ux.test.ts` UXG-2 |
@@ -176,6 +177,6 @@ See backlog.
 | UXG-B3 | No entry has `dataAsOf`; cards show only "Updated" | `catalogue-content.json` | fill from each app's provenance line |
 | UXG-B4 | 9 of 10 entries are "Prototype"; review with evidence | catalogue | needs human |
 | UXG-B5 | About and method page missing (UX-9) | hub | needs owner content |
-| UXG-B6 | No automated axe / 390 px / touch-target check | hub | add Playwright smoke when CI allows |
+| UXG-B6 | No automated axe / 390 px check (touch-target CSS minimums are tested, DS-5) | hub | add Playwright smoke when CI allows |
 | UXG-B7 | Footer has no method link | hub | after UX-9 |
 | UXG-B8 | The hub does not use civic-ui `SiteShell`/`SiteFooter` | hub | later, after civic-ui guideline lands |
