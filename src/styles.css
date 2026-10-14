@@ -83,6 +83,9 @@ a:focus-visible {
 .site-header nav a {
   text-decoration: none;
   padding-block: 12px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
 }
 .hero {
   padding-block: 90px 56px;
@@ -135,6 +138,9 @@ h3 {
   border-radius: 99px;
   text-decoration: none;
   font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 .collections a[aria-current] {
   background: #203e32;
@@ -242,6 +248,7 @@ h3 {
   text-decoration: none;
   border-radius: 5px;
   font-size: 14px;
+  min-height: 44px;
 }
 .button:hover {
   background: #173d2e;
@@ -277,6 +284,7 @@ h3 {
   font-size: 14px;
   margin-top: 40px;
   text-decoration: none;
+  min-height: 24px;
 }
 .note {
   font-size: 13px;
@@ -338,6 +346,11 @@ footer {
 }
 footer span {
   margin-right: auto;
+}
+footer a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
 }
 .skip {
   position: absolute;
@@ -448,6 +461,9 @@ footer span {
   }
 }
 @media (forced-colors: active) {
+  .collections a[aria-current] {
+    border: 2px solid Highlight;
+  }
   .button {
     border: 1px solid ButtonText;
   }
