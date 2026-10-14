@@ -131,6 +131,9 @@ h3 {
   border-bottom: 1px solid var(--line);
 }
 .collections a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   padding: 10px 17px;
   border-radius: 99px;
   text-decoration: none;
@@ -448,6 +451,9 @@ footer span {
   }
 }
 @media (forced-colors: active) {
+  .collections a[aria-current] {
+    border: 2px solid Highlight;
+  }
   .button {
     border: 1px solid ButtonText;
   }
