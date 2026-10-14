@@ -35,6 +35,9 @@ for (const path of paths) {
   const footer = html.slice(html.lastIndexOf("<footer"));
   assert.ok(footer.includes(`href="${privacy}"`), `${path}: footer does not link ${privacy}`);
 
+  for (const [, href, body] of html.matchAll(/<a [^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/gs))
+    if (href.startsWith("/")) assert.ok(!body.includes("↗"), `${path}: same-site link ${href} uses ↗`);
+
   const once = (pattern, what) => {
     const found = [...html.matchAll(pattern)];
     assert.equal(found.length, 1, `${path}: expected one ${what}, found ${found.length}`);
