@@ -256,3 +256,15 @@ describe("UXG-2 content rules", () => {
     }
   });
 });
+
+describe("UXG-3 motion and forced colours", () => {
+  const css = readFileSync("src/styles.css", "utf8");
+  it("turns motion off when the visitor asks for less", () => {
+    expect(css).toMatch(/@media \(prefers-reduced-motion: reduce\)\s*\{[^@]*transition: none/);
+  });
+  it("keeps buttons and badges outlined in forced colours", () => {
+    const block = css.slice(css.indexOf("@media (forced-colors: active)"));
+    expect(block).toMatch(/\.button[^{]*\{[^}]*border: 1px solid ButtonText/);
+    expect(block).toMatch(/\.tag[^{]*\{[^}]*border: 1px solid/);
+  });
+});
