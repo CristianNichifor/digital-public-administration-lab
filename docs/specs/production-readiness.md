@@ -244,6 +244,13 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
   visible border.
 - Test: `src/ux.test.ts` UXG-3 (stylesheet rules).
 
+### UXG-4 Page structure on every page (`done`)
+
+- Given any prerendered page, then the first link is the skip link, there is
+  exactly one H1, a header, a `main#main` and a footer, and every image has
+  an `alt`.
+- Test: `src/ux.test.ts` UXG-4 (a regression guard; it passed on arrival).
+
 ## Maintainer-only
 
 - DPAL-7 uptime probe workflow: `needs-human` (workflow changes; diff in the PR body).

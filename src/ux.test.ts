@@ -268,3 +268,16 @@ describe("UXG-3 motion and forced colours", () => {
     expect(block).toMatch(/\.tag[^{]*\{[^}]*border: 1px solid/);
   });
 });
+
+describe("UXG-4 page structure", () => {
+  it("has a skip link first, one H1 and header, main and footer landmarks", () => {
+    for (const page of pages) {
+      const html = render(page.path);
+      expect(html.match(/<a [^>]*>/)![0], page.path).toContain('class="skip"');
+      expect(html.match(/<h1[ >]/g) ?? [], page.path).toHaveLength(1);
+      for (const tag of ["<header", '<main id="main"', "<footer"])
+        expect(html, `${page.path} ${tag}`).toContain(tag);
+      expect(html.match(/<img (?![^>]*alt=)/g) ?? [], page.path).toHaveLength(0);
+    }
+  });
+});
