@@ -87,6 +87,7 @@
     "repository": "digital-romania-atlas",
     "collection": "civic",
     "status": "prototype",
+    "dataAsOf": "2026-09-11",
     "theme": "state-digital",
     "languages": [
       "ro"
