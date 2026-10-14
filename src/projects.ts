@@ -1,4 +1,7 @@
-/** Runtime routing registry. Slugs are the public paths and match the English repository names, so each GitHub Pages build base proxies 1:1. */
+/**
+ * Runtime routing registry. Slugs are the public paths and match the English repository names;
+ * each proxied project's Cloudflare Pages build is laid out under `/<slug>/`, so paths proxy 1:1.
+ */
 
 export type ProjectKind =
   /** Served from its own origin through the proxy in `functions/_middleware.ts`. */
@@ -35,11 +38,11 @@ const pages = (slug: string) => `https://${slug}.pages.dev/${slug}`;
 const pagesDev = (slug: string) => `https://dev.${slug}.pages.dev/${slug}`;
 
 /**
- * `public-pay-simulator` and `administrative-reform-simulator` are deliberately
- * absent. Both repos now serve a meta-refresh stub pointing into
- * `romania-reforms/public-pay/` and `romania-reforms/administrative-reform/`,
- * so proxying them would bounce a visitor straight off this host. Visitors
- * reach both simulators through `/romania-reforms/`.
+ * `public-pay-simulator` and `administrative-reform-simulator` are deliberately absent. Their
+ * simulators now live in romania-reforms (`simulators/salarizare`, `simulators/administrativ`) and
+ * are served at `/romania-reforms/public-pay/` and `/romania-reforms/administrative-reform/`. The
+ * old repos publish only a redirect stub to those paths, so proxying them would bounce a visitor
+ * straight back here through an extra hop.
  */
 
 export const projects: Project[] = [
