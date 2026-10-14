@@ -17,6 +17,7 @@
     "test": "vitest run",
     "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm build:functions",
     "smoke": "node scripts/smoke-dist.mjs && node scripts/verify-catalogue.mjs",
+    "check:live": "node scripts/check-live-paths.mjs",
     "setup:sibling": "node scripts/setup-bureaucracy-as-code.mjs"
   },
   "dependencies": {
