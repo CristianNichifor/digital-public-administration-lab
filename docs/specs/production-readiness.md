@@ -263,8 +263,8 @@ collection pages.
   carrier of meaning.
 - Given a collection page with no entries, then it shows "No projects here
   yet" / "Nu există proiecte aici încă" with a link to all projects.
-- Given the stylesheet, then filter chips and header links are at least 44 px
-  tall; the 390 px one-column grid and one-row chips (UX-6) are unchanged.
+- Touch targets (chips, header links at 44 px) are #49 / #46 (other
+  sessions); styles here live in `src/screens.css`, layered over `styles.css`.
 - Not in this item: the header "About & method" link, which needs the UX-9
   route (#42); it lands with DS-3.
 - Test: `src/ds1-home.test.ts`. Romanian: needs human review.
