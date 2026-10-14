@@ -250,6 +250,24 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
   exactly one H1, a header, a `main#main` and a footer, and every image has
   an `alt`.
 - Test: `src/ux.test.ts` UXG-4 (a regression guard; it passed on arrival).
+### DS-1 Home screen implemented (`done`, header link pending UX-9)
+
+Implements `docs/design/screens/01-home.html` (PR #47) on the live home and
+collection pages.
+
+- Given a theme heading on the home or civic page, then it carries the count of
+  tools under it ("2 tools" / "2 instrumente"; "Other" counts projects).
+- Given a status badge, then `live-data` renders `data-tone="success"` and
+  `demo-data` `data-tone="warning"`, each with a border and a colour stripe in
+  the stylesheet; other statuses keep the plain tag. The text stays the only
+  carrier of meaning.
+- Given a collection page with no entries, then it shows "No projects here
+  yet" / "Nu există proiecte aici încă" with a link to all projects.
+- Given the stylesheet, then filter chips and header links are at least 44 px
+  tall; the 390 px one-column grid and one-row chips (UX-6) are unchanged.
+- Not in this item: the header "About & method" link, which needs the UX-9
+  route (#42); it lands with DS-3.
+- Test: `src/ds1-home.test.ts`. Romanian: needs human review.
 
 ## Maintainer-only
 
