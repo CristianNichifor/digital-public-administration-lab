@@ -228,6 +228,14 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
   visible border.
 - Test: `src/ux.test.ts` UXG-3 (stylesheet rules).
 
+### UXG-5 Filter chips are 44 px targets (`done`)
+
+- Given the filter chips, then each is a block target at least 44 px tall
+  (an inline link's padding does not make its hit area tall).
+- Given `forced-colors: active`, then the current chip keeps a Highlight
+  border, since its dark background is dropped in that mode.
+- Test: `src/ux.test.ts` UXG-5 (stylesheet rules).
+
 ## Maintainer-only
 
 - DPAL-7 uptime probe workflow: `needs-human` (workflow changes; diff in the PR body).

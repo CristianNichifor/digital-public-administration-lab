@@ -160,6 +160,7 @@ demonstrative / Prototip / Arhivat). No other words ("beta", "alpha", "WIP",
 | Naming registry ↔ catalogue in sync | `src/ux.test.ts` UXG-1 |
 | Comma-below ș ț, no banned terms | `src/ux.test.ts` UXG-2 |
 | Reduced motion, forced colours | `src/ux.test.ts` UXG-3 |
+| Chips 44 px, current chip in forced colours | `src/ux.test.ts` UXG-5 |
 | Security headers | `src/security-headers.test.ts` |
 | Real 404 | `scripts/smoke-dist.mjs` |
 

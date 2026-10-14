@@ -268,3 +268,14 @@ describe("UXG-3 motion and forced colours", () => {
     expect(block).toMatch(/\.tag[^{]*\{[^}]*border: 1px solid/);
   });
 });
+
+describe("UXG-5 filter chip targets", () => {
+  const css = readFileSync("src/styles.css", "utf8");
+  it("makes each chip a 44px block target", () => {
+    expect(css).toMatch(/\.collections a\s*\{[^}]*display: inline-flex[^}]*min-height: 44px/);
+  });
+  it("outlines the current chip in forced colours", () => {
+    const block = css.slice(css.indexOf("@media (forced-colors: active)"));
+    expect(block).toMatch(/\.collections a\[aria-current\][^{]*\{[^}]*border: [^;]*Highlight/);
+  });
+});
