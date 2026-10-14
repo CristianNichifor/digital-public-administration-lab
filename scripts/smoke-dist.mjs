@@ -28,6 +28,7 @@ const read = (file) => readFile(resolve(root, file), "utf8");
 const sitemap = await read("dist/sitemap.xml");
 const paths = [...sitemap.matchAll(/<loc>https:\/\/projects\.cristian-nichifor\.com([^<]+)<\/loc>/g)].map((m) => m[1]);
 assert.ok(paths.includes("/privacy/") && paths.includes("/ro/confidentialitate/"), "privacy pages missing from sitemap");
+assert.ok(paths.includes("/about/") && paths.includes("/ro/despre/"), "about pages missing from sitemap");
 
 for (const path of paths) {
   const html = await read(`dist${path}index.html`);

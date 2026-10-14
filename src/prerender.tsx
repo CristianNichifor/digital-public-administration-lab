@@ -1,7 +1,7 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { renderToString } from "react-dom/server";
 import { App } from "./App";
-import { pages, origin, alternatePath, privacyMeta } from "./catalogue";
+import { pages, origin, alternatePath, privacyMeta, aboutMeta } from "./catalogue";
 import { catalogueHeaderRules } from "./security-headers";
 const template = await readFile("dist/index.html", "utf8");
 const escape = (s: string) =>
@@ -16,7 +16,12 @@ for (const page of pages) {
     page.locale === "ro"
       ? "Cristian Nichifor: instrumente deschise pentru a înțelege statul român."
       : "Cristian Nichifor: open tools for understanding the Romanian state.";
-  const privacy = "privacy" in page ? privacyMeta[page.locale] : undefined;
+  const privacy =
+    "privacy" in page
+      ? privacyMeta[page.locale]
+      : "about" in page
+        ? aboutMeta[page.locale]
+        : undefined;
   const title = `${page.entry?.[page.locale].title ?? privacy?.title ?? page.collection?.[page.locale].title ?? (page.locale === "en" ? "Open civic tools about the Romanian state" : "Instrumente civice deschise despre statul român")} — Cristian Nichifor`;
   const description =
     page.entry?.[page.locale].summary ??
