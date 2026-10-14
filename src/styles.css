@@ -411,3 +411,30 @@ footer span {
     flex-basis: 100%;
   }
 }
+.project-details > p,
+.project-details ul {
+  max-width: 720px;
+}
+.project-details li {
+  padding-block: 4px;
+}
+.callout {
+  margin-block: 32px;
+  padding: 20px 24px;
+  max-width: 720px;
+  background: #f4efe2;
+  border-left: 4px solid #a46a1f;
+  border-radius: 4px;
+}
+.callout h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+.callout p {
+  margin: 0;
+}
+.related a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
