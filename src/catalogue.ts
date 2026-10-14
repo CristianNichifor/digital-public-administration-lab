@@ -25,6 +25,20 @@ export const collections = [
   },
 ];
 export const home = (locale: Locale) => (locale === "ro" ? "/ro/" : "/");
+export const privacyMeta = {
+  en: {
+    title: "Privacy",
+    description:
+      "Who runs projects.cristian-nichifor.com, what data a visit involves, and which services process it.",
+  },
+  ro: {
+    title: "Confidențialitate",
+    description:
+      "Cine administrează projects.cristian-nichifor.com, ce date implică o vizită și ce servicii le prelucrează.",
+  },
+};
+export const privacyPath = (locale: Locale) =>
+  locale === "ro" ? "/ro/confidentialitate/" : "/privacy/";
 export const catalogue = projects.map((runtime) => {
   const content = metadata[runtime.slug as keyof typeof metadata];
   if (!content) throw new Error(`Missing catalogue content: ${runtime.slug}`);
@@ -46,6 +60,13 @@ export function entryPath(entry: Entry, locale: Locale) {
 }
 export const pages = (["en", "ro"] as const).flatMap((locale) => [
   { path: home(locale), locale, collection: undefined, entry: undefined },
+  {
+    path: privacyPath(locale),
+    locale,
+    collection: undefined,
+    entry: undefined,
+    privacy: true,
+  },
   ...collections.map((collection) => ({
     path: collectionPath(collection.id, locale),
     locale,
@@ -66,11 +87,10 @@ export function alternatePath(path: string) {
   const page = resolvePage(path);
   if (!page) return null;
   const locale = page.locale === "en" ? "ro" : "en";
-  return page.entry
-    ? entryPath(page.entry, locale)
-    : page.collection
-      ? collectionPath(page.collection.id, locale)
-      : home(locale);
+  if (page.entry) return entryPath(page.entry, locale);
+  if ("privacy" in page) return privacyPath(locale);
+  if (page.collection) return collectionPath(page.collection.id, locale);
+  return home(locale);
 }
 export function runtimeHref(entry: Entry) {
   return entry.runtime.kind === "external"

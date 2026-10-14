@@ -6,11 +6,13 @@ import {
   collectionPath,
   entryPath,
   home,
+  privacyPath,
   resolvePage,
   runtimeHref,
   type Entry,
   type Locale,
 } from "./catalogue";
+import { Privacy } from "./Privacy";
 import { budgetApi, budgetHref, budgetPages } from "./budget-links";
 const contact = "mailto:cristian@cristian-nichifor.com";
 const status = {
@@ -79,7 +81,9 @@ export function App({
         </nav>
       </header>
       <main id="main" className="wrap">
-        {entry ? (
+        {"privacy" in page ? (
+          <Privacy locale={locale} />
+        ) : entry ? (
           <>
             <a className="back" href={collectionPath(entry.collection, locale)}>
               <ArrowLeft size={16} aria-hidden="true" />
@@ -306,32 +310,37 @@ export function App({
             </section>
           </>
         )}
-        <section className="invitation">
-          <p className="eyebrow">
-            {ro
-              ? "De la exemplu la nevoia ta"
-              : "From an example to your own challenge"}
-          </p>
-          <h2>
-            {ro
-              ? "Ai o problemă pe care merită să o rezolvăm?"
-              : "Have a problem worth working through?"}
-          </h2>
-          <p>
-            {ro
-              ? "Spune-mi ce încerci să îmbunătățești. Putem discuta un flux Coda, o integrare sau o experiență web mai bună."
-              : "Tell me what you are trying to improve. We can discuss a Coda workflow, an integration, or a better web experience."}
-          </p>
-          <a className="button" href={contact}>
-            {ro ? "Hai să discutăm" : "Let’s talk"}
-            <ArrowUpRight aria-hidden="true" size={18} />
-          </a>
-        </section>
+        {!("privacy" in page) && (
+          <section className="invitation">
+            <p className="eyebrow">
+              {ro
+                ? "De la exemplu la nevoia ta"
+                : "From an example to your own challenge"}
+            </p>
+            <h2>
+              {ro
+                ? "Ai o problemă pe care merită să o rezolvăm?"
+                : "Have a problem worth working through?"}
+            </h2>
+            <p>
+              {ro
+                ? "Spune-mi ce încerci să îmbunătățești. Putem discuta un flux Coda, o integrare sau o experiență web mai bună."
+                : "Tell me what you are trying to improve. We can discuss a Coda workflow, an integration, or a better web experience."}
+            </p>
+            <a className="button" href={contact}>
+              {ro ? "Hai să discutăm" : "Let’s talk"}
+              <ArrowUpRight aria-hidden="true" size={18} />
+            </a>
+          </section>
+        )}
       </main>
       <footer className="wrap">
         <span>© {new Date().getFullYear()} Cristian Nichifor</span>
         <a href="https://github.com/CristianNichifor">GitHub ↗</a>
         <a href={contact}>{ro ? "Contact" : "Get in touch"}</a>
+        <a href={privacyPath(locale)}>
+          {ro ? "Confidențialitate" : "Privacy"}
+        </a>
       </footer>
     </>
   );
