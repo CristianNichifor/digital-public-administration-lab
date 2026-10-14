@@ -83,6 +83,9 @@ a:focus-visible {
 .site-header nav a {
   text-decoration: none;
   padding-block: 12px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
 }
 .hero {
   padding-block: 90px 56px;
@@ -135,6 +138,9 @@ h3 {
   border-radius: 99px;
   text-decoration: none;
   font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 .collections a[aria-current] {
   background: #203e32;
@@ -184,6 +190,34 @@ h3 {
   max-width: 30ch;
   min-height: 72px;
 }
+.project .status,
+.project .caveat,
+.project .meta {
+  min-height: 0;
+  margin: 10px 0 0;
+  font-size: 13px;
+}
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  font-size: 13px;
+  color: #52655e;
+}
+.project .caveat {
+  color: #5c6e65;
+}
+.project .meta {
+  color: var(--green);
+}
+.theme h2 {
+  margin: 48px 0 0;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #466d59;
+}
 .project-action {
   font-size: 13px;
   color: var(--green);
@@ -214,6 +248,7 @@ h3 {
   text-decoration: none;
   border-radius: 5px;
   font-size: 14px;
+  min-height: 44px;
 }
 .button:hover {
   background: #173d2e;
@@ -231,6 +266,17 @@ h3 {
 .detail > p:not(.eyebrow) {
   max-width: 720px;
 }
+.legal > p:not(.eyebrow),
+.legal ul {
+  max-width: 720px;
+}
+.legal h2 {
+  margin-top: 40px;
+  font-size: 22px;
+}
+.legal li {
+  padding-block: 6px;
+}
 .back {
   display: inline-flex;
   align-items: center;
@@ -238,6 +284,7 @@ h3 {
   font-size: 14px;
   margin-top: 40px;
   text-decoration: none;
+  min-height: 24px;
 }
 .note {
   font-size: 13px;
@@ -291,6 +338,7 @@ dd {
 }
 footer {
   display: flex;
+  flex-wrap: wrap;
   gap: 28px;
   padding-block: 30px !important;
   border-top: 1px solid var(--line);
@@ -298,6 +346,11 @@ footer {
 }
 footer span {
   margin-right: auto;
+}
+footer a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
 }
 .skip {
   position: absolute;
@@ -338,6 +391,13 @@ footer span {
   .project-grid {
     grid-template-columns: 1fr;
   }
+  .collections {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  .collections a {
+    flex-shrink: 0;
+  }
   .project p {
     min-height: 0;
     max-width: none;
@@ -362,5 +422,53 @@ footer span {
   }
   footer span {
     flex-basis: 100%;
+  }
+}
+.project-details > p,
+.project-details ul {
+  max-width: 720px;
+}
+.project-details li {
+  padding-block: 4px;
+}
+.callout {
+  margin-block: 32px;
+  padding: 20px 24px;
+  max-width: 720px;
+  background: #f4efe2;
+  border-left: 4px solid #a46a1f;
+  border-radius: 4px;
+}
+.callout h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+.callout p {
+  margin: 0;
+}
+.related a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto;
+    transition: none;
+    animation: none;
+  }
+}
+@media (forced-colors: active) {
+  .collections a[aria-current] {
+    border: 2px solid Highlight;
+  }
+  .button {
+    border: 1px solid ButtonText;
+  }
+  .tag {
+    border: 1px solid CanvasText;
+    padding: 0 4px;
   }
 }

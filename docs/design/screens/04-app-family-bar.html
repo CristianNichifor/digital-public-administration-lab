@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bara familiei și subsolul, în interiorul unei aplicații</title>
+<style>
+/* Tokens copied from civic-ui 0.8: foundations.css + themes/neutral.css (light). */
+:root{--civic-space-1:.25rem;--civic-space-2:.5rem;--civic-space-3:.75rem;--civic-space-4:1rem;--civic-space-5:1.5rem;--civic-space-6:2rem;--civic-space-7:3rem;--civic-space-8:4rem;
+--civic-text-xs:.8125rem;--civic-text-sm:.875rem;--civic-text-md:1rem;--civic-text-lg:1.125rem;--civic-text-xl:1.25rem;--civic-text-2xl:1.5rem;--civic-text-3xl:1.875rem;
+--civic-weight-regular:400;--civic-weight-heading:600;--civic-weight-strong:700;--civic-radius:6px;--civic-control-height:44px;
+--civic-bg:#f4f6f6;--civic-surface:#fff;--civic-raised:#e7eeee;--civic-text:#182b2c;--civic-muted:#475d60;--civic-border:#718588;--civic-action:#006b60;--civic-action-hover:#00564d;--civic-on-action:#fff;--civic-focus:#006b60;--civic-accent:#006b60;--civic-danger:#a31b34;--civic-on-danger:#fff;
+--civic-success:#146c2e;--civic-on-success:#fff;--civic-warning:#f2b300;--civic-on-warning:#1f1600;--civic-info:#1f5fa8;--civic-on-info:#fff;
+--civic-viz-1:#2a78d6;--civic-viz-2:#eb6834;--civic-viz-3:#1baf7a;--civic-viz-4:#eda100;
+/* Hub-only tokens kept from today's styles.css (brand type, warm paper). */
+--hub-paper:#f5f4ee;--hub-green:#24644d;--hub-line:#ccd5cd;--hub-ink:#1b302e;--hub-callout:#f4efe2;--hub-callout-line:#a46a1f;--hub-font-display:"Space Grotesk",system-ui,sans-serif;--hub-font-text:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}body{margin:0;background:#dfe5e3;color:var(--civic-text);font-family:var(--hub-font-text);line-height:1.6;font-size:var(--civic-text-md)}
+a{color:inherit;text-underline-offset:.24em}a:focus-visible,button:focus-visible{outline:3px solid var(--civic-focus);outline-offset:3px}
+/* Review chrome (not part of the design) */
+.review{padding:var(--civic-space-5);max-width:1660px;margin:auto}.review>h1{font:600 var(--civic-text-xl) var(--hub-font-text);margin:0 0 4px}.review>p{margin:0 0 var(--civic-space-5);color:var(--civic-muted);font-size:var(--civic-text-sm);max-width:90ch}
+.frames{display:flex;gap:var(--civic-space-6);align-items:flex-start;flex-wrap:wrap}.frame{container-type:inline-size;background:var(--hub-paper);color:var(--hub-ink);box-shadow:0 2px 14px #0002;flex:none}.frame.desktop{width:1180px}.frame.phone{width:390px}
+.caption{font-size:var(--civic-text-xs);color:var(--civic-muted);margin:0 0 6px}
+.state-note{background:#fff8dc;border:1px dashed var(--civic-warning);padding:4px 8px;font-size:var(--civic-text-xs);color:#1f1600;display:inline-block;margin:var(--civic-space-3) 0}
+/* Hub design */
+.wrap{max-width:1180px;margin:auto;padding-inline:32px}
+.skip{position:absolute;left:16px;top:-100px;background:var(--civic-surface);padding:12px;z-index:5}.skip:focus{top:10px}
+.site-header{display:flex;align-items:center;justify-content:space-between;gap:24px;padding-block:24px;border-bottom:1px solid var(--hub-line)}
+.brand{font-family:var(--hub-font-display);font-weight:650;text-decoration:none;font-size:20px;line-height:1.2}.brand span{display:block;font-family:var(--hub-font-text);font-size:12px;font-weight:400;color:#52655e}
+.site-header nav{display:flex;gap:8px;font-size:14px}.site-header nav a{text-decoration:none;padding:10px 12px;min-height:44px;display:inline-flex;align-items:center;border-radius:var(--civic-radius)}.site-header nav a[aria-current]{box-shadow:inset 0 -2px 0 currentColor;border-radius:0}
+h1,h2,h3{font-family:var(--hub-font-display);line-height:1.12;font-weight:500;letter-spacing:-.03em}
+.hero{padding-block:64px 40px;max-width:900px}h1{font-size:clamp(40px,6vw,72px);margin:16px 0}h1 em{font-style:normal;color:var(--hub-green)}
+.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:700;color:var(--hub-green);margin:0}
+.lead{font-size:20px;line-height:1.55;max-width:700px;color:#40594e;margin:0}
+.collections{display:flex;gap:8px;flex-wrap:wrap;padding-block:8px 24px;border-bottom:1px solid var(--hub-line);margin:0}.collections a{padding:10px 17px;min-height:44px;display:inline-flex;align-items:center;border-radius:99px;text-decoration:none;font-size:14px;border:1px solid transparent}.collections a[aria-current]{background:#203e32;color:#fff}.collections a:hover{box-shadow:inset 0 0 0 1px var(--hub-green)}
+.theme h2{margin:40px 0 0;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:#466d59;display:flex;gap:12px;align-items:baseline}.theme h2 small{font-family:var(--hub-font-text);text-transform:none;letter-spacing:0;font-weight:400;color:#52655e}
+.project-grid{display:grid;grid-template-columns:repeat(3,1fr);column-gap:40px}
+.project{padding:32px 0;border-bottom:1px solid var(--hub-line);position:relative}
+.status{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-size:13px;color:#52655e;margin:0}
+.badge{display:inline-block;padding:2px 8px;border:1px solid var(--civic-border);border-radius:4px;background:var(--civic-raised);color:var(--civic-text);font-size:13px;line-height:1.5}.badge[data-tone=success]{border-color:var(--civic-success);box-shadow:inset 3px 0 0 var(--civic-success)}.badge[data-tone=warning]{border-color:#a07600;box-shadow:inset 3px 0 0 var(--civic-warning)}
+.project h3{margin:16px 0 12px;font-size:24px}.project h3 a{text-decoration:none;display:flex;align-items:start;justify-content:space-between;gap:18px}.project h3 a::after{content:"";position:absolute;inset:0}.project h3 a .arrow{flex:none;margin-top:4px;color:var(--hub-green)}
+.project p{color:#4e6257;font-size:15px;max-width:32ch;margin:0 0 10px}.project .caveat{font-size:13px;color:#5c6e65}.project .meta{font-size:13px;color:var(--hub-green);margin:0}
+.project:hover h3{color:var(--hub-green)}
+.empty{padding:40px 0;color:#4e6257;max-width:60ch}.empty a{font-weight:600}
+footer.site{display:flex;flex-wrap:wrap;gap:12px 28px;padding-block:28px;border-top:1px solid var(--hub-line);font-size:13px;margin-top:48px}footer.site span{margin-right:auto}footer.site a{min-height:24px;display:inline-flex;align-items:center}
+/* Project page */
+.back{display:inline-flex;align-items:center;gap:10px;font-size:14px;margin-top:28px;text-decoration:none;min-height:24px}
+.detail{padding-top:28px}.detail h1{font-size:clamp(36px,4.6vw,56px)}
+.actions{display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-block:28px}
+.button{display:inline-flex;gap:12px;align-items:center;background:#244c3c;color:#fff;padding:0 22px;min-height:44px;text-decoration:none;border-radius:5px;font-size:15px;border:0;font-family:inherit;cursor:pointer}.button:hover{background:#173d2e}.button--secondary{background:transparent;color:var(--hub-ink);border:1px solid var(--civic-border)}
+.provenance{font-size:14px;color:#40594e;margin:0 0 8px;display:flex;flex-wrap:wrap;gap:4px 16px}.provenance b{font-weight:600;color:var(--hub-ink)}
+.note{font-size:13px;color:#526458;max-width:720px}
+.project-details{margin-block:48px}.project-details h2{font-size:22px;margin:36px 0 10px}.project-details p,.project-details ul{max-width:720px;margin:0}.project-details li{padding-block:4px}
+.callout{margin-block:28px;padding:20px 24px;max-width:720px;background:var(--hub-callout);border-left:4px solid var(--hub-callout-line);border-radius:4px}.callout h2{margin:0 0 8px;font-size:18px}
+.related{display:grid;grid-template-columns:repeat(2,1fr);gap:12px 32px;padding:0;list-style:none;max-width:720px}.related li{padding:0}.related a{display:flex;flex-direction:column;gap:2px;padding:12px 0;border-bottom:1px solid var(--hub-line);text-decoration:none}.related a b{font-weight:600}.related a small{color:#52655e;font-size:13px}
+/* About page */
+.legal h2{margin-top:36px;font-size:22px}.legal p,.legal ul{max-width:720px}.legal li{padding-block:6px}.toc{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:24px 0 0}.toc a{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border:1px solid var(--hub-line);border-radius:99px;text-decoration:none;font-size:14px;background:var(--civic-surface)}
+/* Family bar + footer as used inside an app (civic-ui FamilyBar / SiteFooter markup and CSS). */
+.app{background:var(--civic-bg);color:var(--civic-text);font-family:var(--civic-font-sans,system-ui,sans-serif)}
+.civic-family-bar{display:flex;flex-wrap:wrap;align-items:center;gap:var(--civic-space-2) var(--civic-space-4);padding:var(--civic-space-3) var(--civic-space-4);border-bottom:1px solid var(--civic-border);background:var(--civic-surface);font-size:var(--civic-text-sm);overflow-wrap:anywhere}
+.civic-family-bar__home{display:inline-flex;align-items:center;gap:var(--civic-space-1);min-height:32px}.civic-family-bar__tool{font-weight:var(--civic-weight-heading)}
+.civic-family-bar__languages{margin-left:auto}.civic-family-bar__languages ul,.civic-site-footer ul{display:flex;flex-wrap:wrap;gap:var(--civic-space-1) var(--civic-space-4);margin:0;padding:0;list-style:none}
+.civic-family-bar__languages a{display:inline-flex;align-items:center;justify-content:center;min-height:32px;min-width:32px;padding-inline:4px}.civic-family-bar__languages a[aria-current=true]{font-weight:var(--civic-weight-strong);text-decoration:none;box-shadow:inset 0 -2px 0 currentColor}
+.civic-site-footer{display:grid;gap:var(--civic-space-3);padding:var(--civic-space-5) var(--civic-space-4);border-top:1px solid var(--civic-border);color:var(--civic-muted);font-size:var(--civic-text-sm)}.civic-site-footer a{color:var(--civic-text)}
+.app main{padding:var(--civic-space-5) var(--civic-space-4);max-width:72rem;margin:auto}.app h1{font:600 var(--civic-text-3xl)/1.2 var(--civic-font-sans,system-ui,sans-serif);letter-spacing:0;margin:0 0 var(--civic-space-2)}.app .purpose{margin:0 0 var(--civic-space-3);font-size:var(--civic-text-lg);color:var(--civic-muted)}
+.civic-source{font-size:var(--civic-text-sm);color:var(--civic-muted);margin:0 0 var(--civic-space-5)}.civic-source b{color:var(--civic-text);font-weight:600}
+.panel{background:var(--civic-surface);border:1px solid var(--civic-border);border-radius:var(--civic-radius);padding:var(--civic-space-4);margin-bottom:var(--civic-space-4);min-height:120px}.panel h2{font:600 var(--civic-text-lg) var(--civic-font-sans,system-ui,sans-serif);margin:0 0 4px}.panel .q{margin:0 0 var(--civic-space-3);color:var(--civic-muted);font-size:var(--civic-text-sm)}
+.civic-progress{height:8px;background:var(--civic-raised);border-radius:4px;overflow:hidden;max-width:28rem}.civic-progress span{display:block;height:100%;width:45%;background:var(--civic-action)}
+.staged{list-style:none;padding:0;margin:var(--civic-space-2) 0 0;font-size:var(--civic-text-sm)}.staged li::before{content:"✓ ";color:var(--civic-success)}.staged li[aria-current]::before{content:"● ";color:var(--civic-action)}.staged li.todo::before{content:"○ ";color:var(--civic-muted)}
+.civic-status{display:flex;gap:var(--civic-space-3);align-items:flex-start;padding:var(--civic-space-3);border:1px solid var(--civic-border);border-left:4px solid var(--civic-danger);border-radius:var(--civic-radius);background:var(--civic-surface)}.civic-status b{display:block}.civic-button{display:inline-flex;align-items:center;min-height:var(--civic-control-height);padding:0 var(--civic-space-4);border:1px solid var(--civic-border);border-radius:var(--civic-radius);background:var(--civic-surface);font:inherit;cursor:pointer}.civic-button--primary{background:var(--civic-action);color:var(--civic-on-action);border-color:var(--civic-action)}
+.civic-empty{padding:var(--civic-space-5) 0;text-align:center;color:var(--civic-text)}.civic-empty p{margin:4px 0 0;color:var(--civic-muted);font-size:var(--civic-text-sm)}
+.bars{display:grid;gap:8px;max-width:36rem;margin:0}.bars div{display:grid;grid-template-columns:11rem 1fr 5rem;align-items:center;gap:8px;font-size:var(--civic-text-sm)}.bars i{display:block;height:20px;background:var(--civic-viz-1);border-radius:2px}.bars b{font-variant-numeric:tabular-nums;font-weight:600}
+.civic-table{border-collapse:collapse;width:100%;font-size:var(--civic-text-sm)}.civic-table th,.civic-table td{border-bottom:1px solid var(--civic-border);padding:8px 12px;text-align:left}.civic-table th{background:var(--civic-raised)}
+details summary{cursor:pointer;min-height:24px;font-size:var(--civic-text-sm);color:var(--civic-action)}
+/* 390 px layout (container query so desktop and phone render side by side). */
+@container (max-width:520px){
+.wrap{padding-inline:16px}.site-header{align-items:start;flex-direction:column;gap:8px}.site-header nav{width:100%;justify-content:space-between}
+.hero{padding-block:36px 28px}h1{font-size:40px}.detail h1{font-size:34px}.lead{font-size:18px}
+.collections{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}.collections a{flex:none}
+.project-grid{grid-template-columns:1fr}.project p{max-width:none}.related{grid-template-columns:1fr}
+footer.site{flex-direction:column;gap:14px}footer.site span{margin:0}
+.civic-family-bar__languages{margin-left:0;flex-basis:100%}.bars div{grid-template-columns:7rem 1fr 4rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (forced-colors:active){.badge,.button,.civic-button,.collections a[aria-current]{border:1px solid ButtonText}}
+</style>
+</head>
+<body>
+<div class="review">
+<h1>Bara familiei și subsolul, în interiorul unei aplicații</h1>
+<p>Cum arată bara familiei (civic-ui FamilyBar) și subsolul (SiteFooter) în interiorul unei aplicații, pe exemplul Achiziții publice din România: link înapoi la hub, numele din registru, insigna de stare, schimbarea limbii; H1 + scopul într-o linie + linia «Date: sursă, an»; stările de încărcare pe etape, eroare cu reîncercare, fără rezultate, și date demonstrative cu grafic etichetat și tabel alternativ. Subsolul primește și un link spre pagina Despre a hub-ului. Valorile din grafic sunt «—»: nu există cifre în acest depozit.</p>
+<div class="frames">
+<div><p class="caption">1440 px</p><div class="frame desktop">
+<div class="app">
+<a class="skip" href="#app-main">Sari la conținut</a>
+<header class="civic-family-bar">
+  <a class="civic-family-bar__home" href="https://projects.cristian-nichifor.com/ro/"><span aria-hidden="true">←</span> Proiecte civice</a>
+  <span class="civic-family-bar__tool">Achiziții publice din România</span>
+  <span class="badge" data-tone="success">Date reale</span>
+  <nav class="civic-family-bar__languages" aria-label="Limbă"><ul>
+    <li><a href="/open-procurement/" hreflang="ro" lang="ro" aria-current="true">Română</a></li>
+    <li><a href="/open-procurement/en/" hreflang="en" lang="en">English</a></li>
+  </ul></nav>
+</header>
+<main id="app-main" tabindex="-1">
+  <h1>Achiziții publice din România</h1>
+  <p class="purpose">Prețuri unitare comparabile din achizițiile directe, interogate în browser.</p>
+  <p class="civic-source"><b>Sursa:</b> SEAP, achiziții directe · <b>Licență:</b> — · <b>Preluat la:</b> <time datetime="2026-10-14">14 octombrie 2026</time> · <a href="/open-procurement/metodologie/">Metodologie</a></p>
+
+  <p class="state-note">Stare: încărcare peste 2 s (progres pe etape, niciodată doar un spinner)</p>
+  <section class="panel" aria-busy="true"><h2>Prețuri unitare pe produs</h2><p class="q">Cât a plătit, în medie, o autoritate pentru un produs?</p>
+    <div class="civic-progress" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" aria-label="Se pregătesc datele"><span></span></div>
+    <ol class="staged"><li>Se descarcă datele</li><li aria-current="step">Se pregătește interogarea</li><li class="todo">Se calculează prețurile</li></ol>
+  </section>
+
+  <p class="state-note">Stare: eroare cu reîncercare</p>
+  <section class="panel"><h2>Prețuri unitare pe produs</h2>
+    <div class="civic-status" role="alert"><div><b>Datele nu au putut fi încărcate</b>Conexiunea s-a întrerupt înainte ca fișierul cu achiziții să ajungă în browser.</div><button type="button" class="civic-button civic-button--primary">Reîncercați</button></div>
+  </section>
+
+  <p class="state-note">Stare: fără rezultate</p>
+  <section class="panel"><h2>Prețuri unitare pe produs</h2>
+    <div class="civic-empty"><b>Nu există achiziții în 2026 pentru acest produs.</b><p>Alegeți alt an sau alt cod CPV.</p></div>
+  </section>
+
+  <p class="state-note">Stare: gata (date demonstrative) — același grafic cu etichete pe bare și tabel alternativ</p>
+  <section class="panel"><h2>Prețuri unitare pe produs <span class="badge" data-tone="warning">Date demonstrative</span></h2><p class="q">Valorile de mai jos sunt ilustrative; cifrele reale apar după încărcarea setului de date.</p>
+    <figure class="bars" aria-label="Preț unitar mediu, lei"><div><span>Hârtie A4, top</span><i style="width:60%"></i><b>—</b></div><div><span>Toner, buc.</span><i style="width:85%"></i><b>—</b></div><div><span>Motorină, l</span><i style="width:30%"></i><b>—</b></div></figure>
+    <details><summary>Afișează ca tabel</summary><table class="civic-table"><caption>Preț unitar mediu, lei</caption><thead><tr><th scope="col">Produs</th><th scope="col">Preț mediu</th><th scope="col">Eșantion</th></tr></thead><tbody><tr><th scope="row">Hârtie A4, top</th><td>—</td><td>—</td></tr><tr><th scope="row">Toner, buc.</th><td>—</td><td>—</td></tr><tr><th scope="row">Motorină, l</th><td>—</td><td>—</td></tr></tbody></table></details>
+  </section>
+</main>
+<footer class="civic-site-footer"><nav aria-label="Informații despre site"><ul>
+  <li><a href="/open-procurement/metodologie/">Metodologie</a></li>
+  <li><a href="/open-procurement/confidentialitate/">Confidențialitate</a></li>
+  <li><a href="https://data.gov.ro/">Sursa datelor</a></li>
+  <li><a href="https://github.com/CristianNichifor/open-procurement/issues">Contact</a></li>
+  <li><a href="https://projects.cristian-nichifor.com/ro/despre/">Despre familia de instrumente</a></li>
+</ul></nav><p>Nimic nu părăsește browserul: pagina nu stochează date și nu rulează analize de trafic.</p></footer>
+</div>
+</div></div>
+<div><p class="caption">390 px</p><div class="frame phone">
+<div class="app">
+<a class="skip" href="#app-main">Sari la conținut</a>
+<header class="civic-family-bar">
+  <a class="civic-family-bar__home" href="https://projects.cristian-nichifor.com/ro/"><span aria-hidden="true">←</span> Proiecte civice</a>
+  <span class="civic-family-bar__tool">Achiziții publice din România</span>
+  <span class="badge" data-tone="success">Date reale</span>
+  <nav class="civic-family-bar__languages" aria-label="Limbă"><ul>
+    <li><a href="/open-procurement/" hreflang="ro" lang="ro" aria-current="true">Română</a></li>
+    <li><a href="/open-procurement/en/" hreflang="en" lang="en">English</a></li>
+  </ul></nav>
+</header>
+<main id="app-main" tabindex="-1">
+  <h1>Achiziții publice din România</h1>
+  <p class="purpose">Prețuri unitare comparabile din achizițiile directe, interogate în browser.</p>
+  <p class="civic-source"><b>Sursa:</b> SEAP, achiziții directe · <b>Licență:</b> — · <b>Preluat la:</b> <time datetime="2026-10-14">14 octombrie 2026</time> · <a href="/open-procurement/metodologie/">Metodologie</a></p>
+
+  <p class="state-note">Stare: încărcare peste 2 s (progres pe etape, niciodată doar un spinner)</p>
+  <section class="panel" aria-busy="true"><h2>Prețuri unitare pe produs</h2><p class="q">Cât a plătit, în medie, o autoritate pentru un produs?</p>
+    <div class="civic-progress" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" aria-label="Se pregătesc datele"><span></span></div>
+    <ol class="staged"><li>Se descarcă datele</li><li aria-current="step">Se pregătește interogarea</li><li class="todo">Se calculează prețurile</li></ol>
+  </section>
+
+  <p class="state-note">Stare: eroare cu reîncercare</p>
+  <section class="panel"><h2>Prețuri unitare pe produs</h2>
+    <div class="civic-status" role="alert"><div><b>Datele nu au putut fi încărcate</b>Conexiunea s-a întrerupt înainte ca fișierul cu achiziții să ajungă în browser.</div><button type="button" class="civic-button civic-button--primary">Reîncercați</button></div>
+  </section>
+
+  <p class="state-note">Stare: fără rezultate</p>
+  <section class="panel"><h2>Prețuri unitare pe produs</h2>
+    <div class="civic-empty"><b>Nu există achiziții în 2026 pentru acest produs.</b><p>Alegeți alt an sau alt cod CPV.</p></div>
+  </section>
+
+  <p class="state-note">Stare: gata (date demonstrative) — același grafic cu etichete pe bare și tabel alternativ</p>
+  <section class="panel"><h2>Prețuri unitare pe produs <span class="badge" data-tone="warning">Date demonstrative</span></h2><p class="q">Valorile de mai jos sunt ilustrative; cifrele reale apar după încărcarea setului de date.</p>
+    <figure class="bars" aria-label="Preț unitar mediu, lei"><div><span>Hârtie A4, top</span><i style="width:60%"></i><b>—</b></div><div><span>Toner, buc.</span><i style="width:85%"></i><b>—</b></div><div><span>Motorină, l</span><i style="width:30%"></i><b>—</b></div></figure>
+    <details><summary>Afișează ca tabel</summary><table class="civic-table"><caption>Preț unitar mediu, lei</caption><thead><tr><th scope="col">Produs</th><th scope="col">Preț mediu</th><th scope="col">Eșantion</th></tr></thead><tbody><tr><th scope="row">Hârtie A4, top</th><td>—</td><td>—</td></tr><tr><th scope="row">Toner, buc.</th><td>—</td><td>—</td></tr><tr><th scope="row">Motorină, l</th><td>—</td><td>—</td></tr></tbody></table></details>
+  </section>
+</main>
+<footer class="civic-site-footer"><nav aria-label="Informații despre site"><ul>
+  <li><a href="/open-procurement/metodologie/">Metodologie</a></li>
+  <li><a href="/open-procurement/confidentialitate/">Confidențialitate</a></li>
+  <li><a href="https://data.gov.ro/">Sursa datelor</a></li>
+  <li><a href="https://github.com/CristianNichifor/open-procurement/issues">Contact</a></li>
+  <li><a href="https://projects.cristian-nichifor.com/ro/despre/">Despre familia de instrumente</a></li>
+</ul></nav><p>Nimic nu părăsește browserul: pagina nu stochează date și nu rulează analize de trafic.</p></footer>
+</div>
+</div></div>
+</div></div>
+</body>
+</html>

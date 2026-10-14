@@ -6,7 +6,7 @@ const paths = [
     /<loc>https:\/\/projects\.cristian-nichifor\.com([^<]+)<\/loc>/g,
   ),
 ].map((m) => m[1]);
-assert.equal(paths.length, 30);
+assert.equal(paths.length, 36);
 for (const path of paths) {
   const html = await readFile(`dist${path}index.html`, "utf8");
   assert.equal((html.match(/<h1[ >]/g) || []).length, 1, path);

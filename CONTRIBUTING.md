@@ -19,7 +19,7 @@ separate clean checkout at exactly that SHA. Do not edit generated dist/ files.
 segments; mounted/external projects must not proxy. `functions/_middleware.ts`
 allows GET/HEAD only, strips cookies and credentials, preserves queries and
 upstream status, rewrites in-base redirects and applies security headers.
-`public/_redirects` owns legacy 301s; unknown paths must retain genuine 404s.
+The host serves no `_redirects`; unknown paths must retain genuine 404s.
 Tests mock fetch: local verification never contacts live civic upstreams.
 
 The Vite server serves the shell only. `pnpm build:functions` checks the worker

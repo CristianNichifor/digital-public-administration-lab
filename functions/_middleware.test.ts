@@ -103,3 +103,46 @@ describe('Dev preview proxying', () => {
     expect(init.headers.get('x-cnw-preview-gate')).toBeNull();
   });
 });
+
+describe('Canonical Link header on proxied pages', () => {
+  const proxied = async (response: Response, path = '/open-procurement/explore/') => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response));
+    return onRequest({ request: new Request(host + path + '?year=2024'), next: vi.fn() });
+  };
+  it('points an HTML 200 at its production address without the query', async () => {
+    const response = await proxied(new Response('<!doctype html>', { headers: { 'content-type': 'text/html; charset=utf-8' } }));
+    expect(response.headers.get('link')).toBe('<https://projects.cristian-nichifor.com/open-procurement/explore/>; rel="canonical"');
+  });
+  it('keeps an upstream Link value alongside', async () => {
+    const response = await proxied(new Response('', { headers: { 'content-type': 'text/html', link: '</a.css>; rel=preload; as=style' } }));
+    expect(response.headers.get('link')).toBe('</a.css>; rel=preload; as=style, <https://projects.cristian-nichifor.com/open-procurement/explore/>; rel="canonical"');
+  });
+  it.each([
+    ['non-HTML', new Response('{}', { headers: { 'content-type': 'application/json' } })],
+    ['non-200 HTML', new Response('missing', { status: 404, headers: { 'content-type': 'text/html' } })],
+  ])('leaves %s responses alone', async (_, upstream) => {
+    expect((await proxied(upstream)).headers.get('link')).toBeNull();
+  });
+});
+
+describe('Security headers on proxied responses', () => {
+  it('adds framing, sniffing and referrer protection but no CSP', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('', { headers: { 'content-type': 'text/html' } })));
+    const response = await onRequest({ request: new Request(host + '/legislation-linter/'), next: vi.fn() });
+    expect(response.headers.get('x-frame-options')).toBe('SAMEORIGIN');
+    expect(response.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(response.headers.get('referrer-policy')).toBe('strict-origin-when-cross-origin');
+    expect(response.headers.get('content-security-policy')).toBeNull();
+  });
+  it("keeps the app's own CSP and stricter framing rule", async () => {
+    const csp = "default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.jsdelivr.net";
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('', { headers: { 'content-security-policy': csp, 'x-frame-options': 'DENY' } })));
+    const response = await onRequest({ request: new Request(host + '/legislation-linter/'), next: vi.fn() });
+    expect(response.headers.get('content-security-policy')).toBe(csp);
+    expect(response.headers.get('x-frame-options')).toBe('DENY');
+  });
+  it('protects the 405 and gate responses too', async () => {
+    const response = await onRequest({ request: new Request(host + '/legislation-linter/', { method: 'POST' }), next: vi.fn() });
+    expect(response.headers.get('x-frame-options')).toBe('SAMEORIGIN');
+  });
+});

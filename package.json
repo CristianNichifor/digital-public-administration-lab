@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "vite",
     "build": "pnpm build:shell && node scripts/mount-bureaucracy-as-code.mjs",
-    "build:shell": "tsc -b && vite build && vite build --ssr src/prerender.tsx --outDir .prerender && node .prerender/prerender.js",
+    "build:shell": "node scripts/refresh-freshness.mjs && tsc -b && vite build && vite build --ssr src/prerender.tsx --outDir .prerender && node .prerender/prerender.js",
     "build:functions": "wrangler pages functions build --outdir=.wrangler/functions-build",
     "preview": "vite preview",
     "typecheck": "tsc -b",
@@ -17,28 +17,29 @@
     "test": "vitest run",
     "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm build:functions",
     "smoke": "node scripts/smoke-dist.mjs && node scripts/verify-catalogue.mjs",
+    "check:live": "node scripts/check-live-paths.mjs",
     "setup:sibling": "node scripts/setup-bureaucracy-as-code.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.2.0",
-    "lucide-react": "^0.542.0",
+    "lucide-react": "^1.56.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "typescript": "^6.0.3",
     "vite": "^8.3.2"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.5",
+    "@eslint/js": "^10.0.1",
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "eslint": "^9.39.5",
+    "eslint": "^10.12.0",
     "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.6",
+    "eslint-plugin-react-refresh": "^0.5.7",
     "globals": "^16.5.0",
-    "typescript-eslint": "^8.70.0",
+    "typescript-eslint": "^8.71.2",
     "vitest": "^5.0.3",
-    "wrangler": "^4.131.2"
+    "wrangler": "^4.150.0"
   },
   "repository": {
     "type": "git",
