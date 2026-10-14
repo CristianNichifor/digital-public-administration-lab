@@ -281,3 +281,21 @@ describe("UXG-4 page structure", () => {
     }
   });
 });
+
+describe("DS-5 touch targets", () => {
+  const css = readFileSync("src/styles.css", "utf8");
+  const rule = (selector: string) =>
+    css.slice(css.indexOf(`\n${selector} {`)).split("}")[0];
+  it("gives chips, header links and buttons a 44 px minimum height", () => {
+    for (const selector of [".collections a", ".site-header nav a", ".button"])
+      expect(rule(selector), selector).toMatch(/min-height:\s*44px/);
+  });
+  it("keeps the current chip visible in forced colours", () => {
+    const block = css.slice(css.indexOf("@media (forced-colors: active)"));
+    expect(block).toMatch(/\.collections a\[aria-current\][^{]*\{[^}]*border: [^;]*Highlight/);
+  });
+  it("gives footer links and the back link a 24 px minimum height", () => {
+    for (const selector of ["footer a", ".back"])
+      expect(rule(selector), selector).toMatch(/min-height:\s*24px/);
+  });
+});

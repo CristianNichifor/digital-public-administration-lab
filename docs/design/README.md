@@ -24,6 +24,19 @@ Guideline sources: this repo's `docs/ux-guidelines.md` (hub) and civic-ui
 | [03 About & method](screens/03-about-method.html) | Understand who builds the tools, the method, corrections, tracking | hub §2 footer, UX-9; fleet §3 tone | PR #42 content plus an anchored section list under the lead; header and footer link to the page | DS-3: four H2s in order, anchor list links resolve, header and footer links |
 | [04 Family bar and footer in an app](screens/04-app-family-bar.html) | Recognise the family, get back to the hub, read provenance, survive loading/error/empty | fleet §2 anatomy, §4 viz, §5 states, §7 badge, §8 UX-1/3/9/10/17 | Every app gets the civic-ui `FamilyBar` (back link to the hub, registry name, badge, language switch), H1 + purpose + "Date:" line, staged loading, error with one retry, empty with a reason, demo badge with labelled bars and "Afișează ca tabel"; footer adds a link to the hub About page | DS-4: per app, civic-ui checklist UX-1, UX-3, UX-9, UX-10, UX-17 |
 
+## Implementation status
+
+One pull request per screen; a second session seeing a row already owned
+should pick another row rather than open a parallel PR.
+
+| Screen | Spec item | Owned by | State on 2026-10-14 |
+| --- | --- | --- | --- |
+| 01 Home: theme counts, badge tones, empty state | DS-1 | #50 (#56 closed as duplicate) | open |
+| 02 Project page: provenance line, tool buttons | DS-2 | #54 (#53, #55 closed as duplicates) | open |
+| 03 About: anchored section list, header link | DS-3 | #51 (#52, #58 closed as duplicates); 404 link to About merged in #48 | open |
+| 04 Family bar and footer inside an app | DS-4 | each app's own session (civic-ui `SiteShell`) | not started in this repo |
+| Touch targets: 44 px chips, header links, buttons; 24 px footer and back links | DS-5 | #49 (#46 closed in its favour) | open |
+
 ## Before screenshots and mockup PNGs
 
 Not produced in this round: the fleet ran without browsers on 2026-10-14

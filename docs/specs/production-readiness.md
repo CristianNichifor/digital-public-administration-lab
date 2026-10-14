@@ -250,6 +250,22 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
   exactly one H1, a header, a `main#main` and a footer, and every image has
   an `alt`.
 - Test: `src/ux.test.ts` UXG-4 (a regression guard; it passed on arrival).
+
+### UXG-B3 Data as of, from each app's own provenance (`partial`)
+
+- Given a catalogue entry whose app documents a data-as-of date in its
+  repository, then the entry carries it as `dataAsOf` and the card and project
+  page show "Data as of" / "Date la" with that month.
+- Found on 2026-10-14: Digital Romania Atlas publishes `META.dataAsOf`
+  (`src/data/meta.ts`, "2026-10-14"); it is the one entry filled. Open
+  Procurement states only a coverage range (2016–2026), the budget dashboard
+  reads `updatedAt` live from its API, Legislation Linter shows freshness per
+  law, and the simulators, Bureaucracy as Code, the data-flows demo and the
+  USR prototype document no data date. Those stay empty rather than guessed:
+  needs human (each app adds a provenance line first, see civic-ui
+  `docs/ux-guidelines.md` section 2).
+- Test: `src/data-as-of.test.ts`.
+
 ### DS-3 About page: anchors and header link (`done`)
 
 Implements `docs/design/screens/03-about-method.html` (PR #47) on the UX-9
