@@ -9,7 +9,7 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
 
 ## Theme A: legal and identity
 
-### DPAL-1 Privacy page and imprint (`todo`)
+### DPAL-1 Privacy page and imprint (`done`)
 
 - Given a built `dist/`, when `/privacy/` and `/ro/confidentialitate/` are
   requested, then each is a prerendered page in its language with an imprint
@@ -26,7 +26,7 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
   page; 404 links to both), `scripts/verify-catalogue.mjs` (route count).
 - The Romanian text is written by the agent: needs human review.
 
-### DPAL-3 Favicon, Open Graph image and Twitter tags (`todo`)
+### DPAL-3 Favicon, Open Graph image and Twitter tags (`done`)
 
 - Given any prerendered page, then it links `/favicon.svg` as its icon, carries
   `og:image` (absolute URL to a 1200x630 PNG in `dist/`), `og:site_name`,
@@ -35,11 +35,11 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
 - Tests: `scripts/smoke-dist.mjs` asserts each tag once per sitemap page and
   that the referenced files exist in `dist/`.
 
-### DPAL-6 Package homepage (`todo`)
+### DPAL-6 Package homepage (`done`)
 
 - Given `package.json`, then `homepage` is `https://projects.cristian-nichifor.com/`,
   the catalogue origin plus a trailing slash.
-- Test: `src/catalogue.test.ts`.
+- Test: `src/catalogue.test.ts`. The homepage was already correct on dev; the test pins it.
 
 ## Theme B: hub correctness
 
