@@ -24,19 +24,18 @@ describe("DS-2 project page provenance line", () => {
       expect(text(line)).toContain(`${ro ? "Sursa" : "Source"}: ${page.sources!.map((s) => s.name).join(", ")}`);
       expect(text(line)).toContain(`${ro ? "Licență" : "Licence"}: Open Government Licence v1.0`);
       expect(text(line)).toContain(`${ro ? "Date la" : "Data as of"}: —`);
-      const method = (page as { methodHref?: string }).methodHref;
-      if (method) expect(line).toContain(`<a href="${method}">${ro ? "Metodologie" : "Method"} ↗</a>`);
-      else expect(text(line)).toContain(`${ro ? "Metodologie" : "Method"}: —`);
+      expect(line).toContain(`<a href="${page.methodHref}">${ro ? "Metodologie" : "Method"} ↗</a>`);
       const bare = catalogue.find((e) => e.collection === "civic" && !projectPages[e.id]?.sources)!;
       const line2 = render(entryPath(bare, locale)).match(/<p class="provenance">.*?<\/p>/s)![0];
       expect(text(line2)).toContain(`${ro ? "Sursa" : "Source"}: —`);
       expect(text(line2)).toContain(`${ro ? "Licență" : "Licence"}: —`);
+      expect(text(line2)).toContain(`${ro ? "Metodologie" : "Method"}: —`);
       for (const other of catalogue.filter((e) => e.collection !== "civic"))
         expect(render(entryPath(other, locale)), other.id).not.toContain('class="provenance"');
     }
   });
   it("only links methodology documents the apps actually publish", () => {
-    for (const [id, page] of Object.entries(projectPages) as [string, { methodHref?: string }][])
+    for (const [id, page] of Object.entries(projectPages))
       if (page.methodHref)
         expect(page.methodHref, id).toMatch(
           new RegExp(`^https://github.com/CristianNichifor/${by(id).repository}/(blob|tree)/main/`),

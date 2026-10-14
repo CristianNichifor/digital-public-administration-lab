@@ -49,8 +49,7 @@ function Status({ entry, locale }: { entry: Entry; locale: Locale }) {
 function Provenance({ entry, locale }: { entry: Entry; locale: Locale }) {
   const ro = locale === "ro";
   const dash = "—";
-  // `methodHref` is typed and filled by #53; until it lands the link is simply absent.
-  const page: (typeof projectPages)[string] & { methodHref?: string } = projectPages[entry.id] ?? {};
+  const page = projectPages[entry.id] ?? {};
   const sources = page.sources?.map((source) => source.name).join(", ");
   const licences = [...new Set(page.sources?.map((source) => source.licence).filter(Boolean))].join(", ");
   const method = ro ? "Metodologie" : "Method";

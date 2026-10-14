@@ -256,10 +256,12 @@ Implements `docs/design/screens/02-project-page.html` (PR #47).
 
 - Given a civic project page (not a Coda pack or tool page), then under the
   summary and before the buttons it shows one provenance line: source names, "Data as of" / "Date la", licence and a
-  method link, each "—" when the catalogue holds no value. The method link
-  reads `methodHref`, recorded per project by #53 (ds-hub); nothing is
-  invented here. Styles live in `src/screens.css`, layered over
-  `styles.css`, which #49 and #46 own this round.
+  method link, each "—" when the catalogue holds no value. `methodHref` is
+  recorded only where the app publishes a methodology: Open Procurement
+  `METHODOLOGY.md`, Digital Romania Atlas `docs/METHODOLOGY.md` and the
+  romania-reforms simulators folder (one methodology per simulator); nothing
+  is invented. Styles live in `src/screens.css`, layered over `styles.css`,
+  which #49 owns this round.
 - Given the buttons, then the primary reads "Open the tool" / "Deschide
   instrumentul" (Civic UI keeps "Explore components") and "View source" is a
   secondary bordered button.
