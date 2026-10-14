@@ -1,7 +1,7 @@
 import metadata from "./catalogue-content.json";
-import { projects } from "./projects";
+import { projects, siteOrigin } from "./projects";
 export type Locale = "en" | "ro";
-export const origin = "https://projects.cristian-nichifor.com";
+export const origin = siteOrigin;
 export const collections = [
   {
     id: "coda-packs",

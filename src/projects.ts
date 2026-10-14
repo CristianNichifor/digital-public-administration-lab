@@ -29,6 +29,9 @@ export interface Project {
   href?: string;
 }
 
+/** Production address of this host. */
+export const siteOrigin = "https://projects.cristian-nichifor.com";
+
 const GH_PAGES = "https://cristiannichifor.github.io";
 
 /** A project's production build on Cloudflare Pages (its `main` branch), laid out at `/<slug>/`. */

@@ -1,4 +1,4 @@
-import { matchProxyRoute, rewriteLocation } from "../src/projects";
+import { matchProxyRoute, rewriteLocation, siteOrigin } from "../src/projects";
 import { securityHeaders } from "../src/security-headers";
 
 /**
@@ -113,6 +113,13 @@ export async function onRequest(context: PagesContext): Promise<Response> {
     // An app's own framing rule may be stricter; the host only fills the gap.
     if (name === "X-Frame-Options" && responseHeaders.has(name)) continue;
     responseHeaders.set(name, value);
+  }
+
+  // Proxied pages are reachable at their upstream pages.dev address too; point search engines here.
+  if (upstreamResponse.status === 200 && responseHeaders.get("content-type")?.startsWith("text/html")) {
+    const canonical = `<${siteOrigin}${url.pathname}>; rel="canonical"`;
+    const link = responseHeaders.get("link");
+    responseHeaders.set("link", link ? `${link}, ${canonical}` : canonical);
   }
 
   // GitHub Pages 301s `/legislation-linter` to `/legislation-linter/`. Left alone, that would
