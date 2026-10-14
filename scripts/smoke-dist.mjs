@@ -57,6 +57,10 @@ for (const path of paths) {
   assert.equal(once(/<meta name="twitter:image" content="([^"]+)"/g, "twitter:image"), image, `${path}: twitter:image`);
 }
 
+const headers = await read("dist/_headers");
+for (const path of paths)
+  assert.match(headers, new RegExp(`\\n${path.replaceAll("/", "\\/")}\\n  Content-Security-Policy: default-src 'self';[^\\n]*frame-ancestors 'none'`), `${path}: no catalogue CSP rule in _headers`);
+
 const notFound = await read("dist/404.html");
 for (const privacy of ["/privacy/", "/ro/confidentialitate/"])
   assert.ok(notFound.includes(`href="${privacy}"`), `404.html does not link ${privacy}`);
