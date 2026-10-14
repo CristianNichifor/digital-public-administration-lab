@@ -83,6 +83,9 @@ a:focus-visible {
 .site-header nav a {
   text-decoration: none;
   padding-block: 12px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
 }
 .hero {
   padding-block: 90px 56px;
@@ -132,6 +135,9 @@ h3 {
 }
 .collections a {
   padding: 10px 17px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
   border-radius: 99px;
   text-decoration: none;
   font-size: 14px;
@@ -158,6 +164,32 @@ h3 {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #466d59;
+}
+/* DS-1: a tone adds a border and a colour stripe; the text alone carries the meaning. */
+.tag[data-tone] {
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.tag[data-tone="success"] {
+  border-color: #1f7a4d;
+  box-shadow: inset 3px 0 0 #1f7a4d;
+}
+.tag[data-tone="warning"] {
+  border-color: #a07600;
+  box-shadow: inset 3px 0 0 #e0a800;
+}
+.empty {
+  padding: 40px 0;
+  color: #4e6257;
+  max-width: 60ch;
+}
+.empty a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  text-decoration: none;
 }
 .project h3 {
   margin: 20px 0 14px;
@@ -211,6 +243,13 @@ h3 {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #466d59;
+}
+.theme h2 small {
+  margin-left: 8px;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
 }
 .project-action {
   font-size: 13px;
