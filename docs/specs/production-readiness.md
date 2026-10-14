@@ -155,7 +155,7 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
 
 ## Theme E: generated freshness and project pages
 
-### DPAL-11 Freshness from the GitHub API (`todo`)
+### DPAL-11 Freshness from the GitHub API (`done`)
 
 - Given a build with network access, when `pnpm build` runs, then each
   catalogue entry's `updated` is the month of the last commit on its

@@ -1,4 +1,5 @@
 import metadata from "./catalogue-content.json";
+import freshness from "./freshness.json";
 import { projects, siteOrigin } from "./projects";
 export type Locale = "en" | "ro";
 export const origin = siteOrigin;
@@ -73,12 +74,18 @@ export const privacyMeta = {
 };
 export const privacyPath = (locale: Locale) =>
   locale === "ro" ? "/ro/confidentialitate/" : "/privacy/";
+function lastCommitMonth(repository: string) {
+  const date = (freshness as Record<string, string>)[repository];
+  if (!date) throw new Error(`Missing freshness for ${repository}; run scripts/refresh-freshness.mjs`);
+  return date.slice(0, 7);
+}
 export const catalogue = projects.map((runtime) => {
   const content = metadata[runtime.slug as keyof typeof metadata];
   if (!content) throw new Error(`Missing catalogue content: ${runtime.slug}`);
   return {
     ...content,
     status: content.status as Status,
+    updated: lastCommitMonth(content.repository),
     theme: "theme" in content ? content.theme : undefined,
     dataAsOf: "dataAsOf" in content ? (content.dataAsOf as string) : undefined,
     id: runtime.slug,
