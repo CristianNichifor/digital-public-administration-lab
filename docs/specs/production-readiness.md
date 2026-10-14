@@ -153,6 +153,45 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
 
 - Not started: content needs the author's method statement.
 
+## Theme E: generated freshness and project pages
+
+### DPAL-11 Freshness from the GitHub API (`todo`)
+
+- Given a build with network access, when `pnpm build` runs, then each
+  catalogue entry's `updated` is the month of the last commit on its
+  repository's production branch (`main`), read from the GitHub API
+  (`GITHUB_TOKEN` used when set), and the committed cache
+  `src/freshness.json` is rewritten with those dates.
+- Given a build without network access, or a failed or non-OK response for a
+  repository, then that repository keeps its cached date and the build still
+  succeeds; `updated` is never the build date.
+- Given the catalogue, then every repository has a cached date and
+  `catalogue-content.json` holds no hand-written `updated`.
+- Tests: `src/freshness.test.ts` (mocked `fetch`: success, HTTP error,
+  network error, token header, branch), `src/ux.test.ts` (UX-7 formats).
+
+### DPAL-12 Project page template (`todo`)
+
+- Given a project page, then it shows, in this order when present: "What it
+  answers" (up to three bullets), "What it is not" (the existing catalogue
+  caveat, set apart as a callout), "How it works", "Sources" (with licence
+  where known) and "Related tools" (other catalogue entries in the same theme
+  or collection).
+- Given an entry with no curated bullets or sources, then that section is
+  left out rather than filled with invented text; every bullet and source
+  restates an existing catalogue, README or project-description fact.
+- Tests: `src/ux.test.ts` (rendered sections, order, empty-section omission,
+  related links resolve to catalogue pages).
+- Agent-written Romanian and the chosen bullets: needs human review.
+
+### DPAL-13 "How it works" from civic-tech-hub (`todo`)
+
+- Given a project that civic-tech-hub described (its `index.html` before the
+  redirect, commit `f0184cd`), then its project page carries that concrete
+  description in both languages under "How it works".
+- Tests: `src/ux.test.ts` (the carried-over text renders on the EN and RO
+  pages of each described project).
+
 ## Maintainer-only
 
 - DPAL-7 uptime probe workflow: `needs-human` (workflow changes; diff in the PR body).
