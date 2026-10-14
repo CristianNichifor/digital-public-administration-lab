@@ -34,6 +34,27 @@ for (const path of paths) {
   const privacy = path.startsWith("/ro/") ? "/ro/confidentialitate/" : "/privacy/";
   const footer = html.slice(html.lastIndexOf("<footer"));
   assert.ok(footer.includes(`href="${privacy}"`), `${path}: footer does not link ${privacy}`);
+
+  const once = (pattern, what) => {
+    const found = [...html.matchAll(pattern)];
+    assert.equal(found.length, 1, `${path}: expected one ${what}, found ${found.length}`);
+    return found[0][1];
+  };
+  const icon = once(/<link rel="icon" href="([^"]+)" type="image\/svg\+xml"/g, "svg icon");
+  await access(resolve(root, `dist${icon}`));
+  const image = once(/<meta property="og:image" content="([^"]+)"/g, "og:image");
+  assert.match(image, /^https:\/\/projects\.cristian-nichifor\.com\/.+\.png$/, `${path}: og:image must be an absolute PNG URL`);
+  await access(resolve(root, `dist${new URL(image).pathname}`));
+  once(/<meta property="og:image:width" content="(1200)"/g, "og:image:width");
+  once(/<meta property="og:image:height" content="(630)"/g, "og:image:height");
+  once(/<meta property="og:image:alt" content="([^"]+)"/g, "og:image:alt");
+  once(/<meta property="og:site_name" content="([^"]+)"/g, "og:site_name");
+  const locale = once(/<meta property="og:locale" content="([^"]+)"/g, "og:locale");
+  assert.equal(locale, path.startsWith("/ro/") ? "ro_RO" : "en_US", `${path}: og:locale`);
+  once(/<meta name="twitter:card" content="(summary_large_image)"/g, "twitter:card");
+  once(/<meta name="twitter:title" content="([^"]+)"/g, "twitter:title");
+  once(/<meta name="twitter:description" content="([^"]+)"/g, "twitter:description");
+  assert.equal(once(/<meta name="twitter:image" content="([^"]+)"/g, "twitter:image"), image, `${path}: twitter:image`);
 }
 
 const notFound = await read("dist/404.html");
