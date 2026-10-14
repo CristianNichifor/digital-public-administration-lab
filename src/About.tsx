@@ -1,3 +1,4 @@
+import { aboutSections } from "./about-sections";
 import { aboutMeta, privacyPath, type Locale } from "./catalogue";
 
 /**
@@ -15,6 +16,20 @@ const reformsMethods = `${gh}/romania-reforms/tree/main/simulators`;
 const bureaucracyPrivacy = `${gh}/bureaucracy-as-code/blob/main/docs/privacy-model.md`;
 const licence = `${gh}/digital-public-administration-lab/blob/main/LICENSE`;
 
+function Toc({ locale }: { locale: Locale }) {
+  return (
+    <nav aria-label={locale === "ro" ? "Pe această pagină" : "On this page"}>
+      <ul className="toc">
+        {aboutSections.map((section) => (
+          <li key={section.id[locale]}>
+            <a href={`#${section.id[locale]}`}>{section[locale]}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
 export function About({ locale }: { locale: Locale }) {
   return locale === "ro" ? <Romanian /> : <English />;
 }
@@ -29,7 +44,8 @@ function English() {
         their sources shown. This page says who makes them, how the numbers are
         produced, how to get an error corrected and what a visit involves.
       </p>
-      <h2>Independence</h2>
+      <Toc locale="en" />
+      <h2 id="independence">Independence</h2>
       <p>
         The projects are built by Cristian Nichifor and are not affiliated with
         the Romanian state or any public institution. Every project is published
@@ -37,7 +53,7 @@ function English() {
         GitHub, so anyone can read how a figure was produced and run the code
         themselves.
       </p>
-      <h2>Sources shown</h2>
+      <h2 id="sources">Sources shown</h2>
       <p>
         Each project page on this site lists the sources it uses and their
         licence, and shows the month its data is as of. The projects follow a few
@@ -68,7 +84,7 @@ function English() {
           scenarios; they do not establish legal entitlements.
         </li>
       </ul>
-      <h2>Corrections</h2>
+      <h2 id="corrections">Corrections</h2>
       <p>
         Two projects publish a formal corrections policy today, and the others
         take reports through their GitHub issues.
@@ -96,7 +112,7 @@ function English() {
           For this site itself, <a href={hubIssues}>open an issue on GitHub</a>.
         </li>
       </ul>
-      <h2>No tracking</h2>
+      <h2 id="tracking">No tracking</h2>
       <p>
         The catalogue pages set no cookies, run no analytics and store nothing in
         your browser. The projects publish no personal data: Open Procurement
@@ -121,7 +137,8 @@ function Romanian() {
         România, cu sursele la vedere. Această pagină spune cine le face, cum sunt
         produse cifrele, cum se corectează o eroare și ce implică o vizită.
       </p>
-      <h2>Independență</h2>
+      <Toc locale="ro" />
+      <h2 id="independenta">Independență</h2>
       <p>
         Proiectele sunt construite de Cristian Nichifor și nu sunt afiliate
         statului român sau vreunei instituții publice. Fiecare proiect este
@@ -129,7 +146,7 @@ function Romanian() {
         astfel încât oricine poate citi cum a fost produsă o cifră și poate rula
         codul.
       </p>
-      <h2>Surse la vedere</h2>
+      <h2 id="surse">Surse la vedere</h2>
       <p>
         Fiecare pagină de proiect de pe acest site enumeră sursele folosite și
         licența lor și arată luna la care sunt actualizate datele. Proiectele
@@ -162,7 +179,7 @@ function Romanian() {
           explorează scenarii; nu stabilesc drepturi legale.
         </li>
       </ul>
-      <h2>Corectări</h2>
+      <h2 id="corectari">Corectări</h2>
       <p>
         Două proiecte publică astăzi o politică formală de corectări, iar
         celelalte primesc sesizări prin paginile lor de issue pe GitHub.
@@ -190,7 +207,7 @@ function Romanian() {
           Pentru acest site, <a href={hubIssues}>deschide un issue pe GitHub</a>.
         </li>
       </ul>
-      <h2>Fără urmărire</h2>
+      <h2 id="urmarire">Fără urmărire</h2>
       <p>
         Paginile catalogului nu setează cookie-uri, nu folosesc instrumente de
         analiză a traficului și nu salvează nimic în browserul tău. Proiectele nu
