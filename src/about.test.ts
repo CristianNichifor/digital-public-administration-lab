@@ -46,7 +46,7 @@ describe("UX-9 about & method page", () => {
     for (const locale of ["en", "ro"] as const) {
       const html = render(aboutPath(locale));
       const [h1, ...h2s] = headings[locale];
-      expect(html).toContain(`<h1>${h1.replace("&", "&amp;")}</h1>`);
+      expect(html).toContain(`<h1>${h1.replaceAll("&", "&amp;")}</h1>`);
       let last = 0;
       for (const heading of h2s) {
         const at = html.indexOf(`<h2>${heading}</h2>`);
@@ -77,7 +77,7 @@ describe("UX-9 about & method page", () => {
     for (const page of pages) {
       const footer = render(page.path).slice(render(page.path).lastIndexOf("<footer"));
       expect(footer, page.path).toContain(
-        `href="${aboutPath(page.locale)}">${labels[page.locale].replace("&", "&amp;")}</a>`,
+        `href="${aboutPath(page.locale)}">${labels[page.locale].replaceAll("&", "&amp;")}</a>`,
       );
     }
   });
