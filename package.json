@@ -39,7 +39,7 @@
     "globals": "^16.5.0",
     "typescript-eslint": "^8.71.2",
     "vitest": "^5.0.3",
-    "wrangler": "^4.150.0"
+    "wrangler": "^4.151.1"
   },
   "repository": {
     "type": "git",
