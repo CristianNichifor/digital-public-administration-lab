@@ -7,7 +7,11 @@
   gap: 4px 16px;
   margin: 0 0 8px;
   font-size: 14px;
-  color: #40594e;
+  color: var(--muted);
+}
+.provenance .missing {
+  font-style: normal;
+  color: var(--soft);
 }
 .button--secondary {
   background: transparent;
@@ -46,12 +50,12 @@
   border-radius: 4px;
 }
 .tag[data-tone="success"] {
-  border-color: #1f7a4d;
-  box-shadow: inset 3px 0 0 #1f7a4d;
+  border-color: var(--success);
+  box-shadow: inset 3px 0 0 var(--success);
 }
 .tag[data-tone="warning"] {
-  border-color: #a07600;
-  box-shadow: inset 3px 0 0 #e0a800;
+  border-color: var(--warning);
+  box-shadow: inset 3px 0 0 var(--warning-stripe);
 }
 .theme h2 small {
   margin-left: 8px;
@@ -62,7 +66,7 @@
 }
 .empty {
   padding: 40px 0;
-  color: #4e6257;
+  color: var(--soft);
   max-width: 60ch;
 }
 .empty a {
@@ -125,4 +129,54 @@
 }
 .project .status {
   max-width: none;
+}
+
+/* Catalogue cards share their row's tracks, so badges, titles, summaries, caveats and languages
+   line up across a row even when one status line or title wraps. */
+.project-grid > .project:has(> .status) {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 5;
+  align-content: start;
+  row-gap: 12px;
+}
+/* Grid items do not collapse margins, so the row gap alone spaces the card's parts. */
+.project-grid > .project:has(> .status) > * {
+  margin-block: 0;
+}
+.project-grid > .project:has(> .status) > h3 {
+  margin-top: 8px;
+}
+/* Keyboard focus: the ring is drawn around the whole card, which is the click target. */
+.project h3 a::after {
+  inset: 16px -14px;
+  border-radius: 6px;
+}
+.project h3 a:focus-visible {
+  outline: none;
+}
+.project h3 a:focus-visible::after {
+  outline: 3px solid var(--focus);
+  outline-offset: 0;
+}
+.project:focus-within h3 {
+  color: var(--green);
+}
+.skip:focus {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+/* About and privacy end with breathing room above the footer. */
+.hero.detail.legal {
+  padding-bottom: 72px;
+}
+.related a:hover b {
+  color: var(--green);
+  text-decoration: underline;
+}
+@media (forced-colors: active) {
+  .project h3 a:focus-visible::after {
+    outline-color: Highlight;
+  }
 }
