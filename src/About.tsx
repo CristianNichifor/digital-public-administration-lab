@@ -214,7 +214,7 @@ function Romanian() {
         publică date cu caracter personal: Achiziții publice elimină numele
         persoanelor de contact, adresele de e-mail și telefoanele înainte de
         publicare, iar registrul din Birocrație ca program{" "}
-        <a href={bureaucracyPrivacy}>conține hash-uri, niciodată nume sau identificatori</a>.
+        <a href={bureaucracyPrivacy}>conține hash-uri, niciodată nume sau identificatori</a>.{" "}
         <a href={privacyPath("ro")}>Pagina de confidențialitate</a> enumeră
         singurul furnizor de găzduire care prelucrează datele cererilor și ce
         încarcă fiecare proiect de la terți.
