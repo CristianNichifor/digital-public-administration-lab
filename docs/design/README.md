@@ -55,7 +55,8 @@ a browser; the 390 px frame sits to the right of the 1440 px frame.
 - Badge: keep `statusLabels` as the only text; add `data-tone` from the
   status key (`live-data` → `success`, `demo-data` → `warning`, others none).
 - Provenance line needs new optional catalogue fields `source`, `licence`,
-  `methodHref` per entry; render "—" when absent, never invent.
+  `methodHref` per entry; render "not recorded" / "neconsemnată" when absent (was "—", which read as
+  broken), never invent.
 - The hub keeps its own header (brand, About, Work with me, language) and
   does not adopt `SiteShell` yet (UXG-B8); apps do.
 - Touch targets: chips, header links and buttons are 44 px; footer links and

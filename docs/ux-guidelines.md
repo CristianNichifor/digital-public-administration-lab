@@ -28,14 +28,17 @@ Every hub page, top to bottom:
 1. Skip link, then site header: brand (home link) and language switch.
 2. H1 and a one-line purpose (hero `lead`).
 3. Provenance: on project pages, the status line (badge · updated · data as
-   of). The hub holds no data of its own, so it has no "Date: sursă, an" line;
+   of). On civic project pages the provenance line names a value the
+   catalogue does not hold as "not recorded" / "neconsemnată", never "—"
+   and never an invented value. The hub holds no data of its own, so it has no "Date: sursă, an" line;
    each app carries its own.
 4. Primary task: on home, the themed card grid; on a project page, the
    "Open the tool" button.
 5. Secondary: filters, project page sections (what it answers → what it is
-   not → how it works → sources → related tools).
-6. Footer: copyright, GitHub, contact, privacy. A method page (UX-9) is
-   pending owner content.
+   not → how it works → sources → any project-specific sections, such as
+   the budget dashboards or the Coda pack story → related tools, last).
+6. Footer: copyright, GitHub, contact, About & method, privacy. The About &
+   method page (UX-9) is a draft awaiting owner review.
 
 ### How the hub presents an app
 
@@ -137,6 +140,12 @@ source on the chart, demo/partial badge.
   focus ring.
 - `prefers-reduced-motion`: no transitions beyond colour.
 - `forced-colors`: badges and buttons keep a border.
+- `prefers-color-scheme: dark`: the pages follow the system theme through the
+  colour tokens on `:root` in `src/styles.css` (the 404 page repeats them).
+  No toggle: the site stores nothing in the browser. Body text stays at
+  4.5:1 or more in both themes.
+- Card focus: the ring is drawn around the whole card, which is the card
+  link's click area.
 
 ## 7. Status vocabulary
 
@@ -176,7 +185,9 @@ See backlog.
 | UXG-B2 | EN/RO names differ in meaning for two apps | catalogue, apps | needs human |
 | UXG-B3 | No entry has `dataAsOf`; cards show only "Updated" | `catalogue-content.json` | fill from each app's provenance line |
 | UXG-B4 | 9 of 10 entries are "Prototype"; review with evidence | catalogue | needs human |
-| UXG-B5 | About and method page missing (UX-9) | hub | needs owner content |
+| UXG-B5 | About and method page is an agent-written draft (UX-9, #51) | hub | needs owner review of the text |
 | UXG-B6 | No automated axe / 390 px check (touch-target CSS minimums are tested, DS-5) | hub | add Playwright smoke when CI allows |
-| UXG-B7 | Footer has no method link | hub | after UX-9 |
+| UXG-B7 | ~~Footer has no method link~~ resolved: footer links "About & method" | hub | done |
 | UXG-B8 | The hub does not use civic-ui `SiteShell`/`SiteFooter` | hub | later, after civic-ui guideline lands |
+| UXG-B9 | Six of seven civic pages record no source, licence or method; their provenance line reads "not recorded" | `project-pages.ts` | needs owner content from each app |
+| UXG-B10 | Collection pages for Coda Packs, Tools and Experiments hold one entry each and share one generic lead | catalogue | needs owner decision: keep, merge into Other, or write a lead per collection |

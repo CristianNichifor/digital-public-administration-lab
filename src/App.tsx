@@ -67,10 +67,12 @@ function Status({ entry, locale }: { entry: Entry; locale: Locale }) {
     </p>
   );
 }
-/** DS-2: one provenance line under the summary; "—" where the catalogue holds no value. */
+/** DS-2: one provenance line under the summary; a value the catalogue does not hold is named as such, never invented. */
 function Provenance({ entry, locale }: { entry: Entry; locale: Locale }) {
   const ro = locale === "ro";
-  const dash = "—";
+  const missing = (plural = false) => (
+    <i className="missing">{ro ? (plural ? "neconsemnate" : "neconsemnată") : "not recorded"}</i>
+  );
   const page = projectPages[entry.id] ?? {};
   const sources = page.sources?.map((source) => source.name).join(", ");
   const licences = [...new Set(page.sources?.map((source) => source.licence).filter(Boolean))].join(", ");
@@ -78,21 +80,21 @@ function Provenance({ entry, locale }: { entry: Entry; locale: Locale }) {
   return (
     <p className="provenance">
       <span>
-        <b>{`${ro ? "Sursa" : "Source"}:`}</b> {sources || dash}
+        <b>{`${ro ? "Sursa" : "Source"}:`}</b> {sources || missing()}
       </span>
       <span>
         <b>{`${ro ? "Date la" : "Data as of"}:`}</b>{" "}
-        {entry.dataAsOf ? month(entry.dataAsOf.slice(0, 7), locale) : dash}
+        {entry.dataAsOf ? month(entry.dataAsOf.slice(0, 7), locale) : missing(true)}
       </span>
       <span>
-        <b>{`${ro ? "Licență" : "Licence"}:`}</b> {licences || dash}
+        <b>{`${ro ? "Licență" : "Licence"}:`}</b> {licences || missing()}
       </span>
       <span>
         {page.methodHref ? (
           <a href={page.methodHref}>{`${method} ↗`}</a>
         ) : (
           <>
-            <b>{`${method}:`}</b> {dash}
+            <b>{`${method}:`}</b> {missing()}
           </>
         )}
       </span>
@@ -145,13 +147,6 @@ function Grid({
 function ProjectDetails({ entry, locale }: { entry: Entry; locale: Locale }) {
   const ro = locale === "ro";
   const page = projectPages[entry.id] ?? {};
-  const related = catalogue.filter(
-    (item) =>
-      item.id !== entry.id &&
-      (entry.collection === "civic"
-        ? item.theme === entry.theme
-        : filterOf(item) === filterOf(entry)),
-  );
   return (
     <section className="practical project-details">
       {page.answers && (
@@ -192,22 +187,34 @@ function ProjectDetails({ entry, locale }: { entry: Entry; locale: Locale }) {
           </ul>
         </>
       )}
-      {related.length > 0 && (
-        <>
-          <h2>{ro ? "Instrumente înrudite" : "Related tools"}</h2>
-          <ul className="related">
-            {related.map((item) => (
-              <li key={item.id}>
-                <a href={entryPath(item, locale)}>
-                  <b>{item[locale].title}</b>
-                  <span className="tag">{statusLabels[item.status][locale]}</span>
-                  <span>{item[locale].summary}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
+    </section>
+  );
+}
+/** Related tools close the page, after any section that belongs to the project itself. */
+function Related({ entry, locale }: { entry: Entry; locale: Locale }) {
+  const ro = locale === "ro";
+  const related = catalogue.filter(
+    (item) =>
+      item.id !== entry.id &&
+      (entry.collection === "civic"
+        ? item.theme === entry.theme
+        : filterOf(item) === filterOf(entry)),
+  );
+  if (related.length === 0) return null;
+  return (
+    <section className="practical project-details">
+      <h2>{ro ? "Instrumente înrudite" : "Related tools"}</h2>
+      <ul className="related">
+        {related.map((item) => (
+          <li key={item.id}>
+            <a href={entryPath(item, locale)}>
+              <b>{item[locale].title}</b>
+              <span className="tag">{statusLabels[item.status][locale]}</span>
+              <span>{item[locale].summary}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }
@@ -430,6 +437,7 @@ export function App({
                 </dl>
               </section>
             )}
+            <Related entry={entry} locale={locale} />
           </>
         ) : (
           <>
@@ -457,7 +465,11 @@ export function App({
                 )}
               </h1>
               <p className="lead">
-                {ro
+                {collection && collection.id !== "civic"
+                  ? ro
+                    ? "Proiecte din afara instrumentelor civice: pachete Coda, biblioteci și experimente."
+                    : "Projects outside the civic tools: Coda Packs, libraries and experiments."
+                  : ro
                   ? "Instrumente civice independente și open source care explică date publice din România: buget, achiziții, legislație și propuneri de reformă, cu sursele la vedere. Nu sunt afiliate statului român sau vreunei instituții publice."
                   : "Independent, open-source civic tools that explain Romanian public data: budgets, procurement, legislation and reform proposals, with their sources shown. Not affiliated with the Romanian state or any public institution."}
               </p>
@@ -476,7 +488,13 @@ export function App({
                 <a
                   key={id}
                   href={collectionPath(id, locale)}
-                  aria-current={collection?.id === id ? "page" : undefined}
+                  aria-current={
+                    collection?.id === id
+                      ? "page"
+                      : collection && id === "other" && collection.id !== "civic"
+                        ? "true"
+                        : undefined
+                  }
                 >
                   {collections.find((c) => c.id === id)![locale].title}
                 </a>

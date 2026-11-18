@@ -5,21 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Not found — Civic projects</title>
     <style>
+      /* Same palette and type as the catalogue (src/styles.css); this page ships without the bundle. */
+      @font-face {
+        font-family: Inter;
+        src: url("/fonts/inter-latin-wght-normal.woff2") format("woff2");
+        font-weight: 100 900;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: Inter;
+        src: url("/fonts/inter-latin-ext-wght-normal.woff2") format("woff2");
+        font-weight: 100 900;
+        font-display: swap;
+        unicode-range: U+0100-024F;
+      }
+      @font-face {
+        font-family: Space;
+        src: url("/fonts/space-grotesk-latin-wght-normal.woff2") format("woff2");
+        font-weight: 300 700;
+        font-display: swap;
+      }
       :root {
         color-scheme: light dark;
-        --bg: #f6f6f4;
-        --fg: #16161a;
-        --muted: #5c5c66;
-        --line: #d9d9d2;
+        --bg: #f5f4ee;
+        --glow: #e5eddd;
+        --fg: #1b302e;
+        --muted: #4e6257;
+        --green: #24644d;
+        --line: #ccd5cd;
+        --solid: #244c3c;
+        --on-solid: #ffffff;
       }
 
       @media (prefers-color-scheme: dark) {
         :root {
-          --bg: #0e0e11;
-          --fg: #f2f2ef;
-          --muted: #9a9aa5;
-          --line: #2a2a31;
+          --bg: #101815;
+          --glow: #1a2b23;
+          --fg: #e7ede8;
+          --muted: #a6b5ac;
+          --green: #86d1aa;
+          --line: #2f4038;
+          --solid: #8fd3ae;
+          --on-solid: #0f1f18;
         }
+      }
+
+      * {
+        box-sizing: border-box;
       }
 
       body {
@@ -27,72 +59,125 @@
         min-height: 100vh;
         display: grid;
         place-items: center;
-        padding: 2rem;
-        background: var(--bg);
+        padding: 2rem 22px;
+        background:
+          radial-gradient(ellipse at 92% 15%, var(--glow), transparent 40%), var(--bg);
         color: var(--fg);
-        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-        line-height: 1.6;
+        font-family: Inter, system-ui, sans-serif;
+        line-height: 1.65;
       }
 
       main {
-        max-width: 34rem;
+        max-width: 36rem;
+      }
+
+      .brand {
+        display: inline-block;
+        margin-bottom: 3rem;
+        font-family: Space, system-ui, sans-serif;
+        font-weight: 650;
+        font-size: 20px;
+        text-decoration: none;
       }
 
       p.code {
         margin: 0 0 0.5rem;
-        font-size: 0.8rem;
+        font-size: 11px;
+        font-weight: 700;
         letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: var(--muted);
+        color: var(--green);
       }
 
       h1 {
-        margin: 0 0 0.75rem;
-        font-size: clamp(1.6rem, 4vw, 2.2rem);
-        line-height: 1.2;
+        margin: 0 0 1rem;
+        font-family: Space, system-ui, sans-serif;
+        font-weight: 500;
+        letter-spacing: -0.045em;
+        font-size: clamp(2rem, 6vw, 3.2rem);
+        line-height: 1.12;
       }
 
       p {
+        margin: 0 0 0.5rem;
         color: var(--muted);
       }
 
       a {
-        display: inline-block;
-        margin-top: 1.25rem;
-        padding: 0.6rem 1.1rem;
-        border: 1px solid var(--line);
-        border-radius: 0.5rem;
         color: inherit;
+        text-underline-offset: 0.24em;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 1.75rem;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 0 21px;
+        border: 1px solid var(--line);
+        border-radius: 5px;
+        font-size: 14px;
         text-decoration: none;
       }
 
+      .button.primary {
+        background: var(--solid);
+        border-color: var(--solid);
+        color: var(--on-solid);
+      }
+
       footer {
-        margin-top: 2rem;
-        font-size: 0.85rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 20px;
+        margin-top: 2.5rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--line);
+        font-size: 13px;
       }
 
       footer a {
-        margin: 0 1rem 0 0;
-        padding: 0;
-        border: 0;
-        text-decoration: underline;
+        display: inline-flex;
+        align-items: center;
+        min-height: 24px;
       }
 
-      a:hover,
       a:focus-visible {
-        border-color: currentColor;
+        outline: 3px solid var(--green);
+        outline-offset: 4px;
+        border-radius: 3px;
+      }
+
+      @media (forced-colors: active) {
+        .button {
+          border: 1px solid ButtonText;
+        }
       }
     </style>
   </head>
   <body>
     <main>
+      <a class="brand" href="/">Cristian Nichifor</a>
       <p class="code">404</p>
       <h1>There is nothing at this address</h1>
       <p>
-        The page may have moved, or the link may be wrong. Every project on this host lives at its
-        own path from the index.
+        The page may have moved, or the link may be wrong. Every project on this site is listed on
+        the home page.
       </p>
-      <a href="/">Back to the project index</a>
+      <p lang="ro">
+        Este posibil ca pagina să fi fost mutată sau ca linkul să fie greșit. Toate proiectele de pe acest site sunt
+        listate pe pagina principală.
+      </p>
+      <div class="actions">
+        <a class="button primary" href="/">See all projects</a>
+        <a class="button" href="/ro/" lang="ro" hreflang="ro">Vezi toate proiectele</a>
+      </div>
       <footer>
         <a href="/about/">About &amp; method</a>
         <a href="/ro/despre/" lang="ro" hreflang="ro">Despre și metodă</a>
