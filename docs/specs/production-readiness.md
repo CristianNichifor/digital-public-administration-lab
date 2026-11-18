@@ -57,6 +57,8 @@ Status values: `todo`, `done`, `blocked`, `needs-human`.
 - Test: `src/live-paths.test.ts` covers the path list. Run with `pnpm check:live`.
   On 2026-10-14 the salarizare and administrativ paths answered 404 (romania-reforms
   redirect stubs pending) and the privacy pages 404 until this work is promoted.
+  Since the romania-reforms stubs went live, salarizare and administrativ answer 301 to
+  public-pay and administrative-reform; the script expects that redirect instead of a 200.
 
 ### DPAL-4 Canonical Link header on proxied HTML (`done`)
 
